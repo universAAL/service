@@ -3,4 +3,5 @@ pom/pom.xml -text
 sieg.simple.profile.models/pom.xml -text
 sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/DefaultServiceCallee.java -text
 sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/ServiceProfileModel.java -text
+sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/StartUIServiceProfileModel.java -text svneol=unset#text/plain
 sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/osgi/Activator.java -text
