@@ -52,9 +52,9 @@
 
 	<repositories>
 		<repository>
-			<id>central</id>
-			<name>Central Maven Repository</name>
-			<url>http://repo1.maven.org/maven2</url>
+			<id>uaal</id>
+			<name>universAAL Repositories</name>
+			<url>http://depot.universaal.org/maven-repo/releases/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
