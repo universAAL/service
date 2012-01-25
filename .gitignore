@@ -1,2 +1,6 @@
 pom/.project
 pom/.settings
+sieg.simple.profile.models/*.classpath
+sieg.simple.profile.models/*.project
+sieg.simple.profile.models/*.settings
+sieg.simple.profile.models/target

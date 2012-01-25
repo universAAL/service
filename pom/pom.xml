@@ -28,7 +28,9 @@
 		<release.previous>1.0.0</release.previous>
 		<release.next>1.1.0</release.next>
 	</properties>
+	
 	<modules>
+		<module>../sieg.simple.profile.models</module>
 	</modules>
 
 	<dependencyManagement>
@@ -46,6 +48,11 @@
 				<version>1.0.0</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.universAAL.service</groupId>
+				<artifactId>sieg.simple.profile.models</artifactId>
+				<version>(${release.previous} , ${release.next}]</version>				
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
