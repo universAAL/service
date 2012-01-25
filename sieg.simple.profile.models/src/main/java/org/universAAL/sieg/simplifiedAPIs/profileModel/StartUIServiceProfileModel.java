@@ -13,21 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.universAAL.sieg.simplifiedAPIs.profileModel.osgi;
+package org.universAAL.sieg.simplifiedAPIs.profileModel;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
+import org.universAAL.middleware.service.owl.InitialServiceDialog;
+import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
-public class Activator implements BundleActivator {
+public abstract class StartUIServiceProfileModel implements ServiceProfileModel {
 
-	public void start(BundleContext arg0) throws Exception {
-		// TODO Auto-generated method stub
 
-	}
+	protected String serviceClassURI;
+	protected String vendor = "universAAL";
+	protected String description = "";
+	protected String serviceStartURI;
 
-	public void stop(BundleContext arg0) throws Exception {
-		// TODO Auto-generated method stub
-
+	public ServiceProfile getServiceProfile() {
+		return InitialServiceDialog.createInitialDialogProfile(
+				serviceClassURI,
+				vendor,
+				description,
+				serviceStartURI);
 	}
 
 }
