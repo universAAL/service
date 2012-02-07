@@ -18,15 +18,26 @@ package org.universAAL.sieg.simplifiedAPIs.profileModel.osgi;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+/**
+ * This bundle provides a couple of classes and interfaces to simplify the usage of uAAL's Service bus
+ * @author amedrano
+ *
+ */
 public class Activator implements BundleActivator {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void start(BundleContext arg0) throws Exception {
-		// TODO Auto-generated method stub
+		// Dummy library provision Bundle
 
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void stop(BundleContext arg0) throws Exception {
-		// TODO Auto-generated method stub
+		// Dummy library provision Bundle
 
 	}
 
