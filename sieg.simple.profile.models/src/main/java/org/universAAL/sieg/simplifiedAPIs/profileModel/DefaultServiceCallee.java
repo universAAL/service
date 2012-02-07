@@ -27,108 +27,114 @@ import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
 /**
  * This class will help manage service profiles easier.<br>
- * Each {@link ServiceProfile} will be implemented in a single class that implements
- * {@link ServiceProfileModel}.<br>
- * This service profile decoupling helps manage, from an implementation point of view, all
- * service profiles, and at the same time helps developers to register and unregister 
- * dynamically service profiles.<br>
+ * Each {@link ServiceProfile} will be implemented in a single class that
+ * implements {@link ServiceProfileModel}.<br>
+ * This service profile decoupling helps manage, from an implementation point of
+ * view, all service profiles, and at the same time helps developers to register
+ * and unregister dynamically service profiles.<br>
  * Also this {@link ServiceCallee} implements the typical service call checks,
- * so the amount of code copied is decreased, and therefore code becomes more understandable
- * and error proof.
+ * so the amount of code copied is decreased, and therefore code becomes more
+ * understandable and error proof.
  * 
  * @author amedrano
  * @see ServiceProfileModel
  */
 public class DefaultServiceCallee extends ServiceCallee {
 
-    /**
-     * the Map to keep track of the {@link ServiceProfileModel}s that are
-     * registered and their callbacks.
-     */
-    private HashMap profileModels;
-    
-    /**
-     * Constructor.
-     * @param context
-     *     {@link ModuleContext} mandatory for all {@link ServiceCallee}, 
-     * @param profileModel
-     *     a list of all initial {@link ServiceProfileModel}s that this service callee
-     *     manages.
-     */
-    public DefaultServiceCallee (ModuleContext context,
-	    ServiceProfileModel[] profileModel){
-	super(context,new ServiceProfile[] {});
-	profileModels = new HashMap();
-	ServiceProfile[] realizedServices = new ServiceProfile[profileModel.length];
-	for (int i = 0; i < profileModel.length; i++){
-	    ServiceProfile sp = profileModel[i].getServiceProfile();
-	    profileModels.put(sp.getURI(), profileModel[i]);
-	    realizedServices[i] = sp;
-	}	
-	addNewRegParams(realizedServices);
-    }
-    
-    /**
-     * add a new service profile, by providing a {@link ServiceProfileModel}.
-     * @param spm
-     *     the {@link ServiceProfileModel} which implements the {@link ServiceProfile}
-     *     to be added.
-     */
-    public void addServiceProfileModel(ServiceProfileModel spm) {
-	ServiceProfile sp = spm.getServiceProfile();
-	profileModels.put(sp.getURI(), spm);
-	addNewRegParams(new ServiceProfile[]{sp});
-    }
-
-    /**
-     * Remove an existing service profile, by providing a {@link ServiceProfileModel}.
-     * @param spm
-     *     the {@link ServiceProfileModel} which implements the {@link ServiceProfile}
-     *     to be removed.
-     */
-    public void removeServiceProfileModel (ServiceProfileModel spm){
-	ServiceProfile sp = spm.getServiceProfile();
-	profileModels.remove(sp.getURI());
-	removeMatchingRegParams(new ServiceProfile[] {sp});
-    }
-
-    /** {@inheritDoc}*/
-    public void communicationChannelBroken() {
-	// TODO Auto-generated method stub
-    }
-
-    /** {@inheritDoc}*/
-    public ServiceResponse handleCall(ServiceCall call) {
-	ServiceResponse invalidInput = new ServiceResponse(
-		CallStatus.serviceSpecificFailure);
-	if (call == null) {
-	    invalidInput
-	    .addOutput(new ProcessOutput(
-		    ServiceResponse.PROP_SERVICE_SPECIFIC_ERROR,
-		    "Corrupt call"));
-	    return invalidInput;
-	}
-
-	String operation = call.getProcessURI();
-	/*
-	 * FIXME
-	 * operation may not be equal to profile URI!
-	 * there might be necessary a transformation.
+	/**
+	 * The Map to keep track of the {@link ServiceProfileModel}s that are
+	 * registered and their callbacks.
 	 */
-	if (operation == null) {
-	    invalidInput
-	    .addOutput(new ProcessOutput(
-		    ServiceResponse.PROP_SERVICE_SPECIFIC_ERROR,
-		    "Corrupt call"));
-	    return invalidInput;
+	private HashMap profileModels;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param context
+	 *            {@link ModuleContext} mandatory for all {@link ServiceCallee},
+	 * @param profileModel
+	 *            a list of all initial {@link ServiceProfileModel}s that this
+	 *            service callee manages.
+	 */
+	public DefaultServiceCallee(ModuleContext context,
+			ServiceProfileModel[] profileModel) {
+		super(context, new ServiceProfile[] {});
+		profileModels = new HashMap();
+		ServiceProfile[] realizedServices = new ServiceProfile[profileModel.length];
+		for (int i = 0; i < profileModel.length; i++) {
+			ServiceProfile sp = profileModel[i].getServiceProfile();
+			profileModels.put(sp.getURI(), profileModel[i]);
+			realizedServices[i] = sp;
+		}
+		addNewRegParams(realizedServices);
 	}
 
-	if (!profileModels.containsKey(operation)){
-	    invalidInput.addOutput(new ProcessOutput(
-		    ServiceResponse.PROP_SERVICE_SPECIFIC_ERROR, "Invalid call"));
-	    return invalidInput;
+	/**
+	 * add a new service profile, by providing a {@link ServiceProfileModel}.
+	 * 
+	 * @param spm
+	 *            the {@link ServiceProfileModel} which implements the
+	 *            {@link ServiceProfile} to be added.
+	 */
+	public final void addServiceProfileModel(ServiceProfileModel spm) {
+		ServiceProfile sp = spm.getServiceProfile();
+		profileModels.put(sp.getURI(), spm);
+		addNewRegParams(new ServiceProfile[] { sp });
 	}
-	return ((ServiceProfileModel) profileModels.get(operation)).handleCall(call);
-    }
+
+	/**
+	 * Remove an existing service profile, by providing a
+	 * {@link ServiceProfileModel}.
+	 * 
+	 * @param spm
+	 *            the {@link ServiceProfileModel} which implements the
+	 *            {@link ServiceProfile} to be removed.
+	 */
+	public final void removeServiceProfileModel(ServiceProfileModel spm) {
+		ServiceProfile sp = spm.getServiceProfile();
+		profileModels.remove(sp.getURI());
+		removeMatchingRegParams(new ServiceProfile[] { sp });
+	}
+
+	/** {@inheritDoc} */
+	public void communicationChannelBroken() {
+		// nothing
+	}
+
+	/** {@inheritDoc} */
+	public final ServiceResponse handleCall(ServiceCall call) {
+		ServiceResponse invalidInput = new ServiceResponse(
+				CallStatus.serviceSpecificFailure);
+		if (call == null) {
+			invalidInput
+					.addOutput(new ProcessOutput(
+							ServiceResponse.PROP_SERVICE_SPECIFIC_ERROR,
+							"Corrupt call"));
+			return invalidInput;
+		}
+
+		String operation = call.getProcessURI();
+		/*
+		 * operation may not be equal to profile URI! there might be necessary a
+		 * transformation. In principle this works!
+		 */
+		if (operation == null) {
+			invalidInput
+					.addOutput(new ProcessOutput(
+							ServiceResponse.PROP_SERVICE_SPECIFIC_ERROR,
+							"Corrupt call"));
+			return invalidInput;
+		}
+
+		if (!profileModels.containsKey(operation)) {
+			invalidInput
+					.addOutput(new ProcessOutput(
+							ServiceResponse.PROP_SERVICE_SPECIFIC_ERROR,
+							"Invalid call"));
+			return invalidInput;
+		}
+		return ((ServiceProfileModel) profileModels.get(operation))
+				.handleCall(call);
+	}
 
 }

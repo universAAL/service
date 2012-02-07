@@ -21,34 +21,35 @@ import org.universAAL.middleware.service.ServiceResponse;
 import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
 /**
- * Classes that implement this Interface will realize one (and only one) {@link ServiceProfile}.
- * This class helps manage {@link ServiceProfile} independently, and if needed, hierarchically.
+ * Classes that implement this Interface will realize one (and only one)
+ * {@link ServiceProfile}. This class helps manage {@link ServiceProfile}
+ * independently, and if needed, hierarchically.
  * 
  * @author amedrano
  * @see DefaultServiceCallee
  */
 public interface ServiceProfileModel {
 
-    /**
-     * This method will define the {@link ServiceProfile} to which the implementation class
-     * will respond.
-     * @return
-     *      a well formed {@link ServiceProfile} for the implemented service.
-     */
-    public ServiceProfile getServiceProfile();
+	/**
+	 * This method will define the {@link ServiceProfile} to which the
+	 * implementation class will respond.
+	 * 
+	 * @return a well formed {@link ServiceProfile} for the implemented service.
+	 */
+	public ServiceProfile getServiceProfile();
 
-    /**
-     * This method acts as a callback for the {@link ServiceProfile} defined in
-     * {@link ServiceProfileModel#getServiceProfile()}.
-     * There is no need to check the coincidence as this will be done by 
-     * {@link DefaultServiceCallee}
-     * @param call
-     *        the {@link ServiceCall} which contains all the input parameters needed for the 
-     *        {@link ServiceProfile}
-     * @return
-     *        a {@link ServiceResponse} that contains all the output parameters as weel as the
-     *        {@link CallStatus} and/or specific error.
-     */
-    public ServiceResponse handleCall (ServiceCall call);
+	/**
+	 * This method acts as a callback for the {@link ServiceProfile} defined in
+	 * {@link ServiceProfileModel#getServiceProfile()}. There is no need to
+	 * check the coincidence as this will be done by
+	 * {@link DefaultServiceCallee}
+	 * 
+	 * @param call
+	 *            the {@link ServiceCall} which contains all the input
+	 *            parameters needed for the {@link ServiceProfile}
+	 * @return a {@link ServiceResponse} that contains all the output parameters
+	 *         	  as weel as the {@link CallStatus} and/or specific error.
+	 */
+	public ServiceResponse handleCall(ServiceCall call);
 
 }
