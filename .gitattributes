@@ -1,5 +1,8 @@
 * text=auto !eol
 pom/pom.xml -text
+sieg.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
+sieg.simple.profile.models/MITX.txt -text svneol=unset#text/plain
+sieg.simple.profile.models/NOTICE.txt -text svneol=unset#text/plain
 sieg.simple.profile.models/pom.xml -text
 sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/DefaultServiceCallee.java -text
 sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/ServiceProfileModel.java -text
