@@ -1,0 +1,83 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix list: <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix expr: <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix service: <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix profile: <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix process: <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix process11: <http://www.daml.org/services/owl-s/1.1/Process.owl#> .
+@prefix ns: <http://ontology.igd.fhg.de/LightingConsumer.owl#> .
+@prefix pvn: <http://ontology.universAAL.org/uAAL.owl#> .
+@prefix turnOffLamp: <http://ontology.universAAL.org/TurnOffLamp.ttl#> .
+@prefix asor: <http://ontology.universAAL.org/ASOR.owl#> .
+@prefix : <http://ontology.universAAL.org/TurnOffLampsInLoop.ttl#> .
+
+<> a owl:Ontology ;
+	owl:imports <http://www.daml.org/services/owl-s/1.2/Profile.owl> ;
+	owl:imports <http://www.daml.org/services/owl-s/1.1/Process.owl> ;
+	owl:imports <d:/universAAL/workspaces/ServiceOrchestrator/ASOR_Scripts/TurnOffLamp/TurnOffLamp.ttl> ;
+	owl:versionInfo "..." .
+
+# Service description
+:TurnOffLampsInLoopService a service:Service ;
+	service:presents :TurnOffLampsInLoopProfile ;
+	service:describedBy :TurnOffLampsInLoopProcess .
+
+# Profile description
+:TurnOffLampsInLoopProfile a profile:Profile ;
+	service:presentedBy :TurnOffLampsInLoopService ;
+	profile:serviceName "..."@en ;
+	profile:textDescription "..."@en .
+
+:TurnOffLampsInLoopProcess a process:CompositeProcess ;
+	rdfs:label "..." ;
+	rdfs:comment """...""" ;
+	process:invocable "true"^^xsd:boolean ;
+	service:describes :TurnOffLampsInLoopService ;
+	process:hasInput :Lamps ;
+	process:hasLocal :currentValue ;
+	process:hasLocal :trueValue .
+
+:currentValue a process:Loc ;
+	process:parameterType "http://www.w3.org/2001/XMLSchema#int"^^xsd:anyURI ;
+	process:initialValue "false"^^xsd:boolean .
+
+:trueValue a process:Loc ;
+	process:parameterType "http://www.w3.org/2001/XMLSchema#boolean"^^xsd:anyURI ;
+	process:initialValue "true"^^xsd:boolean .
+	
+:Lamps a process:Input ;
+	process:parameterType "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#List"^^xsd:anyURI .
+	
+:TurnOffLampsInLoopProcess process:composedOf [ 
+	 a process:For-Each ;
+	 	process:theList [
+			a process:ValueOf ;
+				process:fromProcess process:ThisPerform ;
+				process:theVar :Lamps
+			] ;
+		process:theLoopVar :loopVar;
+		process:iterateBody :PerformTurnOffLamp
+	] .
+
+		
+:PerformTurnOffLamp a process:Perform ;
+	process:process turnOffLamp:TurnOffLampProcess ;
+	process:hasDataFrom [
+		a process:InputBinding ;
+			process:valueSource [
+				a process:ValueOf ;
+					process:fromProcess process:ThisPerform ;
+					process:theVar :loopVar 
+			] ;
+			process:toVar turnOffLamp:LampID
+		] .
+		
+:TurnOffLampsInLoopProcess process:hasLocal :loopVar .
+
+:loopVar a process:Loc ;
+	process:parameterType "http://www.w3.org/2001/XMLSchema#base64Binary"^^xsd:anyURI;
+	rdfs:label "loopVar" .
