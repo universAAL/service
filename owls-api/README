@@ -1,0 +1,13 @@
+OWL-S API README
+================
+
+OWL-S API provides support for reading, writing, and executing
+Semantic Web Services described in OWL-S.
+
+Project homepage
+http://on.cs.unibas.ch/owls-api/index.html
+
+There is a mailing list for questions and feedback:
+owl-s@lists.mindswap.org
+You can subscribe to the list and see the archives here:
+http://lists.mindswap.org/mailman/listinfo/owl-s

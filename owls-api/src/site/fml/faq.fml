@@ -1,0 +1,11 @@
+<!-- $Id: faq.fml 2296 2009-08-26 13:35:43Z thorsten $ -->
+<faqs title="Frequently Asked Questions">
+<!--	<part id="General">
+		<faq id="faq1">
+			<question>Why do I get CastingExceptions?</question>
+			<answer>
+				<p>Any valid XHTML can be placed in the <code>answer</code> element</p>
+			</answer>
+		</faq>
+	</part> -->
+</faqs>

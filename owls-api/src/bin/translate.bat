@@ -1,0 +1,1 @@
+java -cp ..\lib\@fileName@.jar examples.Translator %1 %2

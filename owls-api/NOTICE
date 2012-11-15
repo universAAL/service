@@ -1,0 +1,14 @@
+#########################################################################
+## OWL-S API DEPENDENCIES                                              ##
+#########################################################################
+
+A binary distribution of the OWL-S API which is built from source,
+includes a number of dependent packages with separate copyright notices
+and license terms. In the following a list of these dependencies; see
+also the Maven POM file.
+
+* Jena (http://jena.sourceforge.net) developed by HP Labs
+* Axis (http://ws.apache.org/axis) developed by Apache Software Foundation
+* CyberLink UPnP (http://www.cybergarage.org/net/upnp/java/) developed by
+  Satoshi Konno
+* Pellet (http://pellet.owldl.com) developed by Clarc & Parsia LLC

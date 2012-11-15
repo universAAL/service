@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE uridef[
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl">
+  <!ENTITY expr "http://www.daml.org/services/owl-s/1.1/generic/Expression.owl">
+  <!ENTITY swrl "http://www.w3.org/2003/11/swrl">
+  <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb">
+  <!ENTITY list "http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl">
+  <!ENTITY this "http://on.cs.unibas.ch/owl-s/1.1/IfThenElse-2.owl">
+]>
+
+<rdf:RDF
+  xmlns="&this;#"
+  xmlns:rdf="&rdf;#"
+  xmlns:rdfs="&rdfs;#"
+  xmlns:owl="&owl;#"
+  xmlns:xsd="&xsd;#"
+  xmlns:service="&service;#"
+  xmlns:profile="&profile;#"
+  xmlns:process="&process;#"
+  xmlns:grounding="&grounding;#"
+  xmlns:expr="&expr;#"
+  xmlns:swrl="&swrl;#"
+  xmlns:list="&list;#"
+  xml:base="&this;">
+
+<owl:Ontology rdf:about="">
+	<owl:imports rdf:resource="&service;"/>
+	<owl:imports rdf:resource="&process;"/>
+	<owl:imports rdf:resource="&profile;"/>
+	<owl:versionInfo>$Id: IfThenElse-2.owl 2398 2010-01-27 15:05:12Z thorsten $</owl:versionInfo>
+</owl:Ontology>
+
+<!-- Some axioms respectively assertions for testing purposes. -->
+<owl:Class rdf:ID="A" />
+<owl:Class rdf:ID="B">
+	<rdfs:subClassOf rdf:resource="#A" />
+</owl:Class>
+<owl:Class rdf:ID="NotB">
+	<owl:complementOf rdf:resource="#B" />
+</owl:Class>
+<A rdf:ID="someA" />
+<B rdf:ID="someB" />
+<NotB rdf:ID="someNotB" />
+
+<!-- Service description -->
+<service:Service rdf:ID="IfThenElseService">
+	<service:presents rdf:resource="#IfThenElseProfile"/>
+	<service:describedBy rdf:resource="#IfThenElseProcess"/>
+</service:Service>
+
+<!-- Profile description -->
+<profile:Profile rdf:ID="IfThenElseProfile">
+	<service:presentedBy rdf:resource="#IfThenElseService"/>
+	<profile:serviceName xml:lang="en">
+		Simple If-Then-Else Test Service using a SWRL built-in rule (lessThan).
+	</profile:serviceName>
+	<profile:hasInput rdf:resource="#inputA"/>
+	<profile:hasInput rdf:resource="#inputB"/>
+	<profile:hasOutput rdf:resource="#outputA"/>
+</profile:Profile>
+
+<!-- Composite Process description -->
+<process:CompositeProcess rdf:ID="IfThenElseProcess">
+	<service:describes rdf:resource="#IfThenElseService"/>
+
+	<process:hasInput>
+		<process:Input rdf:ID="inputA">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&this;#A</process:parameterType>
+			<rdfs:label>inputA</rdfs:label>
+		</process:Input>
+	</process:hasInput>
+
+	<process:hasInput>
+		<process:Input rdf:ID="inputB">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&this;#B</process:parameterType>
+			<rdfs:label>inputB</rdfs:label>
+		</process:Input>
+	</process:hasInput>
+
+	<process:hasOutput>
+		<process:Output rdf:ID="outputA">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&this;#A</process:parameterType>
+			<rdfs:label>outputA</rdfs:label>
+		</process:Output>
+	</process:hasOutput>
+
+	<process:composedOf>
+		<process:If-Then-Else rdf:ID="If-Then-Else">
+			<process:ifCondition>
+				<expr:SWRL-Condition>
+					<expr:expressionBody rdf:parseType="Literal">
+						<swrl:AtomList>
+							<rdf:first>
+								<!-- Test using absolute URIs within literal. Parser should handle this correctly. -->
+								<swrl:ClassAtom>
+									<swrl:argument1>
+										<process:Input rdf:about="&this;#inputA"/>
+									</swrl:argument1>
+									<swrl:classPredicate rdf:resource="&this;#B"/>
+								</swrl:ClassAtom>
+							</rdf:first>
+							<rdf:rest rdf:resource="&rdf;#nil" />
+						</swrl:AtomList>
+					</expr:expressionBody>
+				</expr:SWRL-Condition>
+			</process:ifCondition>
+			<process:then>
+				<process:Sequence>
+					<process:components>
+						<process:ControlConstructList>
+							<list:first rdf:resource="#ProduceThen" />
+							<list:rest rdf:resource="&list;#nil" />
+						</process:ControlConstructList>
+					</process:components>
+				</process:Sequence>
+			</process:then>
+			<process:else>
+				<process:Sequence>
+					<process:components>
+						<process:ControlConstructList>
+							<list:first rdf:resource="#ProduceElse" />
+							<list:rest rdf:resource="&list;#nil" />
+						</process:ControlConstructList>
+					</process:components>
+				</process:Sequence>
+			</process:else>
+		</process:If-Then-Else>
+	</process:composedOf>
+</process:CompositeProcess>
+
+<process:Produce rdf:ID="ProduceThen">
+	<process:producedBinding>
+		<process:OutputBinding>
+			<process:toParam rdf:resource="#outputA" />
+			<process:valueSource>
+				<process:ValueOf>
+					<process:fromProcess rdf:resource="&process;#TheParentPerform" />
+					<process:theVar rdf:resource="#inputA"/>
+				</process:ValueOf>
+			</process:valueSource>
+		</process:OutputBinding>
+	</process:producedBinding>
+</process:Produce>
+
+<process:Produce rdf:ID="ProduceElse">
+	<process:producedBinding>
+		<process:OutputBinding>
+			<process:toParam rdf:resource="#outputA" />
+			<process:valueSource>
+				<process:ValueOf>
+					<process:fromProcess rdf:resource="&process;#TheParentPerform" />
+					<process:theVar rdf:resource="#inputB" />
+				</process:ValueOf>
+			</process:valueSource>
+		</process:OutputBinding>
+	</process:producedBinding>
+</process:Produce>
+
+</rdf:RDF>

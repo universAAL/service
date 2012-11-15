@@ -1,0 +1,74 @@
+ ----
+ User Specific Grounding Implementations
+ -----
+ Thorsten Moeller
+ -----
+ $Id: replacing_grounding_implementations.apt.vm 2296 2009-08-26 13:35:43Z thorsten $
+ -----
+
+How to Create and Activate your own Grounding Implementation
+
+  The library allows to replace the built-in Java, WSDL, and UPnP grounding
+implementations by other implementations. (It is also possible to extend and
+integrate new grounding implementations into the library, e.g., a REST style
+Web service grounding. However, this is not discussed here.)
+
+  As an example, we will briefly describe the steps that need to be done in
+order to replace the WSDL grounding by a new implementation. The procedure is
+similar for the Java or UPnP grounding implementation.
+
+  [[1]] In short, WSDL groundings are represented by the following interfaces:
+      <<<WSDLAtomicGrounding>>>, <<<WSDLGrounding>>>, <<<WSDLOperationRef>>>,
+      and <<<MessageMap\<String\>>>>. The former two are the most important
+      classes that need to be implemented. The new implementation classes can
+      extend <<<WrappedIndividual>>> in order to reduce the number of methods
+      that need to be implemented. Regarding the latter two you may entirely
+      reuse existing implementations.
+
+  [[2]] Implement the Java interface <<<WSDLGroundingProvider>>>. This interface
+      represents a factory like encapsulation that is used by the library to
+      create instances of your implementation classes. The main part here is
+      the method <<<registerConverters(OWLObjectConverterRegistry)>>>. This
+      method will be invoked by the <<<OWLObjectConverterRegistry>>> when it
+      gets instantiated. In this method you need to register your implementations
+      for the corresponding Java interfaces using the corresponding OWL-S
+      concepts. It is easiest to have a look at the existing class
+      <<<WSDLGroundingProviderImpl>>> on how this needs to be done.
+
+  [[3]] As a last step you need to make your implementation of <<<WSDLGroundingProvider>>>
+      available so that it will be loaded by the library at runtime. The
+      following ordered lookup procedure is used at runtime to determine which
+      provider is to be loaded. (1) Check if a system property
+      <<<org.mindswap.owls.grounding.WSDLGroundingProvider>>> is set. (2) Use
+      the Java Services API (as detailed by the JAR specification). The
+      Services API will look for a fully qualified class name in the file
+      <<<META-INF/services/org.mindswap.owls.grounding.WSDLGroundingProvider>>>
+      in jars available to the runtime. The first one found will be used and
+      the implementation class specified there will be instantiated instead
+      of the built-in WSDL grounding provider.
+
+      Using option (1) you would just add yet another parameter when starting
+      up your application:
+
++---------------------------------------------------------------------------+
+java -Dorg.mindswap.owls.grounding.WSDLGroundingProvider=mypackage.MyWSDLGroundingProviderImpl ...
++---------------------------------------------------------------------------+
+
+      Using option (2) you would have to create the binary jar that contains
+      your WSDL grounding implementation so that it contains the file
+      <<<META-INF/services/org.mindswap.owls.grounding.WSDLGroundingProvider>>>
+      and list the name of your provider implementation class in that file, e.g.
+
++---------------------------------------------------------------------------+
+mypackage.MyWSDLGroundingProviderImpl
++---------------------------------------------------------------------------+
+
+      Provided that the binary jar of your implementation is available in the
+      CLASSPATH then your implementation will be used instead of the built-in
+      implementation.
+
+      <<Caveat>>: When using option (2) and more than one user defined WSDL
+      grounding implementation is available to the runtime then the first one
+      found will be used. The order in which they are found depends on the
+      behavior of the Java runtime and the order of jars in the CLASSPATH.
+

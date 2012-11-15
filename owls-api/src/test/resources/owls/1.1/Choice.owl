@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE uridef[
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl">
+  <!ENTITY expr "http://www.daml.org/services/owl-s/1.1/generic/Expression.owl">
+  <!ENTITY swrl "http://www.w3.org/2003/11/swrl">
+  <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb">
+  <!ENTITY list "http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl">
+  <!ENTITY this "http://on.cs.unibas.ch/owl-s/1.1/Choice.owl">
+]>
+
+<rdf:RDF
+  xmlns="&this;#"
+  xmlns:rdf="&rdf;#"
+  xmlns:rdfs="&rdfs;#"
+  xmlns:owl="&owl;#"
+  xmlns:xsd="&xsd;#"
+  xmlns:service="&service;#"
+  xmlns:profile="&profile;#"
+  xmlns:process="&process;#"
+  xmlns:grounding="&grounding;#"
+  xmlns:expr="&expr;#"
+  xmlns:swrl="&swrl;#"
+  xmlns:list="&list;#"
+  xml:base="&this;">
+
+<owl:Ontology rdf:about="">
+	<owl:imports rdf:resource="&service;"/>
+	<owl:imports rdf:resource="&process;"/>
+	<owl:imports rdf:resource="&profile;"/>
+	<owl:versionInfo>$Id: Choice.owl 2398 2010-01-27 15:05:12Z thorsten $</owl:versionInfo>
+</owl:Ontology>
+
+<!-- Some axioms respectively assertions used within preconditions for testing purposes. -->
+<owl:Class rdf:ID="Person" />
+<owl:Class rdf:ID="Woman">
+	<rdfs:subClassOf rdf:resource="#Person" />
+</owl:Class>
+<owl:Class rdf:ID="Man">
+	<rdfs:subClassOf rdf:resource="#Person" />
+	<owl:disjointWith rdf:resource="#Woman" />
+</owl:Class>
+<owl:Class rdf:ID="FacultyMember">
+	<rdfs:subClassOf rdf:resource="#Person" />
+</owl:Class>
+<owl:Class rdf:ID="Professor">
+	<rdfs:subClassOf rdf:resource="#FacultyMember" />
+</owl:Class>
+<owl:Class rdf:ID="Publication">
+	<owl:disjointWith rdf:resource="#Person" />
+</owl:Class>
+<owl:Class rdf:ID="Book">
+	<rdfs:subClassOf rdf:resource="#Publication" />
+</owl:Class>
+
+<Professor rdf:ID="Einstein" />
+<Man rdf:about="#Einstein" />
+<Person rdf:ID="AlbertEinstein" /><!-- no sameAs 'Einstein' assertion on purpose; we want FirstChoice precondition to be false -->
+
+<Professor rdf:ID="Curie" />
+<Woman rdf:about="#Curie" />
+<Person rdf:ID="MarieCurie">
+	<owl:sameAs rdf:resource="#Curie" />
+</Person>
+
+
+
+<!-- Service description -->
+<service:Service rdf:ID="ChoiceService">
+	<service:presents rdf:resource="#ChoiceProfile"/>
+	<service:describedBy rdf:resource="#ChoiceProcess"/>
+</service:Service>
+
+<!-- Profile description -->
+<profile:Profile rdf:ID="ChoiceProfile">
+	<service:presentedBy rdf:resource="#ChoiceService"/>
+	<profile:serviceName xml:lang="en">
+		Simple Choice test Service using some SWRL rules as preconditions. The preconditions
+		of the First and Second choice process were specified on purpose to be false, thus,
+		the Third choice process will be executed in any case, no matter which of the tree
+		is tried first. Background: A Choice consisting of more than one control construct
+		will be executed by selecting one arbitrarily first. If it has a precondition and
+		it does not evaluate to true, then select another control construct unless there
+		are no more choices available. I.e., if all choice control constructs have
+		preconditions and all evaluate to false then none would be actually executed.
+	</profile:serviceName>
+	<profile:hasOutput rdf:resource="#selectedChoice"/>
+</profile:Profile>
+
+<!-- Composite Process description -->
+<process:CompositeProcess rdf:ID="ChoiceProcess">
+	<service:describes rdf:resource="#ChoiceService"/>
+
+	<process:hasOutput>
+		<process:Output rdf:ID="selectedChoice">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+			<rdfs:label>selectedChoice</rdfs:label>
+		</process:Output>
+	</process:hasOutput>
+
+	<process:composedOf>
+		<process:Choice rdf:ID="Choice">
+			<process:components>
+				<process:ControlConstructBag>
+					<list:first rdf:resource="#FirstChoiceSequence" />
+					<list:rest>
+						<process:ControlConstructBag>
+							<list:first rdf:resource="#SecondChoiceSequence" />
+							<list:rest>
+								<process:ControlConstructList>
+									<list:first rdf:resource="#ThirdChoiceSequence" />
+									<list:rest rdf:resource="&list;#nil" />
+								</process:ControlConstructList>
+							</list:rest>
+						</process:ControlConstructBag>
+					</list:rest>
+				</process:ControlConstructBag>
+			</process:components>
+		</process:Choice>
+	</process:composedOf>
+</process:CompositeProcess>
+
+<process:Sequence rdf:ID="FirstChoiceSequence">
+	<process:components>
+		<process:ControlConstructList>
+			<list:first>
+				<process:Perform rdf:ID="FirstChoicePerform">
+					<process:process>
+						<process:CompositeProcess rdf:ID="FirstChoiceProcess">
+							<process:hasOutput>
+								<process:Output rdf:ID="firstChoiceOutput">
+									<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+								</process:Output>
+							</process:hasOutput>
+							<process:hasPrecondition>
+								<expr:SWRL-Condition>
+									<expr:expressionLanguage rdf:resource="&expr;#SWRL" />
+									<expr:expressionBody rdf:parseType="Literal">
+										<swrl:AtomList>
+											<rdf:first>
+												<swrl:SameIndividualAtom><!-- false -->
+													<swrl:argument1 rdf:resource="#Einstein" />
+													<swrl:argument2 rdf:resource="#AlbertEinstein" />
+												</swrl:SameIndividualAtom>
+											</rdf:first>
+											<rdf:rest rdf:resource="&rdf;#nil" />
+										</swrl:AtomList>
+									</expr:expressionBody>
+								</expr:SWRL-Condition>
+							</process:hasPrecondition>
+							<process:composedOf>
+								<process:Produce>
+									<process:producedBinding>
+										<process:OutputBinding>
+											<process:toParam rdf:resource="#firstChoiceOutput" />
+											<process:valueData rdf:datatype="&xsd;#string">some data of FirstChoice</process:valueData>
+										</process:OutputBinding>
+									</process:producedBinding>
+								</process:Produce>
+							</process:composedOf>
+						</process:CompositeProcess>
+					</process:process>
+				</process:Perform>
+			</list:first>
+			<list:rest>
+				<process:ControlConstructList>
+					<list:first>
+						<process:Produce>
+							<process:producedBinding>
+								<process:OutputBinding>
+									<process:toParam rdf:resource="#selectedChoice" />
+									<process:valueSource>
+										<process:ValueOf>
+											<process:fromProcess rdf:resource="#FirstChoicePerform" />
+											<process:theVar rdf:resource="#firstChoiceOutput" />
+										</process:ValueOf>
+									</process:valueSource>
+								</process:OutputBinding>
+							</process:producedBinding>
+						</process:Produce>
+					</list:first>
+					<list:rest rdf:resource="&list;#nil" />
+				</process:ControlConstructList>
+			</list:rest>
+		</process:ControlConstructList>
+	</process:components>
+</process:Sequence>
+
+<process:Sequence rdf:ID="SecondChoiceSequence">
+	<process:components>
+		<process:ControlConstructList>
+			<list:first>
+				<process:Perform rdf:ID="SecondChoicePerform">
+					<process:process>
+						<process:CompositeProcess rdf:ID="SecondChoiceProcess">
+							<process:hasOutput>
+								<process:Output rdf:ID="secondChoiceOutput">
+									<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+								</process:Output>
+							</process:hasOutput>
+							<process:hasPrecondition>
+								<expr:SWRL-Condition>
+									<expr:expressionLanguage rdf:resource="&expr;#SWRL" />
+									<expr:expressionBody rdf:parseType="Literal">
+										<swrl:AtomList>
+											<rdf:first>
+												<swrl:DifferentIndividualsAtom><!-- false -->
+													<swrl:argument1 rdf:resource="#Curie" />
+													<swrl:argument2 rdf:resource="#MarieCurie" />
+												</swrl:DifferentIndividualsAtom>
+											</rdf:first>
+											<rdf:rest rdf:resource="&rdf;#nil" />
+										</swrl:AtomList>
+									</expr:expressionBody>
+								</expr:SWRL-Condition>
+							</process:hasPrecondition>
+							<process:composedOf>
+								<process:Produce>
+									<process:producedBinding>
+										<process:OutputBinding>
+											<process:toParam rdf:resource="#secondChoiceOutput" />
+											<process:valueData rdf:datatype="&xsd;#string">some data of SecondChoice</process:valueData>
+										</process:OutputBinding>
+									</process:producedBinding>
+								</process:Produce>
+							</process:composedOf>
+						</process:CompositeProcess>
+					</process:process>
+				</process:Perform>
+			</list:first>
+			<list:rest>
+				<process:ControlConstructList>
+					<list:first>
+						<process:Produce>
+							<process:producedBinding>
+								<process:OutputBinding>
+									<process:toParam rdf:resource="#selectedChoice" />
+									<process:valueSource>
+										<process:ValueOf>
+											<process:fromProcess rdf:resource="#SecondChoicePerform" />
+											<process:theVar rdf:resource="#secondChoiceOutput" />
+										</process:ValueOf>
+									</process:valueSource>
+								</process:OutputBinding>
+							</process:producedBinding>
+						</process:Produce>
+					</list:first>
+					<list:rest rdf:resource="&list;#nil" />
+				</process:ControlConstructList>
+			</list:rest>
+		</process:ControlConstructList>
+	</process:components>
+</process:Sequence>
+
+<process:Sequence rdf:ID="ThirdChoiceSequence">
+	<process:components>
+		<process:ControlConstructList>
+			<list:first>
+				<process:Perform rdf:ID="ThirdChoicePerform">
+					<process:process>
+						<process:CompositeProcess rdf:ID="ThirdChoiceProcess">
+							<process:hasPrecondition>
+								<expr:SWRL-Condition>
+									<expr:expressionLanguage rdf:resource="&expr;#SWRL" />
+									<expr:expressionBody rdf:parseType="Literal">
+										<swrl:AtomList>
+											<rdf:first>
+												<swrl:DifferentIndividualsAtom><!-- true (inferred!)-->
+													<swrl:argument1 rdf:resource="#Einstein" />
+													<swrl:argument2 rdf:resource="#Curie" />
+												</swrl:DifferentIndividualsAtom>
+											</rdf:first>
+											<rdf:rest rdf:resource="&rdf;#nil" />
+										</swrl:AtomList>
+									</expr:expressionBody>
+								</expr:SWRL-Condition>
+							</process:hasPrecondition>
+							<process:hasOutput>
+								<process:Output rdf:ID="thirdChoiceOutput">
+									<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+								</process:Output>
+							</process:hasOutput>
+							<process:composedOf>
+								<process:Produce>
+									<process:producedBinding>
+										<process:OutputBinding>
+											<process:toParam rdf:resource="#thirdChoiceOutput" />
+											<process:valueData rdf:datatype="&xsd;#string">some data of ThirdChoice</process:valueData>
+										</process:OutputBinding>
+									</process:producedBinding>
+								</process:Produce>
+							</process:composedOf>
+						</process:CompositeProcess>
+					</process:process>
+				</process:Perform>
+			</list:first>
+			<list:rest>
+				<process:ControlConstructList>
+					<list:first>
+						<process:Produce>
+							<process:producedBinding>
+								<process:OutputBinding>
+									<process:toParam rdf:resource="#selectedChoice" />
+									<process:valueSource>
+										<process:ValueOf>
+											<process:fromProcess rdf:resource="#ThirdChoicePerform" />
+											<process:theVar rdf:resource="#thirdChoiceOutput" />
+										</process:ValueOf>
+									</process:valueSource>
+								</process:OutputBinding>
+							</process:producedBinding>
+						</process:Produce>
+					</list:first>
+					<list:rest rdf:resource="&list;#nil" />
+				</process:ControlConstructList>
+			</list:rest>
+		</process:ControlConstructList>
+	</process:components>
+</process:Sequence>
+
+</rdf:RDF>

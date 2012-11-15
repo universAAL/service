@@ -1,0 +1,124 @@
+ ------
+ Installation OWL-S API ${currentVersion}
+ ------
+ Thorsten Moeller
+ ------
+ $Id: installation.apt.vm 2296 2009-08-26 13:35:43Z thorsten $
+ ------
+
+Installation of the OWL-S API
+
+* System {Requirements}
+
+*----------------------+---------------------------------------------------------------------------------------------+
+| <<JDK>>              | 1.5 or newer
+*----------------------+---------------------------------------------------------------------------------------------+
+| <<Memory>>           | No minimum requirement
+*----------------------+---------------------------------------------------------------------------------------------+
+| <<Disk>>             | Approximately 20MB will be used on your local disc.
+*----------------------+---------------------------------------------------------------------------------------------+
+| <<Operating System>> | Tested on Windows XP, Ubuntu and Mac OS X.
+*----------------------+---------------------------------------------------------------------------------------------+
+
+* Installation Instructions
+
+  <OWL-S API is a Java tool, so you must have {{{http://java.sun.com}Java}} installed in order to proceed. More precisely,
+  you need a Java Development Kit (JDK) or the Java Runtime Environment (JRE).>
+
+
+** Windows 2000/XP/Vista
+
+  [[1]] Unzip the distribution archive, i.e. <<<owls-api-${currentVersion}-bin.zip>>>
+        to the directory you wish to install OWL-S API ${currentVersion}.
+        The subdirectory <<<owls-api-${currentVersion}>>> will be created from the archive.
+
+  [[2]] Open a <new> command prompt (Winkey + R then type <<<cmd>>>) and run
+        any of the <<<*.bat>>> files in folder <<<bin>>> (only for testing
+        purposes, i.e., usually you would add/import the binaries to the
+        classpath of your project that want's to make use of the API).
+
+** Unix-based Operating Systems (Linux, Solaris and Mac OS X)
+
+  [[1]] Extract the distribution archive, i.e. <<<owls-api-${currentVersion}-bin.tar.gz>>>
+        to the directory you wish to install OWL-S API ${currentVersion}.
+        The subdirectory <<<owls-api-${currentVersion}>>> will be created from the archive.
+
+  [[2]] Run any of the <<<*.sh>>> files in folder <<<bin>>> (only for testing
+        purposes, i.e., usually you would add/import the binaries to the
+        classpath of your project that want's to make use of the API).
+
+** Integration into Maven-managed projects
+
+  [[1]] Add entries for releases and/or snapshots repository to your <<<pom.xml>>>
+        or <<<settings.xml>>>.
+
++---------------------------------------------------------------------------+
+<repositories>
+
+	<!-- ... -->
+
+	<repository>
+		<id>on.cs.unibas.ch</id>
+		<name>DBIS Maven Releases Repository</name>
+		<url>http://on.cs.unibas.ch/maven/repository</url>
+	</repository>
+<repositories>
++---------------------------------------------------------------------------+
+
++---------------------------------------------------------------------------+
+<repositories>
+
+	<!-- ... -->
+
+	<repository>
+		<id>on.cs.unibas.ch</id>
+		<name>DBIS Maven Snapshots Repository</name>
+		<url>http://on.cs.unibas.ch/maven/snapshots-repository</url>
+	</repository>
+<repositories>
++---------------------------------------------------------------------------+
+
+  [[2]] Put the following dependency to the dependencies section of your project
+        <<<pom.xml>>>.
+
++---------------------------------------------------------------------------+
+<dependencies>
+
+	<!-- ... -->
+
+	<dependency>
+		<groupId>ch.unibas.on</groupId>
+		<artifactId>owls-api</artifactId>
+		<version>${currentVersion}</version>
+	</dependency>
+</dependencies>
++---------------------------------------------------------------------------+
+
+  [[3]] Optionally, you can exclude the WSDL and/or UPnP grounding third-party
+        dependencies if you know in advance that you are not going to use WSDL
+        and/or UPnP groundings at runtime. For instance, to disable the UPnP
+        grounding you would add the following exclusion to the dependency
+        section.
+
++---------------------------------------------------------------------------+
+<dependencies>
+
+	<!-- ... -->
+
+	<dependency>
+		<groupId>ch.unibas.on</groupId>
+		<artifactId>owls-api</artifactId>
+		<version>${currentVersion}</version>
+		<exclusions>
+			<exclusion>
+				<groupId>com.fujitsu.fla</groupId>
+				<artifactId>upnp</artifactId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+</dependencies>
++---------------------------------------------------------------------------+
+
+       If you are not going to use the WSDL grounding you can exclude all Apache
+       AXIS related dependencies, see the dependencies section in the project
+       <<<pom.xml>>>.
