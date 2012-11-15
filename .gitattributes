@@ -1,5 +1,34 @@
 * text=auto !eol
 pom/pom.xml -text
+sieg.asor/.classpath -text
+sieg.asor/.project -text
+sieg.asor/ASL2.0.txt -text
+sieg.asor/ASOR_Scripts/1.StartBlinkingLamps.ttl -text
+sieg.asor/ASOR_Scripts/GetLamps/GetLamps.ttl -text
+sieg.asor/ASOR_Scripts/TurnOffLamp/TurnOffLamp.ttl -text
+sieg.asor/ASOR_Scripts/TurnOffLamp/TurnOffLampsInLoop.ttl -text
+sieg.asor/ASOR_Scripts/TurnOnLamp/TurnOnLamp.ttl -text
+sieg.asor/ASOR_Scripts/TurnOnLamp/TurnOnLampsInLoop.ttl -text
+sieg.asor/ASOR_Vocabulary/AsorCallService.ttl -text
+sieg.asor/MITX.txt -text
+sieg.asor/launches/BlinkingUniversAAL-1.2.1.launch -text
+sieg.asor/pom.xml -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/ASOREngineImpl.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/ASORServiceMngr.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASOREngineException.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASORModule.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/Activator.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/IASOREngine.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/parsers/JenaModelParser.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/parsers/ProcessOutputParser.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceCaller.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceResponseWrap.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/RequestsMngr.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/ASORCallService.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/TurtleRepresentationsBridge.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/FileReader.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestParseString.java -text
+sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestTurtleRepresentationBridge.java -text
 sieg.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
 sieg.simple.profile.models/MITX.txt -text svneol=unset#text/plain
 sieg.simple.profile.models/NOTICE.txt -text svneol=unset#text/plain

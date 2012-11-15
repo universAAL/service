@@ -1,0 +1,87 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix list: <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix expr: <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix service: <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix profile: <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix process: <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix process11: <http://www.daml.org/services/owl-s/1.1/Process.owl#> .
+@prefix ns: <http://ontology.igd.fhg.de/LightingServer.owl#> .
+@prefix ns1: <http://ontology.universaal.org/Lighting.owl#> .
+@prefix psn: <http://ontology.universAAL.org/Service.owl#> .
+@prefix pvn: <http://ontology.universAAL.org/uAAL.owl#> .
+@prefix asor: <http://ontology.universAAL.org/ASOR.owl#> .
+@prefix : <http://ontology.universAAL.org/TurnOnLamp.ttl#> .
+
+
+<> a owl:Ontology ;
+	owl:imports <http://www.daml.org/services/owl-s/1.2/Profile.owl> ;
+	owl:imports <http://www.daml.org/services/owl-s/1.1/Process.owl> ;
+	owl:imports <d:/universAAL/workspaces/ServiceOrchestrator/ASOR_Vocabulary/AsorCallService.ttl> ;
+	owl:versionInfo "Turn On Lamp" .
+	
+# Service description
+:TurnOnLampService a service:Service ;
+	service:presents :TurnOnLampProfile ;
+	service:describedBy :TurnOnLampProcess .
+
+# Profile description
+:TurnOnLampProfile a profile:Profile ;
+	service:presentedBy :TurnOnLampService ;
+	profile:serviceName "turn on Lamp"@en ;
+	profile:textDescription "This service is used as Ontology for turn on lamp"@en .
+
+# Process description
+:TurnOnLampProcess a process:CompositeProcess ;
+	rdfs:label "..." ;
+	rdfs:comment """...""" ;
+	process:invocable "true"^^xsd:boolean ;
+	service:describes :TurnOnLampService ;
+	process:hasInput :LampID .
+
+:LampID a 	process:Input ,
+			ns1:LightSource ,
+			<http://ontology.universAAL.org/Device.owl#Device> ,
+			pvn:PhysicalThing .
+		
+:TurnOnLampProcess process:composedOf [ 
+	a process:Sequence ;
+		process:components [
+			a process:ControlConstructList ;
+				list:first :PerformTurnOnCallService ;
+				list:rest list:nil] 
+	] .
+	
+:PerformTurnOnCallService a asor:CallService ;
+	asor:serviceRequest :TurnOnLampServiceRequest .
+
+:TurnOnLampServiceRequest a pvn:ServiceRequest ;
+  pvn:requiredResult [
+    a process11:Result ;
+    process11:hasEffect (
+      [
+        psn:affectedProperty [
+          a psn:PropertyPath ;
+          psn:thePath (
+            ns1:controls
+            ns1:srcBrightness
+          )
+        ] ;
+        a psn:ChangeEffect ;
+        psn:propertyValue 100
+      ]
+    )
+  ] ;
+  pvn:requestedService [
+    a ns1:Lighting ;
+    pvn:instanceLevelRestrictions (
+      [
+        owl:hasValue :LampID ;
+        a owl:Restriction ;
+        owl:onProperty ns1:controls
+      ]
+    ) ;
+    pvn:numberOfValueRestrictions 1
+  ] .
