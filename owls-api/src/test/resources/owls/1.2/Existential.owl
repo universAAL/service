@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE uridef[
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY swrl "http://www.w3.org/2003/11/swrl">
+  <!ENTITY expr "http://www.daml.org/services/owl-s/1.2/generic/Expression.owl">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.2/Profile.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.2/Process.owl">
+  <!ENTITY list "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl">
+  <!ENTITY this "http://on.cs.unibas.ch/owl-s/1.2/Existential.owl">
+]>
+
+<rdf:RDF
+  xmlns="&this;#"
+  xmlns:rdf="&rdf;#"
+  xmlns:rdfs="&rdfs;#"
+  xmlns:owl="&owl;#"
+  xmlns:xsd="&xsd;#"
+  xmlns:swrl="&swrl;#"
+  xmlns:expr="&expr;#"
+  xmlns:service="&service;#"
+  xmlns:profile="&profile;#"
+  xmlns:process="&process;#"
+  xmlns:list="&list;#"
+  xml:base="&this;">
+
+<owl:Ontology rdf:about="">
+	<owl:imports rdf:resource="&service;"/>
+	<owl:imports rdf:resource="&process;"/>
+	<owl:imports rdf:resource="&profile;"/>
+	<owl:versionInfo>$Id: Existential.owl 2479 2010-06-10 13:18:35Z thorsten $</owl:versionInfo>
+</owl:Ontology>
+
+<!-- Our simple world: consisting of some fictitious axioms and assertions. -->
+<owl:Class rdf:ID="C1" />
+<owl:Class rdf:ID="C2" />
+<owl:ObjectProperty rdf:ID="op1" />
+<owl:ObjectProperty rdf:ID="op1sub">
+	<rdfs:domain rdf:resource="#C1" />
+	<rdfs:range rdf:resource="#C2" />
+	<rdfs:subPropertyOf rdf:resource="#op1" />
+</owl:ObjectProperty>
+
+<!-- Execution using #C1Ind1 bound to #subject Input satisfies the
+     precondition. The execution would output #C2Ind1 then.
+     Note that a reasoner is required to infer that #op1sub is a
+     sub property of #op1. -->
+<C1 rdf:ID="C1Ind1">
+	<op1sub rdf:resource="#C2Ind1" />
+</C1>
+<C2 rdf:ID="C2Ind1" />
+
+<!-- Execution using #C1Ind2 bound to #subject Input does not satisfy the
+     precondition as there exists no triple (#C1Ind2 #op1 *) in the KB. -->
+<C1 rdf:ID="C1Ind2" />
+
+<!-- Execution using #C1Ind3 bound to #subject Input satisfies the precondition,
+     but a MultipleSatisfiedPreconditionException would be thrown (if activated)
+     as there is more than one value that could be bound to #existsVar, that is
+     (#C1Ind3 #op1 #C2Ind2) and (#C1Ind3 #op1 #C2Ind3). -->
+<C1 rdf:ID="C1Ind3">
+	<op1sub rdf:resource="#C2Ind2" />
+	<op1sub rdf:resource="#C2Ind3" />
+</C1>
+<C2 rdf:ID="C2Ind2" />
+<C2 rdf:ID="C2Ind3" />
+
+
+<!-- Service description -->
+<service:Service rdf:ID="ExistentialService">
+	<service:presents rdf:resource="#ExistentialProfile"/>
+	<service:describedBy rdf:resource="#ExistentialProcess"/>
+</service:Service>
+
+<!-- Profile description -->
+<profile:Profile rdf:ID="ExistentialProfile">
+	<service:presentedBy rdf:resource="#ExistentialService"/>
+	<profile:serviceName>Identity Function</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+		Didactic test service realizing binding of an existential variable if a SWRL
+		precondition is satisfied. The output will simply be the value that has been
+		bound to the existential. Hence, if the precondition is satisfied (i.e. a
+		value for the existential exists in the backing KB) then the process will
+		execute and return this value. Otherwise, execution would throw a
+		UnsatisfiedPreconditionException.
+	</profile:textDescription>
+	<profile:hasInput rdf:resource="#subject"/>
+	<profile:hasOutput rdf:resource="#object"/>
+</profile:Profile>
+
+<!-- Composite Process description -->
+<process:CompositeProcess rdf:ID="ExistentialProcess">
+	<service:describes rdf:resource="#ExistentialService"/>
+
+	<process:hasInput>
+		<process:Input rdf:ID="subject">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&this;#C1</process:parameterType>
+			<rdfs:label>subject</rdfs:label>
+		</process:Input>
+	</process:hasInput>
+
+	<process:hasOutput>
+		<process:Output rdf:ID="object">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&this;#C2</process:parameterType>
+			<rdfs:label>object</rdfs:label>
+		</process:Output>
+	</process:hasOutput>
+
+	<process:hasExistential>
+		<process:Existential rdf:ID="existsVar">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&owl;#C2</process:parameterType>
+		</process:Existential>
+	</process:hasExistential>
+
+	<process:hasPrecondition>
+		<expr:SWRL-Condition>
+			<expr:expressionObject>
+	          <swrl:AtomList>
+	            <rdf:first>
+	            	<swrl:IndividualPropertyAtom>
+							<swrl:argument1>
+								<process:Input rdf:about="#subject" />
+							</swrl:argument1>
+							<swrl:propertyPredicate rdf:resource="#op1" />
+							<swrl:argument2>
+								<process:Existential rdf:about="#existsVar" />
+							</swrl:argument2>
+						</swrl:IndividualPropertyAtom>
+	            </rdf:first>
+	            <rdf:rest rdf:resource="&rdf;#nil" />
+	          </swrl:AtomList>
+			</expr:expressionObject>
+		</expr:SWRL-Condition>
+	</process:hasPrecondition>
+
+	<process:hasResult>
+		<process:Result>
+			<process:withOutput>
+				<process:OutputBinding>
+					<process:toVar rdf:resource="#object" />
+					<process:valueSource>
+						<process:ValueOf>
+							<process:fromProcess rdf:resource="&process;#ThisPerform" />
+							<process:theVar rdf:resource="#existsVar" />
+						</process:ValueOf>
+					</process:valueSource>
+				</process:OutputBinding>
+			</process:withOutput>
+		</process:Result>
+	</process:hasResult>
+
+	<process:composedOf>
+		<process:Sequence>
+			<process:components>
+				<process:ControlConstructList rdf:about="&list;#nil" />
+			</process:components>
+		</process:Sequence>
+	</process:composedOf>
+</process:CompositeProcess>
+
+</rdf:RDF>

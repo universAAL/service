@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE uridef[
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.2/Profile.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.2/Process.owl">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.2/Grounding.owl">
+  <!ENTITY expr "http://www.daml.org/services/owl-s/1.2/generic/Expression.owl">
+  <!ENTITY swrl "http://www.w3.org/2003/11/swrl">
+  <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb">
+  <!ENTITY list "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl">
+  <!ENTITY moregr "http://on.cs.unibas.ch/owl-s/1.2/MoreGroundings.owl">
+  <!ENTITY this "http://on.cs.unibas.ch/owl-s/1.2/RepeatWhile.owl">
+]>
+
+<rdf:RDF
+  xmlns="&this;#"
+  xmlns:rdf="&rdf;#"
+  xmlns:rdfs="&rdfs;#"
+  xmlns:owl="&owl;#"
+  xmlns:xsd="&xsd;#"
+  xmlns:service="&service;#"
+  xmlns:profile="&profile;#"
+  xmlns:process="&process;#"
+  xmlns:grounding="&grounding;#"
+  xmlns:expr="&expr;#"
+  xmlns:swrl="&swrl;#"
+  xmlns:list="&list;#"
+  xmlns:moregr="&moregr;#"
+  xml:base="&this;">
+
+<owl:Ontology rdf:about="">
+	<owl:imports rdf:resource="&service;"/>
+	<owl:imports rdf:resource="&process;"/>
+	<owl:imports rdf:resource="&profile;"/>
+	<owl:versionInfo>$Id: RepeatWhile.owl 2398 2010-01-27 15:05:12Z thorsten $</owl:versionInfo>
+</owl:Ontology>
+
+<!-- Service description -->
+<service:Service rdf:ID="RepeatWhileService">
+	<service:presents rdf:resource="#RepeatWhileProfile"/>
+	<service:describedBy rdf:resource="#RepeatWhileProcess"/>
+</service:Service>
+
+<!-- Profile description -->
+<profile:Profile rdf:ID="RepeatWhileProfile">
+	<service:presentedBy rdf:resource="#RepeatWhileService"/>
+	<profile:serviceName xml:lang="en">
+		Simple RepeatWhile test Service to see how fast we can iterate and evaluate
+		conditions. It does basically nothing else than to increment a local
+		variable (starting from 0) unless it reaches a target value.
+	</profile:serviceName>
+	<profile:hasInput rdf:resource="#targetValue" />
+	<profile:hasOutput rdf:resource="#actualValue" />
+</profile:Profile>
+
+<!-- Composite Process description -->
+<process:CompositeProcess rdf:ID="RepeatWhileProcess">
+	<service:describes rdf:resource="#RepeatWhileService"/>
+
+	<process:hasInput>
+		<process:Input rdf:ID="targetValue">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#int</process:parameterType>
+			<rdfs:label>target value</rdfs:label>
+		</process:Input>
+	</process:hasInput>
+
+	<process:hasOutput>
+		<process:Output rdf:ID="actualValue">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#int</process:parameterType>
+			<rdfs:label>actual value</rdfs:label>
+		</process:Output>
+	</process:hasOutput>
+
+	<process:hasLocal>
+		<process:Loc rdf:ID="currentValue">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#int</process:parameterType>
+			<process:initialValue rdf:datatype="&xsd;#int">0</process:initialValue>
+		</process:Loc>
+	</process:hasLocal>
+
+	<process:hasResult>
+		<process:Result>
+			<process:withOutput>
+				<process:OutputBinding>
+					<process:toVar rdf:resource="#actualValue" />
+					<process:valueSource>
+						<process:ValueOf>
+							<process:fromProcess rdf:resource="&process;#ThisPerform" />
+							<process:theVar rdf:resource="#currentValue" />
+						</process:ValueOf>
+					</process:valueSource>
+				</process:OutputBinding>
+			</process:withOutput>
+		</process:Result>
+	</process:hasResult>
+
+	<process:composedOf rdf:resource="#RepeatWhileLoop" />
+
+</process:CompositeProcess>
+
+<process:Repeat-While rdf:ID="RepeatWhileLoop">
+	<process:whileCondition>
+		<expr:SWRL-Condition>
+			<expr:expressionObject>
+				<swrl:AtomList>
+					<rdf:first>
+						<swrl:BuiltinAtom>
+							<swrl:builtin rdf:resource="&swrlb;#lessThan" />
+							<swrl:arguments>
+								<!-- Repeat as long as #currentValue is less than #targetValue. -->
+								<rdf:List>
+									<rdf:first rdf:resource="#currentValue" />
+									<rdf:rest>
+										<rdf:List>
+											<rdf:first rdf:resource="#targetValue" />
+											<rdf:rest rdf:resource="&rdf;#nil" />
+										</rdf:List>
+									</rdf:rest>
+								</rdf:List>
+							</swrl:arguments>
+						</swrl:BuiltinAtom>
+					</rdf:first>
+					<rdf:rest rdf:resource="&rdf;#nil" />
+				</swrl:AtomList>
+			</expr:expressionObject>
+		</expr:SWRL-Condition>
+	</process:whileCondition>
+	<process:whileProcess rdf:resource="#RepeatWhileSequence" />
+</process:Repeat-While>
+
+<!-- In order to increment the value we must execute the increment process
+     first and then assign its output (incremented value) to the local variable
+     #currentValue. -->
+<process:Sequence rdf:ID="RepeatWhileSequence">
+	<process:components>
+		<process:ControlConstructList>
+			<list:first rdf:resource="#PerformIncrement" />
+			<list:rest>
+				<process:ControlConstructList>
+					<list:first rdf:resource="#SetCurrentValue" />
+					<list:rest rdf:resource="&list;#nil" />
+				</process:ControlConstructList>
+			</list:rest>
+		</process:ControlConstructList>
+	</process:components>
+</process:Sequence>
+
+<process:Set rdf:ID="SetCurrentValue">
+	<process:setBinding>
+		<process:LocBinding>
+			<process:toVar rdf:resource="#currentValue" />
+			<process:valueSource>
+				<process:ValueOf>
+					<process:fromProcess rdf:resource="#PerformIncrement" />
+					<process:theVar rdf:resource="#after"/>
+				</process:ValueOf>
+			</process:valueSource>
+		</process:LocBinding>
+	</process:setBinding>
+</process:Set>
+
+<process:Perform rdf:ID="PerformIncrement">
+	<process:hasDataFrom>
+		<process:InputBinding>
+			<process:toVar rdf:resource="#before" />
+			<process:valueSource>
+				<process:ValueOf>
+					<process:fromProcess rdf:resource="&process;#ThisPerform" />
+					<process:theVar rdf:resource="#currentValue" />
+				</process:ValueOf>
+			</process:valueSource>
+		</process:InputBinding>
+	</process:hasDataFrom>
+	<process:process>
+		<process:AtomicProcess rdf:ID="IncrementProcess">
+			<service:describes>
+				<service:Service rdf:ID="IncrementService">
+					<service:presents>
+						<profile:Profile rdf:ID="IncrementProfile">
+							<service:presentedBy rdf:resource="#IncrementService"/>
+							<profile:serviceName xml:lang="en">Integer Increment Service</profile:serviceName>
+							<profile:hasInput rdf:resource="#before"/>
+							<profile:hasOutput rdf:resource="#after"/>
+						</profile:Profile>
+					</service:presents>
+					<service:describedBy rdf:resource="#IncrementProcess"/>
+					<service:supports rdf:resource="#IncrementGrounding"/>
+				</service:Service>
+			</service:describes>
+			<process:hasInput>
+				<process:Input rdf:ID="before">
+					<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#int</process:parameterType>
+					<rdfs:label>input number</rdfs:label>
+				</process:Input>
+			</process:hasInput>
+			<process:hasOutput>
+				<process:Output rdf:ID="after">
+					<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#int</process:parameterType>
+					<rdfs:label>incremented number</rdfs:label>
+				</process:Output>
+			</process:hasOutput>
+		</process:AtomicProcess>
+	</process:process>
+</process:Perform>
+
+<moregr:JavaGrounding rdf:ID="IncrementGrounding">
+	<service:supportedBy rdf:resource="#IncrementService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#IncrementProcessGrounding"/>
+</moregr:JavaGrounding>
+
+<moregr:JavaAtomicProcessGrounding rdf:ID="IncrementProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#IncrementProcess"/>
+	<moregr:javaClass>impl.owls.process.RepeatWhileTest</moregr:javaClass>
+	<moregr:javaMethod>inc</moregr:javaMethod>
+	<moregr:hasJavaParameter>
+		<moregr:JavaParameter>
+			<moregr:paramIndex rdf:datatype="&xsd;#nonNegativeInteger">0</moregr:paramIndex>
+			<moregr:javaType>int</moregr:javaType>
+			<moregr:owlsParameter rdf:resource="#before" />
+		</moregr:JavaParameter>
+	</moregr:hasJavaParameter>
+	<moregr:javaOutput>
+		<moregr:JavaVariable>
+			<moregr:javaType>int</moregr:javaType>
+			<moregr:owlsParameter rdf:resource="#after" />
+		</moregr:JavaVariable>
+	</moregr:javaOutput>
+</moregr:JavaAtomicProcessGrounding>
+
+</rdf:RDF>

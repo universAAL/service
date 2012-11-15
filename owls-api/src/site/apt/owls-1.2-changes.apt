@@ -1,0 +1,71 @@
+ ----
+ Changes to OWL-S
+ -----
+ Thorsten Moeller
+ -----
+ $Id: owls-1.2-changes.apt 2275 2009-08-20 11:30:24Z thorsten $
+ -----
+
+Changes that have been made to OWL-S version 1.2 after its release
+
+* Process Ontology
+
+  * The object property <<<theVar>>> (whose domain is <<<ValueOf>>>) has been
+    reintroduced (it was existing in OWL-S 1.1). It is now a super property of
+    the property <<<theParam>>>. The range of <<<theVar>>> is the union of
+    <<<Parameter>>> and <<<Loc>>>, whereas the range of <<<theParam>>> is just
+    <<<Parameter>>>. This allows to pull some data/individual within a <<<ValueOf>>>
+    not only from an <<<Input>>> or <<<Output>>> (which are the only two subclasses
+    of <<<Parameter>>>) but in addition from <<<Loc>>> variables. This is
+    required for data flow specifications within loop control constructs such
+    as <<<Repeat-Until>>>, <<<Repeat-While>>>, and <<<For-Each>>>.
+
+  * A new control construct <<<For-Each>>> has been added. It can be used to
+    iterate through a <<<objList:List>>> or <<<rdf:List>>>, given by a parameter
+    or local variable. The body of a For-Each loop can be any <<<ControlConstruct>>>.
+    Additionally, a local loop variable holds the current list element for each
+    iteration. The (repeatedly executed) loop body control construct is supposed
+    to refer the loop variable.
+
+    Actually, For-Each was existing in the OWL-S API since a long time but has
+    not been added to OWL-S yet.
+
+  * A new object property <<<valueObject>>> was added. It can be used whenever
+    some Binding should refer to some (constant) OWL individual, which is to be
+    used as the value for the parameter. Since it is declared as an object
+    property it is not similar to the property <<<valueData>>>. The latter
+    represents a constant value by means of an (XML) literal (independent of the
+    syntax and semantics if this literal), whereas this property refers to some
+    OWL individual.
+
+* Grounding Ontology
+
+  * The cardinality restriction regarding the property <<<owlsParameter>>> in
+    the concept definition <<<XSLTInputMessageMap>>> has been changed to a
+    minCardinality of 1 (was cardinality=0 before). This solves the problem of
+    not knowing from which particular Input parameter(s) to derive a WSDL message
+    part (via a XSLT transformation).
+
+* ProfileAdditionalParameters Ontology
+
+  * Minor fix: All referenced ontologies added to imports in order to stay in
+    OWL DL.
+
+  * Minor fix: Several references of properties that have been moved from Profile
+    ontology to ServiceParameter and ServiceCategory ontology respectively did
+    not yet point to the new location.
+
+* ServiceParameter Ontology
+
+  * Minor fix: The object property <<<serviceParameter>>> was declared twice,
+    one of them was removed.
+
+  * Minor fixes: Service and Process ontologies removed from imports because
+    they are actually not referred. Profile ontology was added to import since
+    it is referred.
+
+* ServiceCategory Ontology
+
+  * Minor fixes: Service and Process ontologies removed from imports because
+    they are actually not referred. Profile ontology was added to import since
+    it is referred.

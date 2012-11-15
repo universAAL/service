@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE uridef[
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.2/Profile.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.2/Process.owl">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.2/Grounding.owl">
+  <!ENTITY expr "http://www.daml.org/services/owl-s/1.2/generic/Expression.owl">
+  <!ENTITY swrl "http://www.w3.org/2003/11/swrl">
+  <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb">
+  <!ENTITY list "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl">
+  <!ENTITY moregr "http://on.cs.unibas.ch/owl-s/1.2/MoreGroundings.owl">
+  <!ENTITY this "http://on.cs.unibas.ch/owl-s/1.2/RepeatUntil.owl">
+]>
+
+<rdf:RDF
+  xmlns="&this;#"
+  xmlns:rdf="&rdf;#"
+  xmlns:rdfs="&rdfs;#"
+  xmlns:owl="&owl;#"
+  xmlns:xsd="&xsd;#"
+  xmlns:service="&service;#"
+  xmlns:profile="&profile;#"
+  xmlns:process="&process;#"
+  xmlns:grounding="&grounding;#"
+  xmlns:expr="&expr;#"
+  xmlns:swrl="&swrl;#"
+  xmlns:list="&list;#"
+  xmlns:moregr="&moregr;#"
+  xml:base="&this;">
+
+<owl:Ontology rdf:about="">
+	<owl:imports rdf:resource="&service;"/>
+	<owl:imports rdf:resource="&process;"/>
+	<owl:imports rdf:resource="&profile;"/>
+	<owl:versionInfo>$Id: RepeatUntil.owl 2532 2010-07-31 09:28:52Z thorsten $</owl:versionInfo>
+</owl:Ontology>
+
+<!-- Our simple world: consisting of some axioms and assertions about persons and physical objects. -->
+<owl:Class rdf:ID="PhysicalObject"><!-- Everything that has one and only one weight is a physical object. -->
+	<owl:equivalentClass>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="#weight" />
+			<owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
+		</owl:Restriction>
+	</owl:equivalentClass>
+</owl:Class>
+<owl:DatatypeProperty rdf:ID="weight">
+	<rdfs:range rdf:resource="&xsd;#nonNegativeInteger" />
+</owl:DatatypeProperty>
+
+<owl:Class rdf:ID="Person">
+	<rdfs:subClassOf rdf:resource="#PhysicalObject" />
+</owl:Class>
+<owl:Class rdf:ID="Woman">
+	<rdfs:subClassOf rdf:resource="#Person" />
+</owl:Class>
+<owl:Class rdf:ID="Man">
+	<rdfs:subClassOf rdf:resource="#Person" />
+	<owl:disjointWith rdf:resource="#Woman" />
+</owl:Class>
+
+<owl:Class rdf:ID="InsuredPerson"><!-- A person that has at least one insurance number is a insured person. -->
+	<owl:equivalentClass>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="#insuranceNo" />
+			<owl:minCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:minCardinality>
+		</owl:Restriction>
+	</owl:equivalentClass>
+	<rdfs:subClassOf rdf:resource="#Person" />
+</owl:Class>
+<owl:DatatypeProperty rdf:ID="insuranceNo">
+	<rdfs:domain rdf:resource="#Person" />
+	<rdfs:range rdf:resource="&xsd;#string" />
+</owl:DatatypeProperty>
+
+<Man rdf:ID="SumotoriXYZ">
+	<weight rdf:datatype="&xsd;#nonNegativeInteger">100</weight>
+</Man>
+
+<Woman rdf:ID="ModelXYZ">
+	<weight rdf:datatype="&xsd;#nonNegativeInteger">70</weight>
+	<insuranceNo rdf:datatype="&xsd;#string">80727164</insuranceNo>
+</Woman>
+
+
+
+<!-- Service description -->
+<service:Service rdf:ID="RepeatUntilService">
+	<service:presents rdf:resource="#RepeatUntilProfile"/>
+	<service:describedBy rdf:resource="#RepeatUntilProcess"/>
+</service:Service>
+
+<!-- Profile description -->
+<profile:Profile rdf:ID="RepeatUntilProfile">
+	<service:presentedBy rdf:resource="#RepeatUntilService"/>
+	<profile:serviceName xml:lang="en">
+		More advanced RepeatUntil test Service using some SWRL atom to express preconditions
+		and the loop condition. Also uses SPARQL expression in order to initially assign
+		local variable, which is used in the loop condition.
+
+		This is a diet service - hahaha. It accepts only insured persons that are also
+		physical objects, i.e., that have a weight :-)
+	</profile:serviceName>
+	<profile:hasInput rdf:resource="#person" />
+	<profile:hasOutput rdf:resource="#personWeight" />
+</profile:Profile>
+
+<!-- Composite Process description -->
+<process:CompositeProcess rdf:ID="RepeatUntilProcess">
+	<service:describes rdf:resource="#RepeatUntilService"/>
+
+	<process:hasInput>
+		<process:Input rdf:ID="person">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&this;#Person</process:parameterType>
+			<rdfs:label>person</rdfs:label>
+		</process:Input>
+	</process:hasInput>
+
+	<process:hasInput>
+		<process:Input rdf:ID="goalWeight">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#nonNegativeInteger</process:parameterType>
+			<rdfs:label>goal weight</rdfs:label>
+		</process:Input>
+	</process:hasInput>
+
+	<process:hasOutput>
+		<process:Output rdf:ID="personWeight">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#nonNegativeInteger</process:parameterType>
+			<rdfs:label>person weight</rdfs:label>
+		</process:Output>
+	</process:hasOutput>
+
+	<process:hasLocal>
+		<process:Loc rdf:ID="currentWeight">
+			<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#nonNegativeInteger</process:parameterType>
+		</process:Loc>
+	</process:hasLocal>
+
+	<!-- Check that #person input parameter is
+	     (i)  a insured person and
+	     (ii) is a physical object,            -->
+	<process:hasPrecondition>
+		<expr:SWRL-Condition>
+			<expr:expressionObject>
+	          <swrl:AtomList>
+	            <rdf:first>
+	            	<swrl:ClassAtom>
+							<swrl:argument1>
+								<process:Input rdf:about="#person" />
+							</swrl:argument1>
+							<swrl:classPredicate rdf:resource="#InsuredPerson" />
+						</swrl:ClassAtom>
+	            </rdf:first>
+	            <rdf:rest>
+	            	<swrl:AtomList>
+			            <rdf:first>
+			            	<swrl:ClassAtom>
+									<swrl:argument1>
+										<process:Input rdf:about="#person" />
+									</swrl:argument1>
+									<swrl:classPredicate rdf:resource="#PhysicalObject" />
+								</swrl:ClassAtom>
+			            </rdf:first>
+			            <rdf:rest rdf:resource="&rdf;#nil"/>
+			          </swrl:AtomList>
+	            </rdf:rest>
+	          </swrl:AtomList>
+			</expr:expressionObject>
+		</expr:SWRL-Condition>
+	</process:hasPrecondition>
+
+	<process:hasResult>
+		<process:Result>
+			<process:withOutput>
+				<process:OutputBinding>
+					<process:toVar rdf:resource="#personWeight" />
+					<process:valueSource>
+						<process:ValueOf>
+							<process:fromProcess rdf:resource="&process;#ThisPerform" />
+							<process:theVar rdf:resource="#currentWeight" />
+						</process:ValueOf>
+					</process:valueSource>
+				</process:OutputBinding>
+			</process:withOutput>
+		</process:Result>
+	</process:hasResult>
+
+	<process:composedOf>
+		<process:Sequence>
+			<process:components>
+				<process:ControlConstructList>
+					<list:first>
+						<process:Set>
+							<!-- assign value of input #person.weight to local variable #currentWeight -->
+							<process:setBinding>
+								<process:LocBinding>
+									<process:toVar rdf:resource="#currentWeight"/>
+									<process:valueFunction rdf:parseType="Literal" >
+										<expr:SPARQL-Expression>
+											<expr:expressionData>
+												PREFIX this: &lt;&this;#&gt;
+												SELECT ?weight WHERE { ?person this:weight ?weight . }
+											</expr:expressionData>
+											<expr:variableBinding>
+												<expr:VariableBinding>
+													<expr:theVariable rdf:datatype="&xsd;#string">?person</expr:theVariable>
+													<expr:theObject rdf:resource="#person" />
+												</expr:VariableBinding>
+											</expr:variableBinding>
+											<expr:variableBinding>
+												<expr:VariableBinding>
+													<expr:theVariable rdf:datatype="&xsd;#string">?weight</expr:theVariable>
+													<expr:theObject rdf:resource="#currentWeight" />
+												</expr:VariableBinding>
+											</expr:variableBinding>
+										</expr:SPARQL-Expression>
+									</process:valueFunction>
+								</process:LocBinding>
+							</process:setBinding>
+						</process:Set>
+					</list:first>
+					<list:rest>
+						<process:ControlConstructList>
+							<list:first rdf:resource="#RepeatUntilCC" />
+							<list:rest rdf:resource="&list;#nil" />
+						</process:ControlConstructList>
+					</list:rest>
+				</process:ControlConstructList>
+			</process:components>
+		</process:Sequence>
+	</process:composedOf>
+</process:CompositeProcess>
+
+<process:Repeat-Until rdf:ID="RepeatUntilCC">
+	<process:untilCondition>
+		<expr:SWRL-Condition>
+			<expr:expressionObject>
+				<swrl:AtomList>
+					<rdf:first>
+						<swrl:BuiltinAtom>
+							<swrl:builtin rdf:resource="&swrlb;#greaterThan" />
+							<swrl:arguments>
+								<!-- Repeat diet unless current weight is greater than goal weight. -->
+								<rdf:List>
+									<rdf:first rdf:resource="#currentWeight" />
+									<rdf:rest>
+										<rdf:List>
+											<rdf:first rdf:resource="#goalWeight" />
+											<rdf:rest rdf:resource="&rdf;#nil" />
+										</rdf:List>
+									</rdf:rest>
+								</rdf:List>
+							</swrl:arguments>
+						</swrl:BuiltinAtom>
+					</rdf:first>
+					<rdf:rest rdf:resource="&rdf;#nil" />
+				</swrl:AtomList>
+			</expr:expressionObject>
+		</expr:SWRL-Condition>
+	</process:untilCondition>
+	<process:untilProcess rdf:resource="#RepeatUntilSequence" />
+</process:Repeat-Until>
+
+<process:Sequence rdf:ID="RepeatUntilSequence">
+	<process:components>
+		<process:ControlConstructList>
+			<list:first rdf:resource="#PerformDiet" />
+			<list:rest>
+				<process:ControlConstructList>
+					<list:first rdf:resource="#SetCurrentWeight" />
+					<list:rest rdf:resource="&list;#nil" />
+				</process:ControlConstructList>
+			</list:rest>
+		</process:ControlConstructList>
+	</process:components>
+</process:Sequence>
+
+<process:Set rdf:ID="SetCurrentWeight">
+	<process:setBinding>
+		<process:LocBinding>
+			<process:toVar rdf:resource="#currentWeight" />
+			<process:valueSource>
+				<process:ValueOf>
+					<process:fromProcess rdf:resource="#PerformDiet" />
+					<process:theVar rdf:resource="#newWeight"/>
+				</process:ValueOf>
+			</process:valueSource>
+		</process:LocBinding>
+	</process:setBinding>
+</process:Set>
+
+<process:Perform rdf:ID="PerformDiet">
+	<process:hasDataFrom>
+		<process:InputBinding>
+			<process:toVar rdf:resource="#dietPerson" />
+			<process:valueSource>
+				<process:ValueOf>
+					<process:fromProcess rdf:resource="&process;#ThisPerform" />
+					<process:theVar rdf:resource="#person" />
+				</process:ValueOf>
+			</process:valueSource>
+		</process:InputBinding>
+	</process:hasDataFrom>
+	<process:process>
+		<process:AtomicProcess rdf:ID="MakeDietProcess">
+			<service:describes>
+				<service:Service rdf:ID="MakeDietService">
+					<service:presents>
+						<profile:Profile rdf:ID="MakeDietProfile">
+							<service:presentedBy rdf:resource="#MakeDietService"/>
+							<profile:serviceName xml:lang="en">Make Diet Service</profile:serviceName>
+							<profile:hasInput rdf:resource="#dietPerson"/>
+						</profile:Profile>
+					</service:presents>
+					<service:describedBy rdf:resource="#MakeDietProcess"/>
+					<service:supports rdf:resource="#MakeDietGrounding"/>
+				</service:Service>
+			</service:describes>
+			<process:hasInput>
+				<process:Input rdf:ID="dietPerson">
+					<process:parameterType rdf:datatype="&xsd;#anyURI">&this;#Person</process:parameterType>
+					<rdfs:label>diet person</rdfs:label>
+				</process:Input>
+			</process:hasInput>
+			<process:hasOutput>
+				<process:Output rdf:ID="newWeight">
+					<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#int</process:parameterType>
+					<rdfs:label>new weight</rdfs:label>
+				</process:Output>
+			</process:hasOutput>
+		</process:AtomicProcess>
+	</process:process>
+</process:Perform>
+
+<moregr:JavaGrounding rdf:ID="MakeDietGrounding">
+	<service:supportedBy rdf:resource="#MakeDietService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#MakeDietProcessGrounding"/>
+</moregr:JavaGrounding>
+
+<moregr:JavaAtomicProcessGrounding rdf:ID="MakeDietProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#MakeDietProcess"/>
+	<moregr:javaClass>impl.owls.process.RepeatUntilTest</moregr:javaClass>
+	<moregr:javaMethod>makeDiet</moregr:javaMethod>
+	<moregr:hasJavaParameter>
+		<moregr:JavaParameter>
+			<moregr:paramIndex rdf:datatype="&xsd;#nonNegativeInteger">0</moregr:paramIndex>
+			<moregr:javaType>org.mindswap.owl.OWLIndividual</moregr:javaType>
+			<moregr:owlsParameter rdf:resource="#dietPerson" />
+		</moregr:JavaParameter>
+	</moregr:hasJavaParameter>
+	<moregr:javaOutput>
+		<moregr:JavaVariable>
+			<moregr:javaType>int</moregr:javaType>
+			<moregr:owlsParameter rdf:resource="#newWeight" />
+		</moregr:JavaVariable>
+	</moregr:javaOutput>
+</moregr:JavaAtomicProcessGrounding>
+
+</rdf:RDF>

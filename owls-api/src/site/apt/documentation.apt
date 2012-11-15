@@ -1,0 +1,386 @@
+ ----
+ Documentation
+ -----
+ Thorsten Moeller
+ -----
+ $Id: documentation.apt 2712 2011-06-01 08:44:04Z thorsten $
+ -----
+
+Sections
+
+  * {{{JavaDocs}API JavaDocs}}
+
+  * {{{Examples}Service Examples}}
+
+  * {{{Reading}Reading/writing Service Descriptions}}
+
+  * {{{Validation}OWL-S Validation}}
+
+  * {{{Caching}Caching While Loading Ontologies}}
+
+  * {{{Execute}Execute Services}}
+
+  * {{{Monitoring}Execution Monitoring}}
+
+  * {{{Composite}Creating Composite Services/Processes}}
+
+  * {{{Resources}Using OWL Resources}}
+
+  * {{{WSDL}WSDL Support}}
+
+  * {{{Java}Java Groundings}}
+
+  * {{{Extending}Extending and/or Replacing Parts of the Library}}
+
+  []
+
+
+* API {JavaDocs}
+
+  The JavaDocs of the API can be built from the source distribution or accessed
+  online {{{./apidocs/index.html}here}}.
+
+* Service {Examples}
+
+  There are couple of example OWL-S files on the former mindswap Web site
+  {{{http://www.mindswap.org/2004/owl-s/services.shtml}here}}. In addition,
+  most of the services from this site have been translated to OWL-S 1.2. Those
+  files are located in {{http://on.cs.unibas.ch/owl-s/1.2/}} using the same
+  file name. They (and some more) are also part of the source distribution,
+  located in the folder <<<src/examples>>> and <<<src/test/resources>>>
+  respectively. Many of those services are grounded in WSDL Web services and
+  can be executed with the API. (Note that some of them are no longer executable
+  since the backing Web services disappeared or were turned off). The rest of
+  the services use Java groundings, which should all be executable locally.
+
+  The examples are simple service descriptions to illustrate the different
+  features in OWL-S such as how to define XSLT transformations for WSDL
+  groundings, how to define <<<CompositeProcesses>>>, data flows, preconditions,
+  effects, and so on.
+
+  There are some more exemplary OWL-S service descriptions on the
+  {{{http://www.daml.org/services/owl-s}DAML Web site}}.
+
+  Finally, the <<<examples>>> package in the source distribution file contains
+  example code that shows major functionality provided by the API.
+
+* {Reading}/writing Service Descriptions
+
+  There are two interfaces defined for reading and writing OWL files,
+  <<<OWLReader>>> and <<<OWLWriter>>>. These are simple interfaces that
+  provide the basic functionality of reading and writing OWL files. Readers
+  and Writers can be created either from a <<<OWLModel>>> or from a
+  <<<OWLKnowledgeBase>>> using the methods <<<getWriter()>>> and
+  <<<getReader()>>>. The <<<OWLReader>>> will read in an OWL file from a
+  variety of inputs and produces an <<<OWLOntology>>> object. On the other hand,
+  the <<<OWLWriter>>> class can write an <<<OWLModel>>> (<<<OWLOntology>>>
+  <<<OWLKnowledgeBase>>>) object to a number of different outputs.
+
+  Also, an <<<OWLKnowledgeBase>>> can be created using the <<<OWLFactory>>
+  class. A <<<OWLKnowledgeBase>>> has several read methods to read a ontology
+  into the KB. However, it also provides special read methods such as
+  <<<readService(URI)>>> and <<<readAllServices(URI)>>> for reading in OWL-S
+  descriptions. These methods return the <<<Service>>> instances found in the
+  read resource or a list of <<<Service>>> instances respectively.
+
+  Here is some example code to show you how to use the <<<OWLReader>>>,
+  <<<OWLWriter>>> and <<<OWLKnowledgeBase>>> classes to read in OWL files and
+  OWL-S descriptions. For more details, see the examples provided with the
+  OWL-S API.
+
++---------------------------------------------------------------------------+
+
+   // create the URI of a known service for us to read in
+   URI aURI = URI.create("http://on.cs.unibas.ch/owl-s/1.2/ZipCodeFinder.owl");
+
+   // create a knowledge base using the owl factory
+   OWLKnowledgeBase aKB = OWLFactory.createKB();
+
+   // read in the file specified by the URI into the knowledge base; by default,
+   // this will also read all ontologies imported by the target file
+   OWLOntology aOntology = kb.read(aURI);
+
+   // create an output stream to write the ontology to
+   FileOutputStream aOutputStream = new FileOutputStream("write-test.owl");
+
+   // create a writer from the ontology
+   OWLWriter aWriter = aOntology.getWriter();
+
+   // write this ontology out to the specified output stream
+   aWriter.write(aOntology, aOutputStream, aOntology.getURI());
+
+   // alternatively, if we are reading in an OWL-S description we can use
+   // readService(URI) or readAllServices(URI) to get the service or list of
+   // services specified by the URI.
+
+   // should only be used if we know that the file contains not more than one
+   // service
+   Service aService = aKB.readService(aURI);
+
+
+   // if the file has more than one service or we do actually not know how many
+   // it has then we should read the file and query for all service instances
+   OWLIndividualList<Service> services = aKB.readAllServices(aURI);
+
++---------------------------------------------------------------------------+
+
+
+* OWL-S {Validation}
+
+  A simple validator is provided with the OWL-S API. It is located in the
+  <<<org.mindswap.owls.validator>>> package. The <<<OWLSValidator>>> class
+  provides a method <<<validate()>>> which takes the URI to an ontology,
+  or a <<<OWLOntology>>> to validate. It looks for common structural
+  errors in the OWL-S description. The validator returns an
+  <<<OWLSValidatorReport>>> upon validation which contains all the information
+  about the validation, including whether or not the service(s) found are
+  valid, and any error or warning messages. This report can be written to any
+  output stream, or the <<<Map>>> of <<<OWLSValidatorMessages>>> can be
+  iterated over to get at the validation results.
+
++---------------------------------------------------------------------------+
+
+   // create a new validator
+   OWLSValidator aValidator = new OWLSValidator();
+
+   // the URI of a known service for us to validate
+   String aURI = "http://on.cs.unibas.ch/owl-s/1.2/ZipCodeFinder.owl";
+
+   // run the validator
+   OWLSValidatorReport aReport = aValidator.validate(aURI);
+
+   // print the results to the console
+   aReport.print(System.out);
+
++---------------------------------------------------------------------------+
+
+
+* {Caching} while Loading Ontologies
+
+  In general it is desirable to re-use already loaded ontologies in case of
+  repeated use during the lifetime of an application. This is supported based
+  on the mechanism provided by {{{http://openjena.org}Jena}} on top of
+  which the library is built. For details we refer to
+  {{http://openjena.org/javadoc/com/hp/hpl/jena/ontology/OntDocumentManager.html}}
+  and {{http://openjena.org/ontology/index.html#documentHandling}}.
+  In short, whenever some ontology file is read again into a in-memory model it
+  will not be loaded from the (remote) file again but a cached model is used.
+  If this behavior is not appropriate in your application it can be changed
+  according to the configuration possibilities provided by Jena.
+
+
+* {Execute} Services/Processes
+
+  Executing a service means executing the process it has. The process should
+  have a valid grounding specification in order to invoke the service
+  successfully. WSDL, UPnP, and Java groundings are supported by the API.
+  A process is executed by the <<<ProcessExecutionEngine.execute(Process, ValueMap)>>>
+  method where second parameter specifies the values for input parameters.
+  This method returns another <<<ValueMap>>> which contains the output value
+  bindings. The following code segment shows an example of executing a service:
+
++---------------------------------------------------------------------------+
+   // create an execution engine
+   ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
+
+   // create a kb
+   OWLKnowledgeBase kb = OWLFactory.createKB();
+
+   // read in the service description
+   Service aService = kb.readService("http://on.cs.unibas.ch/owl-s/1.2/Dictionary.owl");
+   // get the process for the server
+   Process aProcess = aService.getProcess();
+
+   // initialize the input values to be empty
+   ValueMap<Input, OWLValue> inputs = new ValueMap<Input, OWLValue>();
+
+   // specify an input value
+   String inValue = "hello";
+   // set the value in the map
+   inputs.setDataValue(aProcess.getInput("InputString"), inValue);
+
+   // run the process
+   ValueMap<Output, OWLValue> outputs = exec.execute(aProcess, inputs, kb);
+
+   // get the output
+   OWLDataValue out = outputs.getDataValue(aProcess.getOutput());
+
+   // display the value
+   System.err.println("Output = " + out.getValue());
+
++---------------------------------------------------------------------------+
+
+  The above is a simple example where the input is a simple XML Schema string.
+  However, some services will have complex inputs that are represented by OWL
+  classes. In this case, the value of input parameter can be set to instances
+  of <<<OWLIndividual>>> representing the complex input. See <<<RunService>>>
+  in the examples package for more examples of this kind.
+
+
+* Execution {Monitoring}
+
+  It is possible to monitor the progress of a service's execution.
+  <<<ProcessExecutionMonitor>>> defines a minimal set of functions for this
+  purpose which are called when a process begins, finishes or fails execution.
+  Use <<<ProcessExecutionEngine.addMonitor(ProcessExecutionMonitor)>>> to add a
+  monitor to the execution engine. See <<<ExecutionMonitor>>> in the examples
+  package for an example of how to use the listener.
+
+
+* Creating {Composite} Processes
+
+  It is possible to create service descriptions, profiles or processes
+  programmatically. <<<OWLModel>>> provides functions to create any of
+  these structures. <<<CreateSequence>>> and <<<CreateComplexProcess>>> in the
+  examples package show examples of how to do this. The following code snippet
+  shows the main idea:
+
++---------------------------------------------------------------------------+
+
+/**
+ *
+ * Create a new Sequence from the processes of the given services and put them in a new
+ * Service object with a automatically generated Profile. This function assumes that
+ * each service in the list has exactly one input and one output (except the first and
+ * last one) such that in the resulting Service the output of each service will be fed
+ * as input to the next one. The first service does not have to have an input and the
+ * last one does not need to have an output. The resulting service will have an input
+ * (or an output) depending on this.
+ *
+ * @param services List of Service objects
+ * @param baseURI The base URI for the generated service
+ * @return The Service which is a Sequence of the given services
+ */
+private Service createSequenceService(List theServices, URI theBaseURI) {
+    OWLOntology theOntology = OWLFactory.createOntology();
+
+    // create the new service
+    Service aService = theOntology.createService(URIUtils.createURI(theBaseURI, "TestService"));
+    // create the composite process for our service
+    CompositeProcess aProcess = theOntology.createCompositeProcess(URIUtils.createURI(theBaseURI, "TestProcess"));
+    // create the new profile and grounding
+    Profile aProfile = theOntology.createProfile(URIUtils.createURI(theBaseURI, "TestProfile"));
+    Grounding aGrounding = theOntology.createGrounding(URIUtils.createURI(theBaseURI, "TestGrounding"));
+
+    // set the profile, process and grounding for the new service
+    aService.setProfile(aProfile);
+    aService.setProcess(aProcess);
+    aService.setGrounding(aGrounding);
+
+    // now lets create the composite sequence
+    Sequence aSequence = theOntology.createSequence();
+    aProcess.setComposedOf(aSequence);
+
+    // for each service that we are composing
+    Perform[] performs = new Perform[theServices.size()];
+    for(int i = 0; i < theServices.size(); i++) {
+        // grab that service, and its process
+        Service s = (Service) theServices.get(i);
+        Process p = s.getProcess();
+
+        // create a new perform
+        performs[i] = theOntology.createPerform();
+        performs[i].setProcess(p);
+
+        // add it to the composition
+        aSequence.addComponent(performs[i]);
+
+        // and link with the previous perform
+        if(i > 0) {
+            Perform prevPerform = performs[i - 1];
+            Input input = p.getInputs().inputAt(0);
+            Output output = prevPerform.getProcess().getOutputs().outputAt(0);
+
+            // the value of 'input' is the value of 'output' from 'prevPerform'
+            performs[i].addBinding(input, prevPerform, output);
+        }
+    }
+
+    Perform firstPerform = performs[0];
+    Perform lastPerform = performs[theServices.size()-1];
+    boolean createInput = firstPerform.getProcess().getInputs().size() > 0;
+    boolean createOutput = lastPerform.getProcess().getOutputs().size() > 0;
+
+    if (createInput) {
+        Input input = firstPerform.getProcess().getInputs().inputAt(0);
+        Input newInput = theOntology.createInput(URIUtils.createURI(theBaseURI, "TestInput"));
+        newInput.setLabel(input.getLabel());
+        newInput.setParamType(input.getParamType());
+        newInput.setProcess(aProcess);
+
+        // input of the first perform is directly read from the input of the
+        // composite process
+        performs[0].addBinding(input, OWLS.Process.TheParentPerform, newInput);
+    }
+
+    if (createOutput) {
+        Output output = lastPerform.getProcess().getOutputs().outputAt(0);
+        Output newOutput = theOntology.createOutput(URIUtils.createURI(theBaseURI, "TestOutput"));
+        newOutput.setLabel(output.getLabel());
+        newOutput.setParamType(output.getParamType());
+        newOutput.setProcess(aProcess);
+
+        // the output of the composite process is the output of last process
+        Result result = theOntology.createResult();
+        result.addBinding(newOutput, lastPerform, output);
+
+        aProcess.setResult(result);
+    }
+
+    // init profile inputs and outputs from the composite process inputs and outputs...
+
+    // ground the processes of the composite service...
+
+    // set some basic info
+    aProfile.setLabel("Composite Service");
+    aProfile.setTextDescription(aProfile.getLabel());
+
+    // return the composite service
+    return aService;
+}
+
++---------------------------------------------------------------------------+
+
+
+* Using OWL {Resources}
+
+  Every resource in the API (<<<Service>>>, <<<Profile>>>, <<<Process>>>, etc.)
+  extends <<<OWLEntity>>> and <<<OWLIndividual>>> which provide basic methods
+  to get and set annotation, object, and data properties for any OWL resource.
+  If additional information is required about the resources then the underlying
+  RDF model can be queried. Right now, the API is built on top of
+  {{{http://openjena.org}Jena}}. The method <<<getImplementation()>>>
+  returns the corresponding resource in the Jena model.
+
+  Each service description is loaded into a separate Jena model where the model
+  contains the imports closure of the service description, i.e. each ontology
+  service description imports is also in that model. <<<OWLModel>>> provides a
+  <<<getImplementation()>>> function that will return the underlying Jena Model.
+  Individual OWLModels can be accessed by the <<<OWLKnowledgeBase>>> they are
+  a part of, stand-alone when created using <<<OWLFactory>>>.
+
+  In the future releases it is planned to add support for
+  {{{http://owlapi.sourceforge.net}OWL API}}.
+
+
+* {WSDL} Support
+
+  The API contains a package <<<org.mindswap.wsdl>>> that provides support for
+  reading and executing WSDL services. Execution of OWL-S services is achieved
+  through this package. The WSDL functionality is based on
+  {{{http://ws.apache.org/axis}Axis}} package version 1.4. The main
+  functionality added to Axis is the ability to execute services with complex
+  inputs dynamically without a need to create stubs or extra code. The SOAP
+  messages are created from the string representation of XML Schema complex
+  type. This invocation method is not robust but works for most of the cases.
+
+* {Java} Groundings
+
+  TODO
+
+* {Extending} and/or Replacing Parts of the Library
+
+  TODO
+
+  See also {{{./replacing_grounding_implementations.html}replacing grounding
+  implementations}}.

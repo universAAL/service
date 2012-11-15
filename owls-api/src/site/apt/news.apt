@@ -1,0 +1,132 @@
+ ----
+ News
+ -----
+ Thorsten Moeller
+ -----
+ $Id: news.apt 2709 2011-05-31 09:43:03Z thorsten $
+ -----
+
+News
+
+* November 23, 2009
+
+  The final version 3.0 of the OWL-S API has been released.
+
+  Changes since version 3.0-b1
+
+  * <Frame Caching>, a new performance optimization has been implemented. It
+    boosts performance of repeated service execution and execution of composite
+    services consisting of iterative control constructs (such as Repeat-While,
+    For-Each) by at least one order of magnitude, even if the knowledge base is
+    entirely kept in main memory. It is activated by default in the execution
+    engine and can be turned off if wanted. It should be turned off for highly
+    dynamic execution scenarios where the process model or groundings are
+    modified during execution.
+
+  * The query API part has been revised and the notion of <Prepared Queries>
+    has been added, see {{{./apidocs/org/mindswap/query/Query.html}Query}}. A
+    prepared query is similar to a <<<PreparedStatement>>> known from JDBC:
+    It represents a (pre-compiled) SPARQL or SPARQL-DL statement that can be
+    efficiently re-executed multiple times. Prepared queries are especially
+    used to simplify and speed up the performance of condition evaluation,
+    that is, process preconditions and branching conditions of conditional
+    control constructs (such as If-Then-Else and Repeat-Until) expressed using
+    SWRL.
+
+  * Some bug fixes and lots of JavaDoc updates/extensions.
+
+  * Jena/ARQ upgraded to latest releases 2.6.2/2.8.1.
+
+  * Pellet upgraded to latest release 2.0.
+
+* August 26, 2009
+
+  We are pleased to announce the release of the OWL-S API, version 3.0 beta 1.
+  To a large extent, version 3.0 is a complete rewrite and redesign of the 2.0
+  codeline. Most importantly, this release supports and implements
+  {{{http://www.ai.sri.com/daml/services/owl-s/1.2}OWL-S 1.2}} by default.
+  Furthermore, it addresses several flaws that existed since the 2.x codeline
+  and which could not be fixed without a major code overhaul. We also took the
+  chance to revise and extend many of the programming interfaces. For a summary
+  of the changes you may check the
+  {{{./new_and_noteworthy_3.0-b1.html}New & Noteworthy}} page.
+
+
+* June 25, 2009
+
+  We are pleased to announce the release of the OWL-S API, version 2.0. After
+  quite a while without major changes to the 2.0-SNAPSHOT version, we have
+  decided to release it for two particular reasons. First, we have started
+  a large refactoring that breaks with the current API at many places. Second,
+  we have also started to implement OWL-S version 1.2. This means that version
+  2.0(.x) will be the last release supporting OWL-S 1.1 by default. The next
+  version 2.2 will support OWL-S 1.2 by default, whereby it is not yet clear
+  if there will be a translation mechanism from OWL-S 1.1 to 1.2 part of this
+  new version (this is mostly a matter of resources).
+
+  Release Notes
+
+  * Minor fix to <<<ProfileImpl>>>: potential NPE in <<<toString()>>>
+
+  * Fix in <<<ProcessExecutionEngineImpl.executeProduce(...)>>> was referring to
+    ThisPerform rather than TheParentPerform.
+
+  * <<<LockNotSupportedException>>> has been removed and related methods in
+    <<<OWLModel>>> regarding locking do not throw this exception any longer.
+
+  * Upgrade Jena 2.5.7 to 2.6.0, and Pellet 1.5.2 to 2.0-RC7.
+
+  * Apache Commons Logging (ACL) is no longer directly used and was replaced by
+    SLF4J. Note that some of the dependencies such as AXIS still use ACL, which
+    is the reason why JCL-over-SLF4J is included in the distribution.
+
+  * Exclude build and documentation related resources from source distribution.
+
+
+
+* January 22, 2009
+
+  Version 2 of the OWL-S API, that is currently under development, contains
+  hundreds of changes compared to its predecessor. In the following we summarize
+  the most important ones.
+
+  * Switch from Java 1.4 to Java 5 language features and API. For instance, Java
+    Generics are used all over now. As a result, substantial simplifications of
+    the OWL-S API could be made. In particular, it was possible to merge more
+    than 30 interfaces and classes into a very small amount of remaining
+    interfaces and classes. Furthermore, almost all collection types (lists,
+    sets, maps) are now parameterized and various classes of the API can now be
+    parameterized as well (e.g. <<<ValueMap>>>).
+
+  * Upgrade to the latest versions of {{{http://openjena.org}Jena}} and
+    {{{http://pellet.owldl.org}Pellet}}, see project
+    {{{./dependencies.html}dependencies}}.
+
+  * Substantial changes of interfaces and (their implementations) that realize
+    OWL-S service execution; they are more <object oriented> now.
+
+  * Introduction of {{{http://www.slf4j.org}SLF4J}} as the underlying logging
+    framework.
+
+  * Introduction of JUnit tests.
+
+  * Build system was changed from {{{http://ant.apache.org}Apache ant}} to
+    {{{http://maven.apache.org}Apache Maven}}.
+
+  * Support for earlier versions of OWL-S than 1.1 has been abandoned.
+
+  []
+
+  For the final 2.x release the following topics are planned to be taken
+  into account.
+
+  * Better support for SPARQL queries (currently only rudimentary support for
+    RDQL queries).
+
+  * Revise the implementation of ABox queries to be more closer integrated with
+    reasoners (Pellet).
+
+  * Revise the SWRL support to be more closer integrated with reasoners (Pellet).
+
+  * Replace the rather outdated WS stack {{{http://ws.apache.org/axis/}AXIS 1.4}}
+    by a more modern framework (different options AXIS2, CXF, Metro).

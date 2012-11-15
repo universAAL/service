@@ -1,0 +1,67 @@
+ ------
+ Download OWL-S API ${currentVersion}
+ ------
+ Thorsten Moeller
+ ------
+ $Id: download.apt.vm 2709 2011-05-31 09:43:03Z thorsten $
+ ------
+
+#set( $isSnapshot = ${currentVersion.indexOf("SNAPSHOT")} != -1 )
+#set( $latest = "3.0" )
+#set( $v2x = "2.0" )
+
+Download OWL-S API
+
+  The API is distributed in several formats for your convenience.
+
+* System Requirements
+
+  See {{{./installation.html#Requirements}Installation Instructions}}
+
+
+* Latest Stable Release
+
+*-------------------------+----------+--------------+
+| <<Latest Stable Release>> | <<File>> | <<Checksum>> |
+*-------------------------+----------+--------------+
+| ${latest} binary (tar.gz)   | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-bin.tar.gz} owls-api-${latest}-bin.tar.gz}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-bin.tar.gz.sha1} owls-api-${latest}-bin.tar.gz.sha1}} |
+*-------------------------+----------+--------------+
+| ${latest} binary (zip)      | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-bin.zip} owls-api-${latest}-bin.zip}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-bin.zip.sha1} owls-api-${latest}-bin.zip.sha1}} |
+*-------------------------+----------+--------------+
+| ${latest} source (tar.gz)   | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-src.tar.gz} owls-api-${latest}-src.tar.gz}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-src.tar.gz.sha1} owls-api-${latest}-src.tar.gz.sha1}} |
+*-------------------------+----------+--------------+
+| ${latest} source (zip)      | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-src.zip} owls-api-${latest}-src.zip}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${latest}/owls-api-${latest}-src.zip.sha1} owls-api-${latest}-src.zip.sha1}} |
+*-------------------------+----------+--------------+
+
+
+* Development Snapshot
+
+*-------------------------+----------+--------------+
+| <<Development Snapshot>> | <<File>> | <<Checksum>> |
+*-------------------------+----------+--------------+
+| ${currentVersion} binary (tar.gz)   | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-bin.tar.gz} owls-api-${currentVersion}-bin.tar.gz}} | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-bin.tar.gz.sha1} owls-api-${currentVersion}-bin.tar.gz.sha1}} |
+*-------------------------+----------+--------------+
+| ${currentVersion} binary (zip)      | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-bin.zip} owls-api-${currentVersion}-bin.zip}} | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-bin.zip.sha1} owls-api-${currentVersion}-bin.zip.sha1}} |
+*-------------------------+----------+--------------+
+| ${currentVersion} source (tar.gz)   | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-src.tar.gz} owls-api-${currentVersion}-src.tar.gz}} | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-src.tar.gz.sha1} owls-api-${currentVersion}-src.tar.gz.sha1}} |
+*-------------------------+----------+--------------+
+| ${currentVersion} source (zip)      | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-src.zip} owls-api-${currentVersion}-src.zip}} | {{{http://on.cs.unibas.ch/maven/#if($isSnapshot)snapshots-#{end}repository/ch/unibas/on/owls-api/${currentVersion}/owls-api-${currentVersion}-src.zip.sha1} owls-api-${currentVersion}-src.zip.sha1}} |
+*-------------------------+----------+--------------+
+
+
+* Previous Releases
+
+*-------------------------+----------+--------------+
+| <<Version ${v2x}>>      | <<File>> | <<Checksum>> |
+*-------------------------+----------+--------------+
+| ${v2x} binary (tar.gz)   | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-bin.tar.gz} owls-api-${v2x}-bin.tar.gz}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-bin.tar.gz.sha1} owls-api-${v2x}-bin.tar.gz.sha1}} |
+*-------------------------+----------+--------------+
+| ${v2x} binary (zip)      | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-bin.zip} owls-api-${v2x}-bin.zip}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-bin.zip.sha1} owls-api-${v2x}-bin.zip.sha1}} |
+*-------------------------+----------+--------------+
+| ${v2x} source (tar.gz)   | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-src.tar.gz} owls-api-${v2x}-src.tar.gz}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-src.tar.gz.sha1} owls-api-${v2x}-src.tar.gz.sha1}} |
+*-------------------------+----------+--------------+
+| ${v2x} source (zip)      | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-src.zip} owls-api-${v2x}-src.zip}} | {{{http://on.cs.unibas.ch/maven/repository/ch/unibas/on/owls-api/${v2x}/owls-api-${v2x}-src.zip.sha1} owls-api-${v2x}-src.zip.sha1}} |
+*-------------------------+----------+--------------+
+
+  A rather old release of the OWL-S API from the former
+  mindswap project can be found {{{http://www.mindswap.org/2004/owl-s/api}here}}.

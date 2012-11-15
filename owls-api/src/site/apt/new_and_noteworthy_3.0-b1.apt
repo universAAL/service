@@ -1,0 +1,182 @@
+ ----
+ New and Noteworthy - Version 3.0-b1
+ -----
+ Thorsten Moeller
+ -----
+ $Id: new_and_noteworthy_3.0-b1.apt 2709 2011-05-31 09:43:03Z thorsten $
+ -----
+
+New and Noteworthy - Version 3.0-b1
+
+* General
+
+  * OWL-S version 1.2 is used by default. Since there were some bugs and loopholes
+    in the original release, we have made some changes and also some extensions
+    in order to fix them, c.f. {{{./owls-1.2-changes.html}changes made to OWL-S 1.2}}.
+
+  * Support for query evaluation has been completely revised and extended, see
+    section on SWRL and SPARQL support below.
+
+  * Modularity of the project has been improved. Several changes have been made
+    to ease the process of replacing parts of the library by an alternative
+    implementations. Currently, this is enabled for the core OWL part (which
+    means that you could replace the standard Jena implementation by another one
+    based on another library). Furthermore, for the Java, WSDL, and UPnP grounding
+    implementation, for the SWRL implementation, and the OWL-S process execution
+    engine and OWL-S translators. Each of those parts is represented by a
+    corresponding Java interface, namely
+
+    * <<<OWLProvider>>> - Core OWL part (for basic abstractions such as
+      <<<OWLModel>>>, <<<OWLOntology>>> and <<<OWLKnowledgeBase>>>)
+
+    * <<<OWLSProvider>>> - OWL-S process execution engine and translators.
+
+    * <<<JavaGroundingProvider>>> - Java grounding implementation.
+
+    * <<<WSDLGroundingProvider>>> - WSDL grounding implementation.
+
+    * <<<UPnPGroundingProvider>>> - UPnP grounding implementation.
+
+    * <<<SWRLProvider>>> - SWRL implementation.
+
+    []
+
+    While it might be rather unlikely to replace the OWL, OWL-S and SWRL part
+    (because that would be quite large undertakings) it is not so difficult to
+    do it for the grounding implementations. For details we refer to the
+    corresponding {{{./replacing_grounding_implementations.html}documentation}}.
+
+  * New interface and implementation to directly support annotation properties, see
+    <<<OWLAnnotationProperty>>>.
+
+  * OWL-S vocabulary definitions and extensions do no longer make use of
+    <<<EntityFactory>>>, which was deprecated. OWL-S ontologies are now read from
+    local copies of the files by default. The files are included in the binary JAR
+    file. If this loading policy is not wanted it can be turned of by modifying
+    the <<<ont-policy.rdf>>> file (see the section about the document manager
+    policy in {{{http://openjena.org/ontology/index.html#documentHandling}Jena Ontology API documentation}}.
+    The advantages are the possibility to work off-line, reduced initialization time,
+    and the fact that the entire ontologies are load to memory (so far, OWL-S
+    ontologies  were basically only partially represented, which limits reasoning
+    dramatically since a lot of axioms were missing). The implementation also
+    tries to load those ontologies lazily only when used.
+
+  * OWL-S 1.2 vocabulary class and property declarations amended to be
+    fully consistent with ontologies.
+
+
+* OWL Model Management
+
+  * <<<OWLOntology>>> is identified by a single URI now (so far, there was a
+    file URI in addition). It does either represent a logical/base URI if the
+    ontology was read from an <<<InputStream>>> or <<<Reader>>> respectively,
+    or a physical URI if it was read from a local or remote file.
+
+  * The models of imported ontologies are now sub models of the base model of an
+    <<<OWLOntology>>>. This was not the case so far, resulting in the fact that
+    reasoning was not working correctly for ontologies having imports.
+
+  * The global model cache of <<<OWLReader>>> and the (unused) <<<OWLCache>>> were
+    entirely removed. Caching of already loaded (in-memory) models is now achieved
+    via the caching mechanism provided by JENA, see JavaDoc of
+    {{{http://openjena.org/javadoc/com/hp/hpl/jena/ontology/OntDocumentManager.html}OntDocumentManager}}
+    class and the section about {{{http://openjena.org/ontology/index.html#documentHandling}document handling}}.
+
+  * Various methods have been added to <<<OWLModel>>> and <<<OWLOntology>>>
+    such as <<<size()>>>, <<<union(...)>>>, <<<difference(...)>>>, and
+    <<<intersection(...)>>>.
+
+
+* SWRL, SPARQL support
+
+  * Support for SWRL preconditions and effects has been extended. The following
+    atoms can be used in expressions <<<ClassAtom>>>, <<<DataPropertyAtom>>>,
+    <<<DifferentIndividualsAtoms>>>, <<<IndividualPropertyAtom>>>, <<<SameIndividualAtom>>>,
+    and the following built-ins: <equal>, <notEqual>, <lessThan>, <lessThanOrEqual>,
+    <greaterThan>, <greaterThanOrEqual>, <add>, <subtract>, <multiply>, <divide>.
+
+  * Evaluation of SWRL expressions and conditions is way more efficient. The
+    implementation was optimized not to create temporary statements in the KB
+    that are required only to evaluate an expression.
+
+  * Support for SPARQL preconditions has been added. If a
+    {{{http://pellet.owldl.com}Pellet}} reasoner instance is attached to
+    the model one can also use SPARQL-DL queries to formulate conditions. Note
+    that there is one limitation imposed for such queries. Only SELECT and
+    ASK queries can be used (i.e., excluding DESCRIBE and CONSTRUCT). In case
+    of SELECT queries the query result is used to bind existential variables
+    (using ASK queries existential variables can not be bound since the result
+    of the query is either <<<true>>> or <<<false>>>).
+
+  * Support for SPARQL value functions has been added to express value functions
+    as part of a Binding. See <<<src/test/resources/owl-s/1.2/RepeatUntil.owl>>>
+    for an example.
+
+  * If Pellet reasoner is attached to a <<<OWLModel>>> you may also use SPARQL-DL
+    queries. (It has to be noted that this option is currently commented in the
+    code and need to be explicitly uncommented to activate it. The reason is that
+    tests have shown that this reduces performance for standard SPARQL queries a
+    bit. We have to further investigate this.)
+
+* Execution support
+
+  * All OWL-S 1.2 control constructs except <<<AsProcess>>> are implemented.
+
+  * Execution semantics of the <<<Choice>>> control construct has been completed.
+    The behavior is now as follows. (1) Randomly select a control construct from
+    the available choices and (2) try to execute this first choice. (3) If it
+    has a precondition which is not satisfied and there exist more constructs
+    then (4) chose another one and try to execute this instead, unless there are
+    no more choices. In the end, either all choices failed or one was executed.
+
+  * Execution semantics of the <<<AnyOrder>>> control construct has been
+    completed. The behavior is now as follows. In general, "any order" means it
+    doesn't matter in which order enclosed control constructs are executed (but
+    not concurrently). (1) The execution engine begins in the sequential order.
+    (2) If some constructs precondition is not satisfied and execution does not
+    stagnate, (3) put the control construct back to a queue of pending control
+    constructs which have not been executed yet and (4) try another one instead.
+    This yields another order. The criteria of stagnation is satisfied if the
+    queue does not decrease between two consecutive execution attempts and all
+    elements of the queue have been tried at least once. (Note that this behavior
+    is not equivalent to trying all permutations in the worst case of the
+    control constructs enclosed by the AnyOrder).
+
+
+* Grounding Support
+
+  * Java grounding implementation has been extended so that static as well as
+    instance methods can be invoked. If the latter is used, the implementation
+    will instantiate the specified class using the default no-args constructor
+    and invoke the instance method then.
+
+
+* Other
+
+  * <<<OWLList>>> was completely re-implemented since the former implementation
+    was horribly slow. The implementation is now more than three times faster.
+
+  * Various objects have been extended in order to allow to inspect them in a
+    truly object oriented manner using the visitor design pattern. Among these
+    are <<<Atom>>>, <<<ControlConstruct>>>, and <<<ParameterValue>>>.
+
+  * Various redundant pairs of methods to create individuals of the same concept
+    have been merged. For instance, all methods of the form <<<OWLModel.createProfile()>>>
+    and <<<OWLModel.createProfile(URI)>>> were merged into one. The no-argument
+    method was removed and the latter can be invoked with <<<null>>> to create
+    an anonymous individual, thus, also providing the functionality of the former.
+    This reduced the number of methods on <<<OWLModel>>> quite a lot.
+
+  * Various fixes of bugs found by {{{http://findbugs.sourceforge.net}FindBugs}}
+    (omitting false positives, of course).
+
+  * Switching between strict and lax object conversion is no longer a global and
+    system wide setting (formerly available by class <<<OWLConfig>>>). It can
+    be set for every knowledge base instance independently now, that is,
+    <<<OWLKnowledgeBase>>> has grown by methods that allow to activate and
+    deactivate this mode.
+
+  * Quite some JUnit integration and unit tests have been added to test major
+    parts of the library. This includes more OWL-S test service descriptions
+    which are located in <<<src/test/resources/owls/1.2>>>, albeit some of them
+    may appear rather useless, artificial, or even funny :-)

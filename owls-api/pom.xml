@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	======================================================================
+	Created:     29.04.2007
+	Version:     $Id: pom.xml 2711 2011-05-31 10:59:29Z thorsten $
+
+	The MIT License
+
+	Copyright (c) 2008 Thorsten Möller
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to
+	deal in the Software without restriction, including without limitation the
+	rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+	sell copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+	IN THE SOFTWARE.
+
+	======================================================================
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>ch.unibas.on</groupId>
+		<artifactId>on</artifactId>
+		<version>2.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>ch.unibas.on</groupId>
+	<artifactId>owls-api</artifactId>
+	<version>3.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>ON :: OWL-S API</name>
+	<description>OWL-S API that provides the means to read, write, manage, and execute OWL-S service descriptions.</description>
+
+	<properties>
+		<!-- workaround required for site generation because Velocity does not support '.' in properties -->
+		<currentVersion>${project.version}</currentVersion>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>The MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>evren</id>
+			<name>Evren Sirin</name>
+		</developer>
+		<developer>
+			<id>daenzerorama</id>
+			<name>Michael Dänzer</name>
+		</developer>
+		<developer>
+			<id>thorsten</id>
+			<name>Thorsten Möller</name>
+			<url>http://dbis.cs.unibas.ch/team/thorsten-moeller/dbis_staff_view</url>
+			<organization>University of Basel - Department Computer Science</organization>
+			<organizationUrl>http://dbis.cs.unibas.ch/</organizationUrl>
+		</developer>
+	</developers>
+
+	<mailingLists>
+		<mailingList>
+			<archive>http://lists.mindswap.org/pipermail/owl-s</archive>
+			<name>OWL-S API</name>
+			<post>owl-s@lists.mindswap.org</post>
+			<subscribe>http://lists.mindswap.org/mailman/listinfo/owl-s</subscribe>
+			<unsubscribe>http://lists.mindswap.org/mailman/listinfo/owl-s</unsubscribe>
+		</mailingList>
+	</mailingLists>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<!-- Substitute dedicated token in startup scripts template files with
+						     target artifact file name (which includes current version). -->
+						<id>prepare-start-scripts</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<copy todir="${project.build.directory}/bin">
+									<fileset dir="src/bin"/>
+								</copy>
+								<replace dir="${project.build.directory}/bin" token="@fileName@" value="${project.build.finalName}">
+									<include name="*.bat"/>
+									<include name="*.sh"/>
+								</replace>
+							</target>
+						</configuration>
+					</execution>
+
+					<!-- Create tailored jar that can be used with projects that depend on
+						this project at compile time but may not require it at runtime.
+						This may sound stupid but, for instance, we want to use the project
+						on-core, which depends on this project, on the Google Android
+						platform but do not need OWL/OWL-S functionality there.
+						The jar contains everything except those classes that depend
+						on (i) third-party libraries, (ii) javax.xml.transform -->
+					<execution>
+						<id>run-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<jar destfile="${project.build.directory}/${project.build.finalName}-android.jar"
+									basedir="${project.build.outputDirectory}"
+									includes="impl/**, org/mindswap/**">
+									<!-- excludes="impl/jena/**,	impl/owls/grounding/UPnP*,
+										impl/owls/grounding/WSDL*,	org/mindswap/wsdl/**,
+										org/mindswap/utils/XSLTEngine*" >-->
+									<manifest>
+										<attribute name="Built-By" value="Apache Maven" />
+										<attribute name="Implementation-Title" value="OWL-S API" />
+										<attribute name="Implementation-Version" value="${project.version}" />
+										<attribute name="Implementation-Vendor" value="${project.organization.name}" />
+									</manifest>
+								</jar>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+
+				<!-- Workaround for http://jira.codehaus.org/browse/MANTRUN-95
+				     on-core requires optional ant tasks.
+				     Dependencies section can be removed after bug was fixed. -->
+				<dependencies>
+					<!-- Dependencies to be put in Javah task classpath. -->
+					<dependency>
+						<groupId>org.apache.ant</groupId><!-- contains javah ant task-->
+						<artifactId>ant-nodeps</artifactId>
+						<version>1.7.1</version>
+					</dependency>
+					<dependency>
+						<groupId>com.sun</groupId>
+						<artifactId>tools</artifactId>
+						<version>${java.version}</version>
+						<scope>system</scope>
+						<systemPath>${toolsJAR}</systemPath>
+					</dependency>
+				</dependencies>
+
+			</plugin>
+			<plugin>
+				<!-- Attach tailored Android JAR so that it will be installed/deployed to the repository. -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-android-artifact</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>${project.build.directory}/${project.build.finalName}-android.jar</file>
+									<type>jar</type>
+									<classifier>android</classifier>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<inherited>false</inherited>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/bin.xml</descriptor>
+						<descriptor>src/assembly/src.xml</descriptor>
+					</descriptors>
+					<tarLongFileMode>gnu</tarLongFileMode>
+				</configuration>
+				<executions>
+					<execution>
+						<id>owls-api-assemblies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<instructions>
+						<!--<Export-Package>org.mindswap.*</Export-Package>
+						<Private-Package>impl.*</Private-Package>-->
+						<RequiredExecutionEnvironment>J2SE-1.5</RequiredExecutionEnvironment>
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<!-- We want to add OSGi meta data to final manifest. This file is created by
+						     the maven-bundle-plugin and we need to merge it into the final manifest. -->
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+						<manifest>
+							<!--
+							 | In contrast to settings made by parent POM, we want dependent JARs to be
+							 | added to classpath because startup scripts do not contain them.
+							 -->
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<!-- Workaround for http://jira.codehaus.org/browse/MANTRUN-95
+		     on-core requires optional ant tasks, which require tools.jar
+	   	  Profiles can be removed after bug was fixed. -->
+		<profile><!-- Set tools.jar for most SUN JDKs on Windows platforms. -->
+			<id>tools-jar-windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<toolsJAR>${java.home}/../lib/tools.jar</toolsJAR>
+			</properties>
+		</profile>
+		<profile><!-- Set tools.jar for most SUN JDKs on UNIX platforms. -->
+			<id>tools-jar-unix</id>
+			<activation>
+				<os>
+					<!-- We need to exclude Mac OS X since it is in family 'unix' -->
+					<family>unix</family>
+					<name>!mac os x</name>
+				</os>
+			</activation>
+			<properties>
+				<toolsJAR>${java.home}/../lib/tools.jar</toolsJAR>
+			</properties>
+		</profile>
+		<profile><!-- Mac OSX Java JDK doesn't has separate tools.jar. -->
+			<id>tools-jar-mac</id>
+			<activation>
+				<os>
+					<!-- We can not only use 'family' discriminator since Mac in in family 'unix' -->
+					<family>unix</family>
+					<name>mac os x</name>
+				</os>
+			</activation>
+			<properties>
+				<toolsJAR>${java.home}/../Classes/classes.jar</toolsJAR>
+			</properties>
+		</profile>
+		<!-- END: Workaround for http://jira.codehaus.org/browse/MANTRUN-95 -->
+	</profiles>
+
+	<dependencies>
+		<!-- Apache AXIS 1.4 start -->
+		<dependency>
+      	<groupId>org.apache.axis</groupId>
+      	<artifactId>axis</artifactId>
+      	<version>1.4</version>
+   	</dependency>
+   	<dependency>
+      	<groupId>commons-discovery</groupId>
+      	<artifactId>commons-discovery</artifactId>
+      	<version>0.2</version>
+      	<exclusions>
+				<exclusion>
+					<!-- We use jcl-over-slf4j; see parent POM. -->
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+   	</dependency>
+   	<dependency>
+      	<groupId>javax.xml</groupId>
+			<artifactId>jaxrpc-api</artifactId>
+			<version>1.1</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>javax.xml</groupId>
+			<artifactId>saaj-api</artifactId>
+			<version>1.2</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>axis</groupId>
+			<artifactId>axis-wsdl4j</artifactId>
+			<version>1.5.1</version>
+   	</dependency>
+   	<dependency>
+      	<groupId>javax.activation</groupId>
+      	<artifactId>activation</artifactId>
+      	<version>1.0.2</version>
+      	<scope>runtime</scope>
+   	</dependency>
+   	<!-- Apache AXIS 1.4 end -->
+
+   	<dependency>
+   		<!-- has transitive dependency to Jena -->
+   		<groupId>com.hp.hpl.jena</groupId>
+			<artifactId>arq</artifactId>
+			<version>2.8.7</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>com.fujitsu.fla</groupId>
+			<artifactId>upnp</artifactId>
+			<version>1.0</version>
+   	</dependency>
+   	<dependency>
+   		<groupId>com.owldl</groupId>
+			<artifactId>pellet</artifactId>
+			<version>2.1.1</version>
+			<exclusions>
+				<exclusion>
+					<!-- Pellet is never used by this project in a way that it would start Jetty. -->
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>org.mortbay.jetty</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- Pellet is used by this project via Jena, i.e., the OWL API is not required at runtime. -->
+					<groupId>net.sourceforge.owlapi</groupId>
+					<artifactId>owlapi</artifactId>
+				</exclusion>
+			</exclusions>
+   	</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>jena-maven</id>
+			<name>Jena Maven Repository</name>
+			<url>http://openjena.org/repo</url>
+		</repository>
+	</repositories>
+</project>

@@ -1,0 +1,90 @@
+ ----
+ Introduction
+ -----
+ Thorsten Moeller
+ -----
+ $Id: index.apt 2713 2011-06-01 08:54:59Z thorsten $
+ -----
+
+Introduction
+
+  OWL-S API provides a Java API for programmatic access to create, read, write,
+and execute OWL-S (formerly known as DAML-S) described atomic as well as
+composite services.
+
+  The library provides a basic <<<ProcessExecutionEngine>>> that can execute atomic
+processes (a.k.a. atomic service) using {{{http://www.w3.org/TR/wsdl}WSDL}},
+Java, or UPnP groundings, and composite processes (a.k.a. composite service) that
+use control constructs such as <<<Choice>>>, <<<Sequence>>>, <<<AnyOrder>>>,
+<<<Split>>>, and <<<Split-Join>>>. Execution of processes that consist of conditional
+control constructs such as <<<IfThenElse>>>, <<<RepeatUntil>>>, or <<<RepeatWhile>>>
+is also supported. Furthermore, execution of processes can be monitored by means of
+<<<ProcessExecutionMonitor>>>.
+
+  Languages that are supported to express conditions (for specifying
+conditional control constructs as well as process preconditions) are
+{{{http://www.w3.org/Submission/SWRL}SWRL}} and
+{{{http://www.w3.org/TR/rdf-sparql-query}SPARQL}}. The API is designed to be
+extensible so that other (logical) formalisms can be integrated, which come
+with their own evaluation procedure. The API is distributed together with
+the OWL-DL reasoner {{{http://pellet.owldl.org}Pellet}}. Other reasoners
+can be integrated, see subsequent section about Jena.
+
+  The class structure of the API has been designed to closely match the definitions
+of OWL-S ontologies, specifically OWL-S version 1.2 and 1.1. The names for
+packages, interfaces and methods in Java are chosen to match the names of
+ontologies, classes and properties in OWL-S ontologies. There are some
+exceptions to this rule where simpler or more descriptive names are chosen to
+make programming easier. For example, the method in <<<Service>>> class to get
+the associated <<<Profile>>> is named as <<<getProfile>>> rather than
+<<<getPresents>>> as the property name <<<service:presents>>> in OWL-S ontology
+suggests.
+
+  Furthermore, the API provides almost complete support for standard RDF and OWL
+management tasks such as adding, removing and querying triples. The basic Java
+abstractions provided (which are extended by all OWL-S specific abstractions) are
+<<<OWLObject>>>, <<<OWLEntity>>>, and <<<OWLIndividual>>>. They come with access
+methods to get the value of any OWL property (no matter if annotation,
+object, or data property). It is also possible to access the underlying data model
+(which is based on {{{http://openjena.org}Jena}} right now). However,
+the underlying data model is not statically accessible from the API interfaces
+(i.e., casts are required for accessing the Jena model or resources),
+because one design goal of the API was to be agnostic regarding underlying
+OWL libraries so that they may be exchanged, for instance, by the
+{{{http://owlapi.sourceforge.net}OWL API}}. Finally, all reasoner implementations
+that provide integration with Jena can be used.
+
+
+OWL-S Version Conformance
+
+  As of the 3.x codeline, the API supports OWL-S version 1.2 by default. The previous
+2.x codeline supports OWL-S 1.1 by default. Services described using OWL-S 1.0
+can be automatically translated to OWL-S 1.1. Note that support for OWL-S 1.1
+and 1.0 has been deprecated. The translation mechanism is currently not actively
+maintained. Support for version 1.0 and 1.1 may be removed completely in the future.
+
+Limitations
+
+  * Support for SWRL built-in atoms is not completely implemented. The following
+    built-ins are supported: <equal>, <notEqual>, <lessThan>, <lessThanOrEqual>,
+    <greaterThan>, <greaterThanOrEqual>, <add>, <subtract>, <multiply>, <divide>.
+
+
+Acknowledgments
+
+  OWL-S API was originally developed and maintained by the
+{{{http://www.mindswap.org} mindswap group}} in collaboration with
+{{{http://www.flacp.fujitsulabs.com}Fujitsu Labs of America, College Park}}. Its
+development and maintenance is continued as part of the
+{{{http://on.cs.unibas.ch}OSIRIS Next}} open service infrastructure project at
+University of Basel by
+{{{http://dbis.cs.unibas.ch/team/thorsten-moeller/dbis_staff_view}Thorsten M\u00f6ller}},
+{{{http://dbis.cs.unibas.ch}Database and Information Systems Group}}.
+
+
+Mailing List
+
+  You may still subscribe and send your questions and comments to the
+{{{http://lists.mindswap.org/mailman/listinfo/owl-s}OWL-S mailing list
+on mindswap}} and see the archives
+{{{http://lists.mindswap.org/pipermail/owl-s/}here}}.

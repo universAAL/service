@@ -1,0 +1,8 @@
+# $Id: available_import.ttl 2530 2010-07-30 17:46:00Z thorsten $
+###############################################################################
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+
+<http://on.cs.unibas.ch/available_import.ttl>
+      a       owl:Ontology ;
+      owl:imports <http://www.daml.org/services/owl-s/1.2/Service.owl> .

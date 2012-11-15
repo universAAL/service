@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE uridef [
+<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
+<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
+<!ENTITY owl "http://www.w3.org/2002/07/owl">
+<!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+<!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+<!ENTITY profile "http://www.daml.org/services/owl-s/1.2/Profile.owl">
+<!ENTITY process "http://www.daml.org/services/owl-s/1.2/Process.owl">
+<!ENTITY grounding "http://www.daml.org/services/owl-s/1.2/Grounding.owl">
+<!ENTITY moregr "http://on.cs.unibas.ch/owl-s/1.2/MoreGroundings.owl">
+]>
+<rdf:RDF
+	xmlns:rdf="&rdf;#"
+	xmlns:rdfs="&rdfs;#"
+	xmlns:owl="&owl;#"
+	xmlns:xsd="&xsd;#"
+	xmlns:service="&service;#"
+	xmlns:profile="&profile;#"
+	xmlns:process="&process;#"
+	xmlns:grounding="&grounding;#"
+	xmlns:moregr="&moregr;#"
+	xml:base="http://on.cs.unibas.ch/owl-s/1.2/JGroundingTest.owl">
+
+<owl:Ontology rdf:about="">
+	<owl:imports rdf:resource="&profile;"/>
+	<owl:imports rdf:resource="&grounding;"/>
+	<owl:imports rdf:resource="&moregr;"/>
+	<owl:versionInfo>$Id: JGroundingTest.owl 2755 2011-09-30 14:17:09Z thorsten $</owl:versionInfo>
+</owl:Ontology>
+
+<!-- Service description -->
+<service:Service rdf:ID="JGroundingTestService">
+	<service:presents rdf:resource="#JGroundingTestProfile"/>
+
+	<service:describedBy rdf:resource="#JGroundingTestProcess"/>
+
+	<service:supports rdf:resource="#JGroundingTestGrounding"/>
+</service:Service>
+
+<!-- Profile description -->
+<profile:Profile rdf:ID="JGroundingTestProfile">
+	<service:presentedBy rdf:resource="#JGroundingTestService"/>
+
+	<profile:serviceName xml:lang="en">JavaGrounding Test Service</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+		This service is used as Test-Ontology for the JavaGrounding
+	</profile:textDescription>
+</profile:Profile>
+
+<!-- Process description -->
+<process:AtomicProcess rdf:ID="JGroundingTestProcess">
+	<service:describes rdf:resource="#JGroundingTestService"/>
+	<process:hasInput rdf:resource="#FirstParam"/>
+	<process:hasInput rdf:resource="#SecParam"/>
+	<process:hasOutput rdf:resource="#OutParam"/>
+</process:AtomicProcess>
+
+<process:Input rdf:ID="FirstParam">
+  	<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#nonNegativeInteger</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="SecParam">
+  	<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#float</process:parameterType>
+</process:Input>
+
+<process:Output rdf:ID="OutParam">
+	<process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+</process:Output>
+
+ <!-- Grounding description -->
+<moregr:JavaGrounding rdf:ID="JGroundingTestGrounding">
+	<service:supportedBy rdf:resource="#JGroundingTestService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#JGroundingTestProcessGrounding"/>
+</moregr:JavaGrounding>
+
+<moregr:JavaAtomicProcessGrounding rdf:ID="JGroundingTestProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#JGroundingTestProcess"/>
+	<moregr:javaClass>impl.owls.grounding.JavaGroundingTest</moregr:javaClass>
+	<moregr:javaMethod>pow</moregr:javaMethod>
+	<moregr:hasJavaParameter>
+		<moregr:JavaParameter rdf:ID="In1">
+			<moregr:javaType>int</moregr:javaType>
+			<moregr:owlsParameter rdf:resource="#FirstParam"/>
+			<moregr:paramIndex rdf:datatype="&xsd;#nonNegativeInteger">1</moregr:paramIndex>
+		</moregr:JavaParameter>
+	</moregr:hasJavaParameter>
+	<moregr:hasJavaParameter>
+		<moregr:JavaParameter rdf:ID="In2">
+			<moregr:javaType>java.lang.Float</moregr:javaType>
+			<moregr:owlsParameter rdf:resource="#SecParam"/>
+			<moregr:paramIndex rdf:datatype="&xsd;#nonNegativeInteger">2</moregr:paramIndex>
+		</moregr:JavaParameter>
+	</moregr:hasJavaParameter>
+	<moregr:javaOutput>
+		<moregr:JavaVariable rdf:ID="Out">
+			<moregr:javaType>java.lang.Double</moregr:javaType>
+			<moregr:owlsParameter rdf:resource="#OutParam"/>
+		</moregr:JavaVariable>
+	</moregr:javaOutput>
+</moregr:JavaAtomicProcessGrounding>
+
+</rdf:RDF>
