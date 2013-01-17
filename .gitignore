@@ -1,5 +1,9 @@
 pom/.project
 pom/.settings
+sieg.asor/.classpath
+sieg.asor/.project
+sieg.asor/.settings
+sieg.asor/target
 sieg.simple.profile.models/*.classpath
 sieg.simple.profile.models/*.project
 sieg.simple.profile.models/*.settings
