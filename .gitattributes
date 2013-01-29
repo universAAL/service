@@ -5,6 +5,7 @@ owls-api/.settings/org.maven.ide.eclipse.prefs -text
 owls-api/LICENSE -text
 owls-api/NOTICE -text
 owls-api/README -text
+owls-api/deploy.bat -text
 owls-api/licensing/ATerm-license.txt -text
 owls-api/licensing/Axis-license.txt -text
 owls-api/licensing/CyberLink-license.txt -text
@@ -508,41 +509,41 @@ owls-api/src/test/resources/owls/1.2/RepeatWhile.owl -text
 owls-api/src/test/resources/owls/1.2/SplitJoin.owl -text
 owls-api/src/test/resources/owls/1.2/TestProfileServiceTermination.owl -text
 owls-api/src/test/resources/owls/1.2/ValueFunction.owl -text
-pom/pom.xml -text
-sieg.asor/.classpath -text
-sieg.asor/.project -text
-sieg.asor/ASL2.0.txt -text
-sieg.asor/ASOR_Scripts/1.StartBlinkingLamps.ttl -text
-sieg.asor/ASOR_Scripts/GetLamps/GetLamps.ttl -text
-sieg.asor/ASOR_Scripts/TurnOffLamp/TurnOffLamp.ttl -text
-sieg.asor/ASOR_Scripts/TurnOffLamp/TurnOffLampsInLoop.ttl -text
-sieg.asor/ASOR_Scripts/TurnOnLamp/TurnOnLamp.ttl -text
-sieg.asor/ASOR_Scripts/TurnOnLamp/TurnOnLampsInLoop.ttl -text
-sieg.asor/ASOR_Vocabulary/AsorCallService.ttl -text
-sieg.asor/MITX.txt -text
-sieg.asor/launches/BlinkingUniversAAL-1.2.1.launch -text
-sieg.asor/pom.xml -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/ASOREngineImpl.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/ASORServiceMngr.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASOREngineException.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASORModule.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/Activator.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/osgi/IASOREngine.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/parsers/JenaModelParser.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/parsers/ProcessOutputParser.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceCaller.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceResponseWrap.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/RequestsMngr.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/ASORCallService.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/TurtleRepresentationsBridge.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/FileReader.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestParseString.java -text
-sieg.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestTurtleRepresentationBridge.java -text
-sieg.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
-sieg.simple.profile.models/MITX.txt -text svneol=unset#text/plain
-sieg.simple.profile.models/NOTICE.txt -text svneol=unset#text/plain
-sieg.simple.profile.models/pom.xml -text
-sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/DefaultServiceCallee.java -text
-sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/ServiceProfileModel.java -text
-sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/StartUIServiceProfileModel.java -text svneol=unset#text/plain
-sieg.simple.profile.models/src/main/java/org/universAAL/sieg/simplifiedAPIs/profileModel/osgi/Activator.java -text
+owls-api_parent/deploy.bat -text
+owls-api_parent/pom.xml -text
+srvc.asor/ASL2.0.txt -text
+srvc.asor/ASOR_Scripts/1.StartBlinkingLamps.ttl -text
+srvc.asor/ASOR_Scripts/GetLamps/GetLamps.ttl -text
+srvc.asor/ASOR_Scripts/TurnOffLamp/TurnOffLamp.ttl -text
+srvc.asor/ASOR_Scripts/TurnOffLamp/TurnOffLampsInLoop.ttl -text
+srvc.asor/ASOR_Scripts/TurnOnLamp/TurnOnLamp.ttl -text
+srvc.asor/ASOR_Scripts/TurnOnLamp/TurnOnLampsInLoop.ttl -text
+srvc.asor/ASOR_Vocabulary/AsorCallService.ttl -text
+srvc.asor/MITX.txt -text
+srvc.asor/launches/BlinkingUniversAAL-1.2.1.launch -text
+srvc.asor/pom.xml -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/ASOREngineImpl.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/ASORServiceMngr.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASOREngineException.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASORModule.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/Activator.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/IASOREngine.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/parsers/JenaModelParser.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/parsers/ProcessOutputParser.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceCaller.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceResponseWrap.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/RequestsMngr.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/ASORCallService.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/TurtleRepresentationsBridge.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/FileReader.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestParseString.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestTurtleRepresentationBridge.java -text
+srvc.pom/pom.xml -text
+srvc.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
+srvc.simple.profile.models/MITX.txt -text svneol=unset#text/plain
+srvc.simple.profile.models/NOTICE.txt -text svneol=unset#text/plain
+srvc.simple.profile.models/pom.xml -text
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/DefaultServiceCallee.java -text
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/ServiceProfileModel.java -text
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/StartUIServiceProfileModel.java -text svneol=unset#text/plain
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/osgi/Activator.java -text

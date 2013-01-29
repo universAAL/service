@@ -6,16 +6,16 @@
 	<parent>
 		<groupId>org.universAAL</groupId>
 		<artifactId>uAAL.pom</artifactId>
-		<version>1.1.0</version>
+		<version>1.2.1-SNAPSHOT</version>
 	</parent>
 
 
 	<groupId>org.universAAL.service</groupId>
-	<artifactId>service.pom</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<artifactId>srvc.pom</artifactId>
+	<version>1.2.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
-	<name>universAAL Service</name>
+	<name>universAAL Service Suite</name>
 	
 	<description>.</description>
 
@@ -28,29 +28,30 @@
 	</properties>
 	
 	<modules>
-		<module>../sieg.simple.profile.models</module>
+		<module>../srvc.simple.profile.models</module>
+		<module>../srvc.asor</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.universAAL.middleware</groupId>
-				<artifactId>mw.pom</artifactId>
-				<version>1.0.0</version>
+				<artifactId>mw.pom.osgi</artifactId>
+				<version>1.2.1-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.universAAL.ontology</groupId>
 				<artifactId>ont.pom</artifactId>
-				<version>1.0.0</version>
+				<version>1.2.1-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.universAAL.service</groupId>
 				<artifactId>sieg.simple.profile.models</artifactId>
-				<version>1.0.1-SNAPSHOT</version>				
+				<version>1.2.1-SNAPSHOT</version>				
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -70,9 +71,9 @@
 	</developers>-->
 
 	<scm>
-		<connection>${svn.base}/pom</connection>
-		<developerConnection>${svn.base}/pom</developerConnection>
-		<url>${svn.base.url}pom</url>
+	    <connection>${svn.base}/${project.artifactId}</connection>
+	    <developerConnection>${svn.base}/${project.artifactId}</developerConnection>
+	    <url>${svn.base.url}${project.artifactId}</url>
 	</scm>
 
 </project>
