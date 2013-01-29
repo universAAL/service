@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.universAAL.sieg.simplifiedAPIs.profileModel;
+package org.universAAL.service.simplifiedAPIs.profileModel;
 
 import java.util.HashMap;
 

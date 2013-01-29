@@ -37,7 +37,7 @@
 		<groupId>ch.unibas.on</groupId>
 		<artifactId>on</artifactId>
 		<version>2.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<relativePath>../owls-api_parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>ch.unibas.on</groupId>

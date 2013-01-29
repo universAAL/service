@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.universAAL.sieg.simplifiedAPIs.profileModel.osgi;
+package org.universAAL.service.simplifiedAPIs.profileModel.osgi;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

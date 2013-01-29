@@ -3,17 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>service.pom</artifactId>
+		<artifactId>srvc.pom</artifactId>
 		<groupId>org.universAAL.service</groupId>
-		<version>1.0.1-SNAPSHOT</version>
-		<relativePath>../pom/</relativePath>
+		<version>1.2.1-SNAPSHOT</version>
+		<relativePath>../srvc.pom/</relativePath>
 	</parent>
 
-	<artifactId>sieg.simple.profile.models</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<artifactId>srvc.simple.profile.models</artifactId>
+	<version>1.2.1-SNAPSHOT</version>
 	<!-- <packaging>bundle</packaging> -->
 
-	<name>Service Profile Models and default service provider</name>
+	<name>universAAL Service Profile Models &amp; Default Provider</name>
 	<description>SPMs help define and manage (even dynamically) services</description>
 
 	<dependencies>
@@ -29,7 +29,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.universAAL.middleware</groupId>
-			<artifactId>mw.bus.service</artifactId>
+			<artifactId>mw.bus.service.osgi</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -47,9 +47,9 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>org.universAAL.sieg.simplifiedAPIs.profileModel.osgi</Bundle-Activator>
-						<Export-Package>org.universAAL.sieg.simplifiedAPIs.profileModel</Export-Package>
-						<Private-Package>org.universAAL.sieg.simplifiedAPIs.profileModel.osgi</Private-Package>
+						<Bundle-Activator>org.universAAL.service.simplifiedAPIs.profileModel.osgi.Activator</Bundle-Activator>
+						<Export-Package>  org.universAAL.service.simplifiedAPIs.profileModel</Export-Package>
+						<Private-Package> org.universAAL.service.simplifiedAPIs.profileModel.osgi</Private-Package>
 					</instructions>
 				</configuration>
 			</plugin>
