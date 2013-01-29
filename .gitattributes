@@ -1,7 +1,5 @@
 * text=auto !eol
 owls-api/.project -text
-owls-api/.settings/org.eclipse.jdt.core.prefs -text
-owls-api/.settings/org.maven.ide.eclipse.prefs -text
 owls-api/LICENSE -text
 owls-api/NOTICE -text
 owls-api/README -text
