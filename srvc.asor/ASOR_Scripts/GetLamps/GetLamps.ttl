@@ -1,0 +1,75 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix list: <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix expr: <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix service: <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix profile: <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix process: <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix process11: <http://www.daml.org/services/owl-s/1.1/Process.owl#> .
+@prefix ns: <http://ontology.igd.fhg.de/LightingConsumer.owl#> .
+@prefix pvn: <http://ontology.universAAL.org/uAAL.owl#> .
+@prefix asor: <http://ontology.universAAL.org/ASOR.owl#> .
+@prefix : <http://ontology.universAAL.org/GetLampsService.ttl#> .
+
+<> a owl:Ontology ;
+	owl:imports <http://www.daml.org/services/owl-s/1.2/Profile.owl> ;
+	owl:imports <http://www.daml.org/services/owl-s/1.1/Process.owl> ;
+	owl:imports <d:/universAAL/workspaces/ServiceOrchestrator/ASOR_Vocabulary/AsorCallService.ttl> ;
+	owl:versionInfo "Get Lamps" .
+
+# Service description
+:GetLampsService a service:Service ;
+	service:presents :GetLampsProfile ;
+	service:describedBy :GetLampsProcess .
+
+# Profile description
+:GetLampsProfile a profile:Profile ;
+	service:presentedBy :GetLampsService ;
+	profile:serviceName "Get Lamps"@en ;
+	profile:textDescription "This service is used as Ontology for get lamps"@en .
+
+# Process description
+:GetLampsProcess a process:CompositeProcess ;
+	rdfs:label "..." ;
+	rdfs:comment """...""" ;
+	process:invocable "true"^^xsd:boolean ;
+	service:describes :GetLampsService ;
+	process:hasOutput ns:controlledLamps .
+
+:GetLampsProcess process:composedOf [ 
+	a process:Sequence ;
+		process:components [
+			a process:ControlConstructList ;
+				list:first :PerformCallService ;
+				list:rest list:nil] 
+	] .
+	
+:PerformCallService a asor:CallService ;
+	asor:serviceRequest :GetLampsServiceRequest .
+
+:GetLampsServiceRequest a pvn:ServiceRequest ;
+  pvn:requiredResult [
+    process11:withOutput (
+      [
+        a process11:OutputBinding ;
+        process11:toParam ns:controlledLamps ;
+        process11:valueForm """
+          @prefix : <http://ontology.universAAL.org/Service.owl#> .
+          _:BN000000 a :PropertyPath ;
+            :thePath (
+              <http://ontology.universaal.org/Lighting.owl#controls>
+            ) .
+          """^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral>
+      ]
+    ) ;
+    a process11:Result
+  ] ;
+  pvn:requestedService [
+    a <http://ontology.universaal.org/Lighting.owl#Lighting>
+  ] .
+  
+ns:controlledLamps a process11:Output ;
+	process:parameterType "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"^^xsd:anyURI .
+	
