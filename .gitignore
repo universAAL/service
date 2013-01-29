@@ -1,2 +1,6 @@
 srvc.pom-1.2.1-SNAPSHOT/.project
 srvc.pom-1.2.1-SNAPSHOT/.settings
+srvc.simple.profile.models-1.2.1-SNAPSHOT/*.classpath
+srvc.simple.profile.models-1.2.1-SNAPSHOT/*.project
+srvc.simple.profile.models-1.2.1-SNAPSHOT/*.settings
+srvc.simple.profile.models-1.2.1-SNAPSHOT/target
