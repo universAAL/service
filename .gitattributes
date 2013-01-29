@@ -1,4 +1,31 @@
 * text=auto !eol
+srvc.asor/ASL2.0.txt -text
+srvc.asor/ASOR_Scripts/1.StartBlinkingLamps.ttl -text
+srvc.asor/ASOR_Scripts/GetLamps/GetLamps.ttl -text
+srvc.asor/ASOR_Scripts/TurnOffLamp/TurnOffLamp.ttl -text
+srvc.asor/ASOR_Scripts/TurnOffLamp/TurnOffLampsInLoop.ttl -text
+srvc.asor/ASOR_Scripts/TurnOnLamp/TurnOnLamp.ttl -text
+srvc.asor/ASOR_Scripts/TurnOnLamp/TurnOnLampsInLoop.ttl -text
+srvc.asor/ASOR_Vocabulary/AsorCallService.ttl -text
+srvc.asor/MITX.txt -text
+srvc.asor/launches/BlinkingUniversAAL-1.2.1.launch -text
+srvc.asor/pom.xml -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/ASOREngineImpl.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/ASORServiceMngr.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASOREngineException.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/ASORModule.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/Activator.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/osgi/IASOREngine.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/parsers/JenaModelParser.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/parsers/ProcessOutputParser.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceCaller.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/ASORServiceResponseWrap.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/impl/servicecaller/RequestsMngr.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/ASORCallService.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/TurtleRepresentationsBridge.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/FileReader.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestParseString.java -text
+srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestTurtleRepresentationBridge.java -text
 srvc.pom/pom.xml -text
 srvc.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
 srvc.simple.profile.models/MITX.txt -text svneol=unset#text/plain
