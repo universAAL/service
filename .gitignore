@@ -1,2 +1,6 @@
 srvc.pom/.project
 srvc.pom/.settings
+srvc.simple.profile.models/*.classpath
+srvc.simple.profile.models/*.project
+srvc.simple.profile.models/*.settings
+srvc.simple.profile.models/target
