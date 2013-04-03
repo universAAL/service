@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.universAAL.middleware.service.ServiceCaller;
-import org.universAAL.middleware.sodapop.msg.MessageContentSerializer;
+import org.universAAL.middleware.serialization.MessageContentSerializer;
 
 
 /**
