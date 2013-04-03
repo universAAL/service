@@ -31,7 +31,7 @@ import org.universAAL.middleware.container.Container;
 import org.universAAL.middleware.container.ModuleContext;
 import org.universAAL.middleware.container.osgi.uAALBundleContainer;
 import org.universAAL.middleware.service.ServiceCaller;
-import org.universAAL.middleware.sodapop.msg.MessageContentSerializer;
+import org.universAAL.middleware.serialization.MessageContentSerializer;
 import org.universAAL.service.asor.impl.ASOREngineImpl;
 import org.universAAL.service.asor.impl.ASORServiceMngr;
 import org.universAAL.service.asor.impl.servicecaller.ASORServiceCaller;

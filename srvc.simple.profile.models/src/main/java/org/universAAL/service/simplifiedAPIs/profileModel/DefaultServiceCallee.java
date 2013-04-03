@@ -66,7 +66,7 @@ public class DefaultServiceCallee extends ServiceCallee {
 			profileModels.put(sp.getURI(), profileModel[i]);
 			realizedServices[i] = sp;
 		}
-		addNewRegParams(realizedServices);
+		addNewServiceProfiles(realizedServices);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class DefaultServiceCallee extends ServiceCallee {
 	public final void addServiceProfileModel(ServiceProfileModel spm) {
 		ServiceProfile sp = spm.getServiceProfile();
 		profileModels.put(sp.getURI(), spm);
-		addNewRegParams(new ServiceProfile[] { sp });
+		addNewServiceProfiles(new ServiceProfile[] { sp });
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class DefaultServiceCallee extends ServiceCallee {
 	public final void removeServiceProfileModel(ServiceProfileModel spm) {
 		ServiceProfile sp = spm.getServiceProfile();
 		profileModels.remove(sp.getURI());
-		removeMatchingRegParams(new ServiceProfile[] { sp });
+		removeMatchingProfiles(new ServiceProfile[] { sp });
 	}
 
 	/** {@inheritDoc} */
