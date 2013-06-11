@@ -517,7 +517,7 @@ srvc.asor/ASOR_Scripts/TurnOffLamp/TurnOffLampsInLoop.ttl -text
 srvc.asor/ASOR_Scripts/TurnOnLamp/TurnOnLamp.ttl -text
 srvc.asor/ASOR_Scripts/TurnOnLamp/TurnOnLampsInLoop.ttl -text
 srvc.asor/ASOR_Vocabulary/AsorCallService.ttl -text
-srvc.asor/MITX.txt -text
+srvc.asor/NOTICE.txt -text
 srvc.asor/launches/BlinkingUniversAAL-1.2.1.launch -text
 srvc.asor/pom.xml -text
 srvc.asor/src/main/java/org/universAAL/service/asor/impl/ASOREngineImpl.java -text
@@ -538,7 +538,6 @@ srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestPa
 srvc.asor/src/main/java/org/universAAL/service/asor/owls/extensions/tests/TestTurtleRepresentationBridge.java -text
 srvc.pom/pom.xml -text
 srvc.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
-srvc.simple.profile.models/MITX.txt -text svneol=unset#text/plain
 srvc.simple.profile.models/NOTICE.txt -text svneol=unset#text/plain
 srvc.simple.profile.models/pom.xml -text
 srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/DefaultServiceCallee.java -text
