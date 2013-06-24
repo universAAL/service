@@ -1,0 +1,143 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix list: <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix expr: <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix service: <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix profile: <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix process: <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix process11: <http://www.daml.org/services/owl-s/1.1/Process.owl#> .
+@prefix ns: <http://ontology.igd.fhg.de/LightingConsumer.owl#> .
+@prefix getLamps: <http://ontology.universAAL.org/GetLampsService.ttl#> .
+@prefix turnOnLampsInLoop: <http://ontology.universAAL.org/TurnOnLampsInLoop.ttl#> .
+@prefix turnOffLampsInLoop: <http://ontology.universAAL.org/TurnOffLampsInLoop.ttl#> .
+@prefix : <D:/universAAL/workspaces/ServiceOrchestrator/ASOR_Scripts/1.StartBlinkingLamps.ttl#> .
+
+<> a owl:Ontology ;
+	owl:imports <http://www.daml.org/services/owl-s/1.2/Profile.owl> ;
+	owl:imports <http://www.daml.org/services/owl-s/1.1/Process.owl> ;
+	owl:imports <d:/universAAL/workspaces/ServiceOrchestrator/ASOR_Scripts/GetLamps/GetLamps.ttl> ;
+	owl:imports <d:/universAAL/workspaces/ServiceOrchestrator/ASOR_Scripts/TurnOnLamp/TurnOnLampsInLoop.ttl> ;
+	owl:imports <d:/universAAL/workspaces/ServiceOrchestrator/ASOR_Scripts/TurnOffLamp/TurnOffLampsInLoop.ttl> ;
+	owl:versionInfo "Start Blinking Lamps" .
+
+# Service description
+:StartBlinkingLampsService a service:Service ;
+	service:presents :StartBlinkingLampsProfile ;
+	service:describedBy :StartBlinkingLampsProcess .
+
+# Profile description
+:StartBlinkingLampsProfile a profile:Profile ;
+	service:presentedBy :StartBlinkingLampsService ;
+	profile:serviceName "Start Blinking Lamps"@en ;
+	profile:textDescription "This service is used as Ontology for start blinking lamps"@en .
+
+# Process description
+:StartBlinkingLampsProcess a process:CompositeProcess ;
+	rdfs:label "Composite process - will blinking lamps" ;
+	rdfs:comment """...""" ;
+	process:invocable "true"^^xsd:boolean ;
+	service:describes :StartBlinkingLampsService ;
+	process:hasLocal :currentValue ;
+	process:hasLocal :blinkingLampIsOn ;
+	process:hasResult :LampsResult ;
+	process:hasOutput :BlinkingLamps .
+
+:BlinkingLamps a process:Output ;
+	process:parameterType "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#List"^^xsd:anyURI .
+
+:LampsResult a process:Result ;
+	process:inCondition expr:AlwaysTrue ;
+	process:withOutput [ 
+		a process:OutputBinding ;
+			process:toVar :BlinkingLamps ;
+			process:valueSource [ 
+				a process:ValueOf ;
+					process:theVar ns:controlledLamps ;
+					process:fromProcess :PerformGetLamps
+				] 
+		] .
+		
+:currentValue a process:Loc ;
+	process:parameterType "http://www.w3.org/2001/XMLSchema#boolean"^^xsd:anyURI ;
+	process:initialValue "true"^^xsd:boolean .
+
+:blinkingLampIsOn a process:Loc ;
+	process:parameterType "http://www.w3.org/2001/XMLSchema#boolean"^^xsd:anyURI ;
+	process:initialValue "true"^^xsd:boolean .
+	
+:StartBlinkingLampsProcess process:composedOf [ 
+	a process:Sequence ;
+		process:components [
+			a process:ControlConstructList ;
+				list:first :StartBlinkingLampProcessRepeatWhile ;
+				list:rest list:nil 
+			]
+	] .
+	
+:StartBlinkingLampProcessRepeatWhile a process:Repeat-While ;
+	process:whileCondition :StartBlinkingLampProcessRepeatWhileCondition ;
+	process:whileProcess :StartBlinkingSequence .
+
+:StartBlinkingLampProcessRepeatWhileCondition a expr:SWRL-Condition ;
+		expr:expressionObject [
+			a swrl:AtomList ;
+				rdf:first [
+					a swrl:BuiltinAtom ;
+						swrl:builtin <http://www.w3.org/2003/11/swrlb#equal> ;
+						swrl:arguments [
+							a rdf:List ;
+								rdf:first :currentValue ;
+								rdf:rest [
+									a rdf:List ;
+										rdf:first :blinkingLampIsOn ;
+										rdf:rest rdf:nil 
+									]
+							]
+					] ;
+				rdf:rest rdf:nil
+			] .
+
+:StartBlinkingSequence a process:Sequence ;
+		process:components [
+			a process:ControlConstructList ;
+				list:first :PerformGetLamps ;
+				list:rest [
+					a process:ControlConstructList ;
+						list:first :TurnOnLamps ;
+						list:rest [
+							a process:ControlConstructList ;
+								list:first :TurnOffLamps ;
+								list:rest list:nil 
+							]
+					]
+			] .
+
+:PerformGetLamps a process:Perform ;
+	process:process getLamps:GetLampsProcess .
+
+:TurnOnLamps a process:Perform ;
+	process:process turnOnLampsInLoop:TurnOnLampsInLoopProcess ;
+	process:hasDataFrom [
+		 a process:InputBinding ;
+			process:toVar turnOnLampsInLoop:Lamps ;
+			process:valueSource [
+				a process:ValueOf ;
+					process:theVar ns:controlledLamps ;
+					process:fromProcess :PerformGetLamps 
+				] 
+		] .
+
+:TurnOffLamps a process:Perform ;
+	process:process turnOffLampsInLoop:TurnOffLampsInLoopProcess ;
+	process:hasDataFrom [
+		 a process:InputBinding ;
+			process:toVar turnOffLampsInLoop:Lamps ;
+			process:valueSource [
+				a process:ValueOf ;
+					process:theVar ns:controlledLamps ;
+					process:fromProcess :PerformGetLamps 
+				] 
+		] .
