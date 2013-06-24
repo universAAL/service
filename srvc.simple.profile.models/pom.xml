@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.universAAL.service</groupId>
     <artifactId>srvc.pom</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
     <relativePath>../srvc.pom/</relativePath>
   </parent>
   <artifactId>srvc.simple.profile.models</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1-SNAPSHOT</version>
   <name>universAAL Service Profile Models and Default Provider</name>
   <description>SPMs help define and manage (even dynamically) services</description>
   <properties>
