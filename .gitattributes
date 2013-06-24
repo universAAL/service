@@ -1,2 +1,9 @@
 * text=auto !eol
 srvc.pom/pom.xml -text
+srvc.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
+srvc.simple.profile.models/NOTICE.txt -text svneol=unset#text/plain
+srvc.simple.profile.models/pom.xml -text
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/DefaultServiceCallee.java -text
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/ServiceProfileModel.java -text
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/StartUIServiceProfileModel.java -text svneol=unset#text/plain
+srvc.simple.profile.models/src/main/java/org/universAAL/service/simplifiedAPIs/profileModel/osgi/Activator.java -text
