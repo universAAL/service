@@ -10,3 +10,7 @@ srvc.simple.profile.models-1.2.1-SNAPSHOT/*.classpath
 srvc.simple.profile.models-1.2.1-SNAPSHOT/*.project
 srvc.simple.profile.models-1.2.1-SNAPSHOT/*.settings
 srvc.simple.profile.models-1.2.1-SNAPSHOT/target
+srvc.simple.profile.models-1.3.3-SNAPSHOT/*.classpath
+srvc.simple.profile.models-1.3.3-SNAPSHOT/*.project
+srvc.simple.profile.models-1.3.3-SNAPSHOT/*.settings
+srvc.simple.profile.models-1.3.3-SNAPSHOT/target
