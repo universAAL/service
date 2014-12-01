@@ -1,1 +1,0 @@
-java -cp ..\lib\@fileName@.jar examples.WSDL2OWLS
