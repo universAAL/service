@@ -1,12 +1,3 @@
-owls-api/.classpath
-owls-api/.project
-owls-api/.settings
-owls-api/bin
-owls-api/target
-srvc.asor/.classpath
-srvc.asor/.project
-srvc.asor/.settings
-srvc.asor/target
 srvc.pom/.project
 srvc.pom/.settings
 srvc.simple.profile.models/*.classpath
