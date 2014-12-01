@@ -1,0 +1,21 @@
+importPackage(java.util);
+
+println("Hello from inside scripting2!");
+println("Hello from inside\r\n" + 
+	" scripting2!");
+
+//println("test = " + author.call());
+
+i = 10;
+
+var list1 = Arrays.asList
+      (['Homer', 'Bart', 'Marge', 'Maggie', 'Lisa']);
+
+//var listObject = {
+//    list2 : Arrays.asList
+//       (['Moe', 'Barney', 'Ned']),
+//    getList2 : function() {
+//       return listObject.list2;
+//    }
+//};
+
