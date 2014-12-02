@@ -60,9 +60,6 @@ public class Test extends BusTestCase {
 
 	((JUnitModuleContext) mc).setLogLevel(LogLevel.DEBUG);
 
-	// ((JUnitModuleContext) mc)
-	// .setLogLevel(JUnitModuleContext.LogLevel.DEBUG);
-
 	// new ExecutionEngine(mc, this).execute2("");
 	// ExecutionEngine e = new ExecutionEngine(mc, this);
 	// e.execute3();

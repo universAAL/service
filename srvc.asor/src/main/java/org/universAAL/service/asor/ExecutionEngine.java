@@ -104,6 +104,9 @@ public class ExecutionEngine extends Service {
 	ContextBusWrapper cw = ctxtWrapper;
 	ctxtWrapper = null;
 	cw.unregister();
+	
+	publisher.close();
+	caller.close();
     }
 
     public void execute(String content, String engineName) {
