@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.universAAL.middleware.container.ModuleContext;
+import org.universAAL.middleware.container.utils.LogUtils;
 import org.universAAL.middleware.context.ContextEvent;
 import org.universAAL.middleware.context.ContextEventPattern;
 import org.universAAL.middleware.context.ContextPublisher;
@@ -35,6 +36,7 @@ import org.universAAL.middleware.context.DefaultContextPublisher;
 import org.universAAL.middleware.context.owl.ContextProvider;
 import org.universAAL.middleware.context.owl.ContextProviderType;
 import org.universAAL.middleware.owl.MergedRestriction;
+import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.middleware.service.CallStatus;
 import org.universAAL.middleware.service.DefaultServiceCaller;
 import org.universAAL.middleware.service.ServiceCall;
@@ -110,6 +112,8 @@ public class ExecutionEngine extends Service {
     }
 
     public void execute(File file, String engineName) {
+	if (file == null)
+	    return;
 	String content = null;
 
 	try {
@@ -118,25 +122,22 @@ public class ExecutionEngine extends Service {
 	    // this just means that the file is empty -> no action/output needed
 	    // e1.printStackTrace();
 	} catch (FileNotFoundException e2) {
-	    e2.printStackTrace();
+	    LogUtils.logError(AsorActivator.mc, ExecutionEngine.class,
+		    "execute", new Object[] { "Script could not be executed.",
+			    file.toString() }, e2);
+	    // e2.printStackTrace();
 	}
 	if (content == null)
 	    content = "";
 	this.content = content;
-	System.out.println(" ------------- executing script with content:");
-	System.out.println(content);
-	System.out.println(" ------------- ..end content!");
+	// System.out.println(" ------------- executing script with content:");
+	// System.out.println(content);
+	// System.out.println(" ------------- ..end content!");
 	execute(content, engineName);
-	// try {
-	// execute(new FileReader(file), engineName);
-	// } catch (FileNotFoundException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
     }
 
     public void execute(final Reader r, String engineName) {
-	System.out.println("hello");
+	// System.out.println("hello");
 	engine = new ScriptEngineManager().getEngineByName(engineName);
 
 	bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
@@ -147,9 +148,15 @@ public class ExecutionEngine extends Service {
 	thread = new Thread() {
 	    @Override
 	    public void run() {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! script:");
+		LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class,
+			"execute", new Object[] { "Executing script: ",
+				filename }, null);
+		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! script:");
+
 		Thread.currentThread().setContextClassLoader(
 			this.getClass().getClassLoader());
+
+		Object retval = null;
 		try {
 		    startDate = new Date();
 		    isRunning = true;
@@ -163,14 +170,36 @@ public class ExecutionEngine extends Service {
 			} catch (Exception e) {
 			}
 		    }
-		    engine.eval(r, bindings);
+		    retval = engine.eval(r, bindings);
 		} catch (ScriptException e) {
-		    e.printStackTrace();
+		    LogUtils.logError(
+			    AsorActivator.mc,
+			    ExecutionEngine.class,
+			    "execute",
+			    new Object[] {
+				    "An error occurred while executing script: ",
+				    filename }, e);
+		    // e.printStackTrace();
 		}
 		isRunning = false;
 		endDate = new Date();
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! finished "
-			+ filename);
+
+		String sRetVal = null;
+		if (retval == null) {
+		    sRetVal = "null";
+		} else {
+		    if (retval instanceof Resource) {
+			sRetVal = "Resource(" + retval.toString() + ")";
+		    } else {
+			sRetVal = retval.toString();
+		    }
+		}
+		LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class,
+			"execute", new Object[] {
+				"Finished executing script: ", filename,
+				" Return value: ", sRetVal }, null);
+		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! finished "
+		// + filename);
 	    }
 	};
 	thread.start();

@@ -21,6 +21,8 @@ package org.universAAL.service.asor;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.universAAL.middleware.container.utils.LogUtils;
 import org.universAAL.middleware.context.ContextEvent;
 import org.universAAL.middleware.context.ContextEventPattern;
 import org.universAAL.middleware.rdf.Resource;
@@ -36,10 +38,13 @@ public class ContextBusWrapper {
     public void publish(Object event) {
 	ContextEvent evt = null;
 	if (event instanceof ContextEvent) {
-	    System.out.println("Firing event -\n");
+	    // System.out.println("Firing event -\n");
 	    evt = (ContextEvent) event;
 	} else {
-	    System.out.println("ERROR: event == null!");
+	    // System.out.println("ERROR: event == null!");
+	    LogUtils.logError(AsorActivator.mc, ContextBusWrapper.class,
+		    "publish",
+		    "Event can not be published, it is not an instance of ContextEvent.");
 	    return;
 	}
 
@@ -54,7 +59,8 @@ public class ContextBusWrapper {
     }
 
     public void register(final String callback, Object profile) {
-	register(callback, new ContextEventPattern[] { (ContextEventPattern)profile });
+	register(callback,
+		new ContextEventPattern[] { (ContextEventPattern) profile });
     }
 
     public void register(final String callback, ContextEventPattern[] profiles) {

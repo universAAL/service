@@ -76,7 +76,8 @@ public class AsorProvider {
 	}
 
 	// log
-	String msg = "Found the following files for ASOR to start:\n";
+	String msg = "Found the following files for ASOR to start:"
+		+ System.getProperty("line.separator");
 	for (File file : files) {
 	    // System.out.println("FILE: " + file);
 	    msg += "   file: " + file + System.getProperty("line.separator");
@@ -102,8 +103,12 @@ public class AsorProvider {
 	ms.engine = new ExecutionEngine(AsorActivator.mc, file.getName());
 	synchronized (scripts) {
 	    scripts.add(ms);
-	    System.out.println(" ----------------------- \n starting script: "
-		    + file.getName()+"\nURI: " + file.toURI().toString());
+	    // System.out.println(" ----------------------- \n starting script: "
+	    // + file.getName() + "\nURI: " + file.toURI().toString());
+	    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class,
+		    "addScript", new Object[] { "Starting script: ", ms.uri },
+		    null);
+
 	    // TODO: language classifier
 	    ms.engine.execute(file, "JavaScript");
 	}
@@ -131,8 +136,11 @@ public class AsorProvider {
 	ms.engine = new ExecutionEngine(AsorActivator.mc, name);
 	synchronized (scripts) {
 	    scripts.add(ms);
-	    System.out.println(" ----------------------- \n starting script: "
-		    + name);
+	    // System.out.println(" ----------------------- \n starting script: "
+	    // + name);
+	    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class,
+		    "addScript", new Object[] { "Starting script: ", ms.uri },
+		    null);
 	    // TODO: language classifier
 	    ms.engine.execute(s.getContent(), "JavaScript");
 	    return ms.uri;
@@ -154,6 +162,9 @@ public class AsorProvider {
 		if (ms.uri.equals(uri)) {
 		    it.remove();
 		    ms.engine.stop();
+		    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class,
+			    "removeScript", new Object[] { "Removing script: ",
+				    uri }, null);
 		    return true;
 		}
 	    }
@@ -194,7 +205,9 @@ public class AsorProvider {
 	while (i > 0) {
 	    i--;
 	    ManagedScript ms = scripts.get(0);
-	    System.out.println("---------- removing script: " + ms.uri);
+	    // System.out.println("---------- removing script: " + ms.uri);
+	    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "stop",
+		    new Object[] { "Stopping script: ", ms.uri }, null);
 	    removeScript(ms.uri);
 	}
     }

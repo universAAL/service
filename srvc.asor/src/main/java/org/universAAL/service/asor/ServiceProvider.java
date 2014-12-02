@@ -1,6 +1,6 @@
-/*
-	Copyright 2008-2010 Fraunhofer IGD, http://www.igd.fraunhofer.de
-	Fraunhofer-Gesellschaft - Institute of Computer Graphics Research 
+/*	
+	Copyright 2007-2014 Fraunhofer IGD, http://www.igd.fraunhofer.de
+	Fraunhofer-Gesellschaft - Institute for Computer Graphics Research
 	
 	See the NOTICE file distributed with this work for additional 
 	information regarding copyright ownership
@@ -24,6 +24,7 @@ import javax.script.ScriptException;
 import javax.script.Invocable;
 
 import org.universAAL.middleware.container.ModuleContext;
+import org.universAAL.middleware.container.utils.LogUtils;
 import org.universAAL.middleware.service.ServiceCall;
 import org.universAAL.middleware.service.ServiceCallee;
 import org.universAAL.middleware.service.ServiceResponse;
@@ -31,17 +32,8 @@ import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
 @SuppressWarnings("restriction")
 public class ServiceProvider extends ServiceCallee {
-
     private ScriptEngine engine;
     private String callback;
-
-    // this is just to prepare a standard error message for later use
-    // private static final ServiceResponse invalidInput = new ServiceResponse(
-    // CallStatus.serviceSpecificFailure);
-    // static {
-    // invalidInput.addOutput(new ProcessOutput(
-    // ServiceResponse.PROP_SERVICE_SPECIFIC_ERROR, "Invalid input!"));
-    // }
 
     public ServiceProvider(ModuleContext mc, ServiceProfile[] profiles,
 	    ScriptEngine engine, String callback) {
@@ -58,7 +50,6 @@ public class ServiceProvider extends ServiceCallee {
     @Override
     public ServiceResponse handleCall(ServiceCall call) {
 	if (call == null)
-	    // TODO: log
 	    return null;
 
 	String operation = call.getProcessURI();
@@ -72,11 +63,21 @@ public class ServiceProvider extends ServiceCallee {
 
 	    return sr;
 	} catch (NoSuchMethodException e) {
-	    // TODO: log
-	    e.printStackTrace();
+	    LogUtils.logError(
+		    AsorActivator.mc,
+		    ServiceProvider.class,
+		    "handleCall",
+		    new Object[] { "Service call could not be transferred to script: callback method does not exist. A NoSuchMethodException occurred." },
+		    e);
+	    // e.printStackTrace();
 	} catch (ScriptException e) {
-	    // TODO: log
-	    e.printStackTrace();
+	    LogUtils.logError(
+		    AsorActivator.mc,
+		    ServiceProvider.class,
+		    "handleCall",
+		    new Object[] { "Service call could not be transferred to script. A ScriptException occurred." },
+		    e);
+	    // e.printStackTrace();
 	}
 
 	return null;

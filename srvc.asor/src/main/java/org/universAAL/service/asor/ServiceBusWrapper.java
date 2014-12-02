@@ -22,6 +22,8 @@ package org.universAAL.service.asor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.universAAL.middleware.container.utils.LogUtils;
 import org.universAAL.middleware.service.CallStatus;
 import org.universAAL.middleware.service.ServiceRequest;
 import org.universAAL.middleware.service.ServiceResponse;
@@ -38,19 +40,22 @@ public class ServiceBusWrapper {
     public Map<String, List<Object>> call(Object req) {
 	ServiceRequest sreq = null;
 	if (req instanceof ServiceRequest) {
-	    System.out.println("Performing request -\n");
+	    // System.out.println("Performing request -\n");
 	    sreq = (ServiceRequest) req;
 	} else {
-	    System.out.println("ERROR: sreq == null!");
+	    // System.out.println("ERROR: sreq == null!");
+	    LogUtils.logError(AsorActivator.mc, ServiceBusWrapper.class,
+		    "call",
+		    "Service can not be called, it is not an instance of ServiceRequest.");
 	    return null;
 	}
 
 	ServiceResponse sr = exec.caller.call(sreq);
 	if (sr.getCallStatus() == CallStatus.succeeded) {
-	    System.out.println("OK: CallStatus succeeded!");
+	    // System.out.println("OK: CallStatus succeeded!");
 	    return sr.getOutputsMap();
 	} else {
-	    System.out.println("ERROR: CallStatus not succeeded!");
+	    // System.out.println("ERROR: CallStatus not succeeded!");
 	    return null;
 	}
     }
