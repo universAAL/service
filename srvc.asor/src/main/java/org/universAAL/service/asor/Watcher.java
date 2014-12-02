@@ -1,3 +1,22 @@
+/*	
+	Copyright 2007-2014 Fraunhofer IGD, http://www.igd.fraunhofer.de
+	Fraunhofer-Gesellschaft - Institute for Computer Graphics Research
+	
+	See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership
+	
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	
+	  http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+ */
 package org.universAAL.service.asor;
 
 import java.io.File;
@@ -11,6 +30,8 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.universAAL.middleware.container.utils.LogUtils;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -86,8 +107,9 @@ public class Watcher {
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
-		System.out.format("%s: %s %d %s\n", event.kind().name(), filename,
-			event.count(), child.toUri().toString());
+		// System.out.format("%s: %s %d %s\n", event.kind().name(),
+		// filename,
+		// event.count(), child.toUri().toString());
 		if (filename == null || file == null)
 		    continue;
 		if (file.isDirectory())
@@ -103,8 +125,17 @@ public class Watcher {
 			    continue;
 		    }
 		    // remove the script and re-add it
-		    if (!provider.removeScript(filename))
-			System.out.println(" -- ERROR: removing script failed!");
+		    if (!provider.removeScript(filename)) {
+			// System.out
+			// .println(" -- ERROR: removing script failed!");
+			LogUtils.logError(
+				AsorActivator.mc,
+				Watcher.class,
+				"processEvents",
+				new Object[] {
+					"The watcher detected a modification of a file and tried to remove the script, but the script could not be removed: ",
+					filename }, null);
+		    }
 		    provider.addScript(file);
 		    // store mod time
 		    modTime.put(filename, mod);

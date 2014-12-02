@@ -2,6 +2,8 @@ package org.universAAL.service.asor.test;
 
 import java.util.List;
 
+import org.universAAL.middleware.bus.junit.BusTestCase;
+import org.universAAL.middleware.bus.permission.AccessControl;
 import org.universAAL.middleware.container.utils.ModuleConfigHome;
 import org.universAAL.middleware.owl.OntologyManagement;
 import org.universAAL.middleware.rdf.Resource;
@@ -13,15 +15,17 @@ import org.universAAL.ontology.asor.Asor;
 import org.universAAL.ontology.asor.AsorOntology;
 import org.universAAL.ontology.asor.Script;
 import org.universAAL.ontology.asor.ScriptEngine;
+import org.universAAL.ontology.lighting.LightingOntology;
+import org.universAAL.ontology.location.LocationOntology;
+import org.universAAL.ontology.phThing.PhThingOntology;
+import org.universAAL.ontology.shape.ShapeOntology;
 import org.universAAL.service.asor.AsorProvider;
 import org.universAAL.service.asor.AsorActivator;
-import org.universAAL.service.asor.Watcher;
-import org.universAAL.support.junit.lighting.LightingTestCase;
 import org.universAAL.container.JUnit.JUnitModuleContext;
 import org.universAAL.container.JUnit.JUnitModuleContext.LogLevel;
 
 @SuppressWarnings("deprecation")
-public class Test extends LightingTestCase {
+public class Test extends BusTestCase {
     static boolean isSetUp = false;
     static DefaultServiceCaller caller;
 
@@ -42,6 +46,15 @@ public class Test extends LightingTestCase {
 	super.setUp();
 	isSetUp = true;
 
+	OntologyManagement.getInstance().register(mc, new LocationOntology());
+	OntologyManagement.getInstance().register(mc, new ShapeOntology());
+	OntologyManagement.getInstance().register(mc, new PhThingOntology());
+	OntologyManagement.getInstance().register(mc, new LightingOntology());
+
+	mc.setAttribute(AccessControl.PROP_MODE, "none");
+	mc.setAttribute(AccessControl.PROP_MODE_UPDATE, "always");
+
+	
 	OntologyManagement.getInstance().register(mc, new AsorOntology());
 	AsorActivator.mc = mc;
 

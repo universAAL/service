@@ -179,13 +179,13 @@ public class AsorIntegration extends ServiceCallee {
     }
 
     private ServiceResponse removeScript(Script script) {
-	System.out.println("-- removeScript");
+	//System.out.println("-- removeScript");
 	as.removeScript(script);
 	return new ServiceResponse(CallStatus.succeeded);
     }
 
     private ServiceResponse addScript(Script script) {
-	System.out.println("-- addscript");
+	//System.out.println("-- addscript");
 	if (script.getContent() == null) {
 	    LogUtils.logDebug(AsorActivator.mc, AsorIntegration.class,
 		    "addScript",
