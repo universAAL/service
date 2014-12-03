@@ -30,8 +30,10 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.universAAL.middleware.container.utils.LogUtils;
+import org.universAAL.ontology.asor.LanguageClassifier;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -112,7 +114,11 @@ public class Watcher {
 		// event.count(), child.toUri().toString());
 		if (filename == null || file == null)
 		    continue;
-		if (file.isDirectory())
+
+		Map<String, LanguageClassifier[]> ext = EngineInfo
+			.getFileExtensions();
+		Set<String> validExt = ext.keySet();
+		if (!AsorProvider.isValidExt(file, validExt))
 		    continue;
 
 		if (kind == ENTRY_MODIFY) {
