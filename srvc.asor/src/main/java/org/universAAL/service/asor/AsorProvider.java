@@ -54,6 +54,30 @@ public class AsorProvider {
 	start();
     }
 
+    /**
+     * Determines whether the given file has a valid file extension according to
+     * the given set of extensions.
+     * 
+     * @param file
+     *            the file to check.
+     * @param validExt
+     *            the set of valid extensions.
+     * @return boolean
+     */
+    public static boolean isValidExt(File file, Set<String> validExt) {
+	if (file.isFile()) {
+	    String extension = "";
+	    int i = file.getName().lastIndexOf('.');
+	    if (i > 0) {
+		extension = file.getName().substring(i + 1);
+	    }
+	    if (validExt.contains(extension)) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
     public void start() {
 	// get valid extensions
 	Map<String, LanguageClassifier[]> ext = EngineInfo.getFileExtensions();
@@ -63,15 +87,8 @@ public class AsorProvider {
 	ArrayList<File> files = new ArrayList<File>();
 	File[] filesList = confHome.listFiles();
 	for (File file : filesList) {
-	    if (file.isFile()) {
-		String extension = "";
-		int i = file.getName().lastIndexOf('.');
-		if (i > 0) {
-		    extension = file.getName().substring(i + 1);
-		}
-		if (validExt.contains(extension)) {
-		    files.add(file);
-		}
+	    if (isValidExt(file, validExt)) {
+		files.add(file);
 	    }
 	}
 
@@ -80,7 +97,8 @@ public class AsorProvider {
 		+ System.getProperty("line.separator");
 	for (File file : files) {
 	    // System.out.println("FILE: " + file);
-	    msg += "   file: " + file + System.getProperty("line.separator");
+	    msg += "   file: " + file.toURI().toString()
+		    + System.getProperty("line.separator");
 	}
 	LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "start", msg);
 
