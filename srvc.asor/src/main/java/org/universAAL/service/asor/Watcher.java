@@ -110,8 +110,7 @@ public class Watcher {
 		    e.printStackTrace();
 		}
 		// System.out.format("%s: %s %d %s\n", event.kind().name(),
-		// filename,
-		// event.count(), child.toUri().toString());
+		// filename, event.count(), child.toUri().toString());
 		if (filename == null || file == null)
 		    continue;
 
@@ -146,6 +145,9 @@ public class Watcher {
 		    // store mod time
 		    modTime.put(filename, mod);
 		} else if (kind == ENTRY_CREATE) {
+		    // weird workaround for linux-editors
+		    provider.removeScript(filename);
+		    // now add the file
 		    provider.addScript(file);
 		} else if (kind == ENTRY_DELETE) {
 		    provider.removeScript(filename);
