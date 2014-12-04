@@ -42,7 +42,6 @@ public final class AsorActivator implements BundleActivator {
      */
     public void start(BundleContext context) throws Exception {
 	bc = context;
-	System.out.println(" -- BundleContext: " + bc);
 	mc = uAALBundleContainer.THE_CONTAINER
 		.registerModule(new Object[] { context });
 	BundleConfigHome folder = new BundleConfigHome(mc.getID());

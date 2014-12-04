@@ -65,15 +65,15 @@ public class AsorProvider {
      * @return boolean
      */
     public static boolean isValidExt(File file, Set<String> validExt) {
-	if (file.isFile()) {
-	    String extension = "";
-	    int i = file.getName().lastIndexOf('.');
-	    if (i > 0) {
-		extension = file.getName().substring(i + 1);
-	    }
-	    if (validExt.contains(extension)) {
-		return true;
-	    }
+	if (file.isDirectory())
+	    return false;
+	String extension = "";
+	int i = file.getName().lastIndexOf('.');
+	if (i > 0) {
+	    extension = file.getName().substring(i + 1);
+	}
+	if (validExt.contains(extension)) {
+	    return true;
 	}
 	return false;
     }
