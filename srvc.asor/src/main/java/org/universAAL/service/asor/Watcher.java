@@ -111,14 +111,25 @@ public class Watcher {
 		}
 		// System.out.format("%s: %s %d %s\n", event.kind().name(),
 		// filename, event.count(), child.toUri().toString());
-		if (filename == null || file == null)
+		if (filename == null || file == null) {
+		    // System.out.println(" -- ERROR: filename: " + filename
+		    // + "  file: " + file);
 		    continue;
+		}
 
 		Map<String, LanguageClassifier[]> ext = EngineInfo
 			.getFileExtensions();
 		Set<String> validExt = ext.keySet();
-		if (!AsorProvider.isValidExt(file, validExt))
+		if (!AsorProvider.isValidExt(file, validExt)) {
+		    LogUtils.logError(
+			    AsorActivator.mc,
+			    Watcher.class,
+			    "processEvents",
+			    new Object[] {
+				    "The watcher detected a change of a file but the file extension could not be recognized: ",
+				    file.toString() }, null);
 		    continue;
+		}
 
 		Long mod = file.lastModified();
 		if (kind == ENTRY_MODIFY) {
@@ -151,7 +162,17 @@ public class Watcher {
 		    provider.addScript(file);
 		    modTime.put(filename, mod);
 		} else if (kind == ENTRY_DELETE) {
-		    provider.removeScript(filename);
+		    if (!provider.removeScript(filename)) {
+			// System.out
+			// .println(" -- ERROR: removing script failed!");
+			LogUtils.logError(
+				AsorActivator.mc,
+				Watcher.class,
+				"processEvents",
+				new Object[] {
+					"The watcher detected the deletion of a file and tried to remove the script, but the script could not be removed: ",
+					filename }, null);
+		    }
 		    // remove mod time
 		    modTime.remove(filename);
 		}
