@@ -120,9 +120,9 @@ public class Watcher {
 		if (!AsorProvider.isValidExt(file, validExt))
 		    continue;
 
+		Long mod = file.lastModified();
 		if (kind == ENTRY_MODIFY) {
 		    Long time = modTime.get(filename);
-		    Long mod = file.lastModified();
 		    if (time != null) {
 			if (time.equals(mod))
 			    // time has not changed -> the file was not modified
@@ -149,6 +149,7 @@ public class Watcher {
 		    provider.removeScript(filename);
 		    // now add the file
 		    provider.addScript(file);
+		    modTime.put(filename, mod);
 		} else if (kind == ENTRY_DELETE) {
 		    provider.removeScript(filename);
 		    // remove mod time

@@ -120,7 +120,9 @@ public class ExecutionEngine extends Service {
 	String content = null;
 
 	try {
-	    content = new Scanner(file).useDelimiter("\\Z").next();
+	    Scanner scanner = new Scanner(file);
+	    content = scanner.useDelimiter("\\Z").next();
+	    scanner.close();
 	} catch (NoSuchElementException e1) {
 	    // this just means that the file is empty -> no action/output needed
 	    // e1.printStackTrace();
