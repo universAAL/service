@@ -4,6 +4,8 @@ srvc.asor/.settings
 srvc.asor/target
 srvc.pom/.project
 srvc.pom/.settings
+srvc.pom/srvc.karaf.feature/target
+srvc.pom/target
 srvc.simple.profile.models/*.classpath
 srvc.simple.profile.models/*.project
 srvc.simple.profile.models/*.settings

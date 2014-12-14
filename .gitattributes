@@ -15,6 +15,10 @@ srvc.asor/src/main/java/org/universAAL/service/asor/Watcher.java -text
 srvc.asor/src/test/java/org/universAAL/service/asor/test/Test.java -text
 srvc.asor/src/test/resources/log4j.properties -text
 srvc.pom/pom.xml -text
+srvc.pom/srvc.karaf.feature/ASL2.0.txt -text
+srvc.pom/srvc.karaf.feature/NOTICE.txt -text
+srvc.pom/srvc.karaf.feature/pom.xml -text
+srvc.pom/srvc.karaf.feature/src/features/features.xml -text
 srvc.simple.profile.models/ASL2.0.txt -text svneol=unset#text/plain
 srvc.simple.profile.models/NOTICE.txt -text svneol=unset#text/plain
 srvc.simple.profile.models/pom.xml -text
