@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="universAAL-Service-Feature" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+	<!-- Import Mw and Ontologies Feature Repositories -->
+	<repository>mvn:org.universAAL.middleware/mw.karaf.feature/${mw.karaf.feature.version}/xml/features</repository>
+	<repository>mvn:org.universAAL.ontology/ont.karaf.feature/${ont.karaf.feature.version}/xml/features</repository>
+
+
+	<feature name="uAAL-srvc.ASOR" description="AAL Service Orchestrator."
+		version="${pom.version}" resolver='(obr)'>
+		<feature>uAAL-Ont.ASOR</feature> 
+		<bundle start-level='70' start='true'>mvn:org.universAAL.service/srvc.asor/${srvc.asor.version}</bundle>
+	</feature>
+		
+</features>
