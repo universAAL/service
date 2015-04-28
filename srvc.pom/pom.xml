@@ -18,13 +18,11 @@
     <module>srvc.karaf.feature</module>
   </modules>
   <scm>
-    <connection>${svn.base}/${project.artifactId}</connection>
-    <developerConnection>${svn.base}/${project.artifactId}</developerConnection>
-    <url>${svn.base.url}${project.artifactId}</url>
+    <connection>scm:git:https://github.com/universAAL/service.git</connection>
+	<developerConnection>scm:git:git@github.com:universAAL/service.git</developerConnection>
   </scm>
   <properties>
     <remoteOBR></remoteOBR>
-    <gforge.project.name>service</gforge.project.name>
     <maven.compile.source>1.5</maven.compile.source>
     <maven.compile.target>1.5</maven.compile.target>
   </properties>
