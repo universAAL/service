@@ -13,11 +13,6 @@
   <version>3.3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>universAAL Service Karaf Feature</name>
-  <scm>
-    <connection>${svn.base}/srvc.pom/${project.artifactId}</connection>
-    <developerConnection>${svn.base}/srvc.pom/${project.artifactId}</developerConnection>
-    <url>${svn.base.url}$srvc.pom%2F{project.artifactId}</url>
-  </scm>
   <properties>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
