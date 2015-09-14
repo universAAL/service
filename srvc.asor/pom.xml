@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.universAAL.service</groupId>
     <artifactId>srvc.pom</artifactId>
-    <version>3.4.0</version>
+    <version>3.4.1-SNAPSHOT</version>
     <relativePath>../srvc.pom</relativePath>
   </parent>
   <artifactId>srvc.asor</artifactId>
-  <version>3.4.0</version>
+  <version>3.4.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>universAAL Service ASOR</name>
   <description>AAL Space Orchestrator</description>
