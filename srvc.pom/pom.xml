@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.universAAL</groupId>
     <artifactId>uAAL.pom</artifactId>
-    <version>3.3.1-SNAPSHOT</version>
+    <version>3.4.0</version>
   </parent>
   <groupId>org.universAAL.service</groupId>
   <artifactId>srvc.pom</artifactId>
-  <version>3.3.1-SNAPSHOT</version>
+  <version>3.4.0</version>
   <packaging>pom</packaging>
   <name>universAAL Service Suite</name>
   <description>.</description>
@@ -19,7 +19,7 @@
   </modules>
   <scm>
     <connection>scm:git:https://github.com/universAAL/service.git</connection>
-	<developerConnection>scm:git:git@github.com:universAAL/service.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:universAAL/service.git</developerConnection>
   </scm>
   <properties>
     <remoteOBR></remoteOBR>
@@ -31,14 +31,14 @@
       <dependency>
         <groupId>org.universAAL.middleware</groupId>
         <artifactId>mw.pom.osgi</artifactId>
-        <version>3.3.1-SNAPSHOT</version>
+        <version>3.4.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.universAAL.ontology</groupId>
         <artifactId>ont.pom</artifactId>
-        <version>3.3.1-SNAPSHOT</version>
+        <version>3.4.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -50,7 +50,7 @@
       <dependency>
         <groupId>org.universAAL.service</groupId>
         <artifactId>srvc.asor</artifactId>
-        <version>3.3.1-SNAPSHOT</version>
+        <version>3.4.0</version>
       </dependency>
       <dependency>
         <groupId>org.universAAL.service</groupId>
