@@ -23,14 +23,12 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.universAAL.middleware.container.ModuleContext;
 import org.universAAL.middleware.container.osgi.uAALBundleContainer;
-import org.universAAL.middleware.container.osgi.util.BundleConfigHome;
 
 /**
  * 
  * @author Carsten Stockloew
  * 
  */
-@SuppressWarnings("deprecation")
 public final class AsorActivator implements BundleActivator {
     public static ModuleContext mc;
     public static BundleContext bc;
@@ -44,9 +42,7 @@ public final class AsorActivator implements BundleActivator {
 	bc = context;
 	mc = uAALBundleContainer.THE_CONTAINER
 		.registerModule(new Object[] { context });
-	BundleConfigHome folder = new BundleConfigHome(mc.getID());
-
-	asor = new AsorProvider(folder);
+	asor = new AsorProvider(mc.getConfigHome());
     }
 
     public void stop(BundleContext mc) throws Exception {

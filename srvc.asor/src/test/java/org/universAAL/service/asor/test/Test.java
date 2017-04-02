@@ -1,10 +1,10 @@
 package org.universAAL.service.asor.test;
 
+import java.io.File;
 import java.util.List;
 
 import org.universAAL.middleware.bus.junit.BusTestCase;
 import org.universAAL.middleware.bus.permission.AccessControl;
-import org.universAAL.middleware.container.utils.ModuleConfigHome;
 import org.universAAL.middleware.owl.OntologyManagement;
 import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.middleware.service.CallStatus;
@@ -24,7 +24,6 @@ import org.universAAL.service.asor.AsorActivator;
 import org.universAAL.container.JUnit.JUnitModuleContext;
 import org.universAAL.container.JUnit.JUnitModuleContext.LogLevel;
 
-@SuppressWarnings("deprecation")
 public class Test extends BusTestCase {
     static boolean isSetUp = false;
     static DefaultServiceCaller caller;
@@ -66,13 +65,12 @@ public class Test extends BusTestCase {
 	// e.execute4();
 	// e.execute2("");
 
-	ModuleConfigHome confHome = new ModuleConfigHome(".", "");
 
 	// new Watcher(null, confHome.getAbsolutePath());
 	// if (true)
 	// return;
 
-	AsorProvider asor = new AsorProvider(confHome);
+	AsorProvider asor = new AsorProvider(new File("."));
 	while (asor.hasRunning()) {
 	}
 

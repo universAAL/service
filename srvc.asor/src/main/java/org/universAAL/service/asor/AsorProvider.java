@@ -27,13 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.universAAL.middleware.container.utils.LogUtils;
-import org.universAAL.middleware.container.utils.ModuleConfigHome;
 import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.ontology.asor.LanguageClassifier;
 import org.universAAL.ontology.asor.Script;
 
-// TODO: use configuration manager to avoid this deprecated class
-@SuppressWarnings("deprecation")
 public class AsorProvider {
     public static final String BASE = "urn:ASOR/";
 
@@ -46,10 +43,10 @@ public class AsorProvider {
 
     List<ManagedScript> scripts = new LinkedList<ManagedScript>();
     AsorIntegration ai;
-    ModuleConfigHome confHome;
+    File confHome;
     private Watcher watcher = null;
 
-    public AsorProvider(ModuleConfigHome confHome) {
+    public AsorProvider(File confHome) {
 	this.confHome = confHome;
 	start();
     }
