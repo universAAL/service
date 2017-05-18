@@ -1,0 +1,44 @@
+language: java
+jdk: oraclejdk8
+sudo: false
+ 
+cache:
+  directories:
+    - ~/.m2
+
+branches: 
+ only:
+ - master
+
+env:
+  global:
+    secure: "x0YGFQM7Kll3TwnyTT7mZ5doz6pfcMH/Zff5cCPEF3Bln33IZiT5e8REoi2CpaNoNWsTLTbV/czT/jXJ+A/G5sQP1UeosgJvyHXLrof4SLNEcwGTVkc3ctkHHkeJKIUrm2wF/Zcifum8XRGdo8SjqoXM+IoiXSZwwPO81gWLaGc="
+
+addons:
+  apt:
+    packages:
+      - graphviz
+
+before_install:
+ - cd pom
+ - (curl -s https://raw.githubusercontent.com/universAAL/platform/master/uAAL.pom/src/scripts/settings.xml) > settings.xml
+ - cp settings.xml $HOME/.m2/settings.xml
+ - (curl -s https://raw.githubusercontent.com/universAAL/platform/master/uAAL.pom/src/scripts/ci.sh) > ci.sh
+ - chmod +x ci.sh
+ - export MY_REPO="service"
+
+install:
+ -
+
+before_script:
+ - cat /etc/mavenrc
+ - echo "MAVEN_OPTS='-Xmx2g'" > ~/.mavenrc
+
+script:
+ - ./ci.sh script
+
+after_success:
+ - ./ci.sh success
+
+notifications:
+  email: false
