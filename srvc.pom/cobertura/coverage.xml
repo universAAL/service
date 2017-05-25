@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.6150537634408603" branch-rate="0.4714285714285714" lines-covered="286" lines-valid="465" branches-covered="66" branches-valid="140" complexity="3.176470588235294" version="2.1.1" timestamp="1495725381192">
+<coverage line-rate="0.6150537634408603" branch-rate="0.4714285714285714" lines-covered="286" lines-valid="465" branches-covered="66" branches-valid="140" complexity="3.176470588235294" version="2.1.1" timestamp="1495744502675">
 	<sources>
 		<source>--source</source>
 		<source>/home/travis/build/universAAL/service/srvc.pom/srvc.karaf.feature/src/main/features</source>
@@ -335,14 +335,14 @@
 								<line number="123" hits="2" branch="false"/>
 								<line number="128" hits="2" branch="false"/>
 								<line number="129" hits="2" branch="false"/>
-								<line number="130" hits="18" branch="true" condition-coverage="100% (2/2)">
+								<line number="130" hits="22" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="132" hits="16" branch="false"/>
+								<line number="132" hits="20" branch="false"/>
 								<line number="133" hits="0" branch="false"/>
-								<line number="134" hits="16" branch="false"/>
+								<line number="134" hits="20" branch="false"/>
 								<line number="136" hits="2" branch="false"/>
 							</lines>
 						</method>
@@ -617,14 +617,14 @@
 						<line number="123" hits="2" branch="false"/>
 						<line number="128" hits="2" branch="false"/>
 						<line number="129" hits="2" branch="false"/>
-						<line number="130" hits="18" branch="true" condition-coverage="100% (2/2)">
+						<line number="130" hits="22" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="132" hits="16" branch="false"/>
+						<line number="132" hits="20" branch="false"/>
 						<line number="133" hits="0" branch="false"/>
-						<line number="134" hits="16" branch="false"/>
+						<line number="134" hits="20" branch="false"/>
 						<line number="136" hits="2" branch="false"/>
 						<line number="139" hits="1" branch="true" condition-coverage="50% (1/2)">
 							<conditions>
