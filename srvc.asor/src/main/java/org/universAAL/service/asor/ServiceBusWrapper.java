@@ -30,54 +30,52 @@ import org.universAAL.middleware.service.ServiceResponse;
 import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
 public class ServiceBusWrapper {
-    Map<String, ServiceProvider> providers = new HashMap<String, ServiceProvider>();
-    ExecutionEngine exec;
+	Map<String, ServiceProvider> providers = new HashMap<String, ServiceProvider>();
+	ExecutionEngine exec;
 
-    public ServiceBusWrapper(ExecutionEngine exec) {
-	this.exec = exec;
-    }
-
-    public Map<String, List<Object>> call(Object req) {
-	ServiceRequest sreq = null;
-	if (req instanceof ServiceRequest) {
-	    // System.out.println("Performing request -\n");
-	    sreq = (ServiceRequest) req;
-	} else {
-	    // System.out.println("ERROR: sreq == null!");
-	    LogUtils.logError(AsorActivator.mc, ServiceBusWrapper.class,
-		    "call",
-		    "Service can not be called, it is not an instance of ServiceRequest.");
-	    return null;
+	public ServiceBusWrapper(ExecutionEngine exec) {
+		this.exec = exec;
 	}
 
-	ServiceResponse sr = exec.caller.call(sreq);
-	if (sr.getCallStatus() == CallStatus.succeeded) {
-	    // System.out.println("OK: CallStatus succeeded!");
-	    return sr.getOutputsMap();
-	} else {
-	    // System.out.println("ERROR: CallStatus not succeeded!");
-	    return null;
-	}
-    }
+	public Map<String, List<Object>> call(Object req) {
+		ServiceRequest sreq = null;
+		if (req instanceof ServiceRequest) {
+			// System.out.println("Performing request -\n");
+			sreq = (ServiceRequest) req;
+		} else {
+			// System.out.println("ERROR: sreq == null!");
+			LogUtils.logError(AsorActivator.mc, ServiceBusWrapper.class, "call",
+					"Service can not be called, it is not an instance of ServiceRequest.");
+			return null;
+		}
 
-    public void register(final String callback, ServiceProfile[] profiles) {
-	// System.out.println("Registering profiles: " + callback + "\n");
-	ServiceProvider sp = new ServiceProvider(AsorActivator.mc, profiles,
-		exec.engine, callback);
-	providers.put(callback, sp);
-    }
-
-    public void unregister(final String callback) {
-	ServiceProvider sp = providers.remove(callback);
-	if (sp != null) {
-	    sp.close();
+		ServiceResponse sr = exec.caller.call(sreq);
+		if (sr.getCallStatus() == CallStatus.succeeded) {
+			// System.out.println("OK: CallStatus succeeded!");
+			return sr.getOutputsMap();
+		} else {
+			// System.out.println("ERROR: CallStatus not succeeded!");
+			return null;
+		}
 	}
-    }
 
-    public void unregister() {
-	for (ServiceProvider sp : providers.values()) {
-	    sp.close();
+	public void register(final String callback, ServiceProfile[] profiles) {
+		// System.out.println("Registering profiles: " + callback + "\n");
+		ServiceProvider sp = new ServiceProvider(AsorActivator.mc, profiles, exec.engine, callback);
+		providers.put(callback, sp);
 	}
-	providers.clear();
-    }
+
+	public void unregister(final String callback) {
+		ServiceProvider sp = providers.remove(callback);
+		if (sp != null) {
+			sp.close();
+		}
+	}
+
+	public void unregister() {
+		for (ServiceProvider sp : providers.values()) {
+			sp.close();
+		}
+		providers.clear();
+	}
 }

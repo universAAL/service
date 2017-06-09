@@ -32,54 +32,46 @@ import org.universAAL.middleware.service.owls.profile.ServiceProfile;
 
 @SuppressWarnings("restriction")
 public class ServiceProvider extends ServiceCallee {
-    private ScriptEngine engine;
-    private String callback;
+	private ScriptEngine engine;
+	private String callback;
 
-    public ServiceProvider(ModuleContext mc, ServiceProfile[] profiles,
-	    ScriptEngine engine, String callback) {
-	// TODO: register profiles ~after~ variables are set
-	super(mc, profiles);
-	this.engine = engine;
-	this.callback = callback;
-    }
-
-    @Override
-    public void communicationChannelBroken() {
-    }
-
-    @Override
-    public ServiceResponse handleCall(ServiceCall call) {
-	if (call == null)
-	    return null;
-
-	String operation = call.getProcessURI();
-	if (operation == null)
-	    return null;
-
-	try {
-	    Invocable inv = (Invocable) engine;
-	    ServiceResponse sr = (ServiceResponse) inv.invokeFunction(callback,
-		    call);
-
-	    return sr;
-	} catch (NoSuchMethodException e) {
-	    LogUtils.logError(
-		    AsorActivator.mc,
-		    ServiceProvider.class,
-		    "handleCall",
-		    new Object[] { "Service call could not be transferred to script: callback method does not exist. A NoSuchMethodException occurred." },
-		    e);
-	    // e.printStackTrace();
-	} catch (ScriptException e) {
-	    LogUtils.logError(
-		    AsorActivator.mc,
-		    ServiceProvider.class,
-		    "handleCall",
-		    new Object[] { "Service call could not be transferred to script. A ScriptException occurred." },
-		    e);
-	    // e.printStackTrace();
+	public ServiceProvider(ModuleContext mc, ServiceProfile[] profiles, ScriptEngine engine, String callback) {
+		// TODO: register profiles ~after~ variables are set
+		super(mc, profiles);
+		this.engine = engine;
+		this.callback = callback;
 	}
 
-	return null;
-    }
+	@Override
+	public void communicationChannelBroken() {
+	}
+
+	@Override
+	public ServiceResponse handleCall(ServiceCall call) {
+		if (call == null)
+			return null;
+
+		String operation = call.getProcessURI();
+		if (operation == null)
+			return null;
+
+		try {
+			Invocable inv = (Invocable) engine;
+			ServiceResponse sr = (ServiceResponse) inv.invokeFunction(callback, call);
+
+			return sr;
+		} catch (NoSuchMethodException e) {
+			LogUtils.logError(AsorActivator.mc, ServiceProvider.class, "handleCall",
+					new Object[] {
+							"Service call could not be transferred to script: callback method does not exist. A NoSuchMethodException occurred." },
+					e);
+			// e.printStackTrace();
+		} catch (ScriptException e) {
+			LogUtils.logError(AsorActivator.mc, ServiceProvider.class, "handleCall",
+					new Object[] { "Service call could not be transferred to script. A ScriptException occurred." }, e);
+			// e.printStackTrace();
+		}
+
+		return null;
+	}
 }

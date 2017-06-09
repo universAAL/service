@@ -30,46 +30,40 @@ import org.universAAL.middleware.context.ContextSubscriber;
 
 @SuppressWarnings("restriction")
 public class ContextConsumer extends ContextSubscriber {
-    private ScriptEngine engine;
-    private String callback;
+	private ScriptEngine engine;
+	private String callback;
 
-    public ContextConsumer(ModuleContext mc, ContextEventPattern[] profiles,
-	    ScriptEngine engine, String callback) {
-	// TODO: register profiles ~after~ variables are set
-	super(mc, profiles);
-	this.engine = engine;
-	this.callback = callback;
-    }
-
-    @Override
-    public void communicationChannelBroken() {
-    }
-
-    @Override
-    public void handleContextEvent(ContextEvent event) {
-	if (event == null)
-	    return;
-
-	try {
-	    Invocable inv = (Invocable) engine;
-	    inv.invokeFunction(callback, event);
-	    return;
-	} catch (NoSuchMethodException e) {
-	    LogUtils.logError(
-		    AsorActivator.mc,
-		    ContextConsumer.class,
-		    "handleContextEvent",
-		    new Object[] { "Context event could not be transferred to script: callback method does not exist. A NoSuchMethodException occurred." },
-		    e);
-	    // e.printStackTrace();
-	} catch (ScriptException e) {
-	    LogUtils.logError(
-		    AsorActivator.mc,
-		    ContextConsumer.class,
-		    "handleContextEvent",
-		    new Object[] { "Context event could not be transferred to script. A ScriptException occurred." },
-		    e);
-	    // e.printStackTrace();
+	public ContextConsumer(ModuleContext mc, ContextEventPattern[] profiles, ScriptEngine engine, String callback) {
+		// TODO: register profiles ~after~ variables are set
+		super(mc, profiles);
+		this.engine = engine;
+		this.callback = callback;
 	}
-    }
+
+	@Override
+	public void communicationChannelBroken() {
+	}
+
+	@Override
+	public void handleContextEvent(ContextEvent event) {
+		if (event == null)
+			return;
+
+		try {
+			Invocable inv = (Invocable) engine;
+			inv.invokeFunction(callback, event);
+			return;
+		} catch (NoSuchMethodException e) {
+			LogUtils.logError(AsorActivator.mc, ContextConsumer.class, "handleContextEvent",
+					new Object[] {
+							"Context event could not be transferred to script: callback method does not exist. A NoSuchMethodException occurred." },
+					e);
+			// e.printStackTrace();
+		} catch (ScriptException e) {
+			LogUtils.logError(AsorActivator.mc, ContextConsumer.class, "handleContextEvent",
+					new Object[] { "Context event could not be transferred to script. A ScriptException occurred." },
+					e);
+			// e.printStackTrace();
+		}
+	}
 }

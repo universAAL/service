@@ -28,59 +28,56 @@ import org.universAAL.middleware.context.ContextEventPattern;
 import org.universAAL.middleware.rdf.Resource;
 
 public class ContextBusWrapper {
-    Map<String, ContextConsumer> consumers = new HashMap<String, ContextConsumer>();
-    ExecutionEngine exec;
+	Map<String, ContextConsumer> consumers = new HashMap<String, ContextConsumer>();
+	ExecutionEngine exec;
 
-    public ContextBusWrapper(ExecutionEngine exec) {
-	this.exec = exec;
-    }
-
-    public void publish(Object event) {
-	ContextEvent evt = null;
-	if (event instanceof ContextEvent) {
-	    // System.out.println("Firing event -\n");
-	    evt = (ContextEvent) event;
-	} else {
-	    // System.out.println("ERROR: event == null!");
-	    LogUtils.logError(AsorActivator.mc, ContextBusWrapper.class,
-		    "publish",
-		    "Event can not be published, it is not an instance of ContextEvent.");
-	    return;
+	public ContextBusWrapper(ExecutionEngine exec) {
+		this.exec = exec;
 	}
 
-	exec.publisher.publish(evt);
-    }
+	public void publish(Object event) {
+		ContextEvent evt = null;
+		if (event instanceof ContextEvent) {
+			// System.out.println("Firing event -\n");
+			evt = (ContextEvent) event;
+		} else {
+			// System.out.println("ERROR: event == null!");
+			LogUtils.logError(AsorActivator.mc, ContextBusWrapper.class, "publish",
+					"Event can not be published, it is not an instance of ContextEvent.");
+			return;
+		}
 
-    public void publish(Resource subject, String predicate, Object object) {
-	subject.setProperty(predicate, object);
-
-	ContextEvent evt = new ContextEvent(subject, predicate);
-	exec.publisher.publish(evt);
-    }
-
-    public void register(final String callback, Object profile) {
-	register(callback,
-		new ContextEventPattern[] { (ContextEventPattern) profile });
-    }
-
-    public void register(final String callback, ContextEventPattern[] profiles) {
-	// System.out.println("Registering profiles: " + callback + "\n");
-	ContextConsumer sp = new ContextConsumer(AsorActivator.mc, profiles,
-		exec.engine, callback);
-	consumers.put(callback, sp);
-    }
-
-    public void unregister(final String callback) {
-	ContextConsumer cc = consumers.remove(callback);
-	if (cc != null) {
-	    cc.close();
+		exec.publisher.publish(evt);
 	}
-    }
 
-    public void unregister() {
-	for (ContextConsumer cc : consumers.values()) {
-	    cc.close();
+	public void publish(Resource subject, String predicate, Object object) {
+		subject.setProperty(predicate, object);
+
+		ContextEvent evt = new ContextEvent(subject, predicate);
+		exec.publisher.publish(evt);
 	}
-	consumers.clear();
-    }
+
+	public void register(final String callback, Object profile) {
+		register(callback, new ContextEventPattern[] { (ContextEventPattern) profile });
+	}
+
+	public void register(final String callback, ContextEventPattern[] profiles) {
+		// System.out.println("Registering profiles: " + callback + "\n");
+		ContextConsumer sp = new ContextConsumer(AsorActivator.mc, profiles, exec.engine, callback);
+		consumers.put(callback, sp);
+	}
+
+	public void unregister(final String callback) {
+		ContextConsumer cc = consumers.remove(callback);
+		if (cc != null) {
+			cc.close();
+		}
+	}
+
+	public void unregister() {
+		for (ContextConsumer cc : consumers.values()) {
+			cc.close();
+		}
+		consumers.clear();
+	}
 }

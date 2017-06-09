@@ -55,158 +55,145 @@ import javax.script.*;
  */
 @SuppressWarnings("restriction")
 public class ExecutionEngine extends Service {
-    private Bindings bindings;
-    private ModuleContext mc;
-    ServiceCaller caller;
-    ContextPublisher publisher;
-    ScriptEngine engine = null;
-    Date startDate;
-    Date endDate;
-    boolean isRunning = true;
-    ServiceBusWrapper srvcWrapper;
-    ContextBusWrapper ctxtWrapper;
-    String filename;
-    static Class<?>[] stdimports;
-    String content;
-    Thread thread = null;
+	private Bindings bindings;
+	private ModuleContext mc;
+	ServiceCaller caller;
+	ContextPublisher publisher;
+	ScriptEngine engine = null;
+	Date startDate;
+	Date endDate;
+	boolean isRunning = true;
+	ServiceBusWrapper srvcWrapper;
+	ContextBusWrapper ctxtWrapper;
+	String filename;
+	static Class<?>[] stdimports;
+	String content;
+	Thread thread = null;
 
-    static {
-	stdimports = new Class[] { ServiceRequest.class, ServiceCall.class,
-		ServiceResponse.class, CallStatus.class, ProcessOutput.class,
-		ContextEvent.class, ContextEventPattern.class,
-		MergedRestriction.class };
-    }
-
-    public ExecutionEngine(ModuleContext mc, String filename) {
-	this.mc = mc;
-	this.filename = filename;
-	caller = new DefaultServiceCaller(this.mc);
-
-	ContextProvider info = new ContextProvider(AsorProvider.BASE
-		+ "ctxt.provider/" + filename);
-	info.setType(ContextProviderType.controller);
-	info.setProvidedEvents(new ContextEventPattern[] { new ContextEventPattern() });
-	publisher = new DefaultContextPublisher(mc, info);
-
-	srvcWrapper = new ServiceBusWrapper(this);
-	ctxtWrapper = new ContextBusWrapper(this);
-    }
-
-    public void stop() {
-	// stops all existing callees and subscribers
-	if (thread != null)
-	    thread.interrupt();
-
-	ServiceBusWrapper sw = srvcWrapper;
-	srvcWrapper = null;
-	sw.unregister();
-
-	ContextBusWrapper cw = ctxtWrapper;
-	ctxtWrapper = null;
-	cw.unregister();
-	
-	publisher.close();
-	caller.close();
-    }
-
-    public void execute(String content, String engineName) {
-	this.content = content;
-	execute(new StringReader(content), engineName);
-    }
-
-    public void execute(File file, String engineName) {
-	if (file == null)
-	    return;
-	String content = null;
-
-	try {
-	    Scanner scanner = new Scanner(file);
-	    content = scanner.useDelimiter("\\Z").next();
-	    scanner.close();
-	} catch (NoSuchElementException e1) {
-	    // this just means that the file is empty -> no action/output needed
-	    // e1.printStackTrace();
-	} catch (FileNotFoundException e2) {
-	    LogUtils.logError(AsorActivator.mc, ExecutionEngine.class,
-		    "execute", new Object[] { "Script could not be executed.",
-			    file.toString() }, e2);
-	    // e2.printStackTrace();
+	static {
+		stdimports = new Class[] { ServiceRequest.class, ServiceCall.class, ServiceResponse.class, CallStatus.class,
+				ProcessOutput.class, ContextEvent.class, ContextEventPattern.class, MergedRestriction.class };
 	}
-	if (content == null)
-	    content = "";
-	this.content = content;
-	// System.out.println(" ------------- executing script with content:");
-	// System.out.println(content);
-	// System.out.println(" ------------- ..end content!");
-	execute(content, engineName);
-    }
 
-    public void execute(final Reader r, String engineName) {
-	// System.out.println("hello");
-	engine = new ScriptEngineManager().getEngineByName(engineName);
+	public ExecutionEngine(ModuleContext mc, String filename) {
+		this.mc = mc;
+		this.filename = filename;
+		caller = new DefaultServiceCaller(this.mc);
 
-	bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-	bindings.put("service", srvcWrapper);
-	bindings.put("ctxt", ctxtWrapper);
+		ContextProvider info = new ContextProvider(AsorProvider.BASE + "ctxt.provider/" + filename);
+		info.setType(ContextProviderType.controller);
+		info.setProvidedEvents(new ContextEventPattern[] { new ContextEventPattern() });
+		publisher = new DefaultContextPublisher(mc, info);
 
-	// execute in new thread
-	thread = new Thread() {
-	    @Override
-	    public void run() {
-		LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class,
-			"execute", new Object[] { "Executing script: ",
-				filename }, null);
-		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! script:");
+		srvcWrapper = new ServiceBusWrapper(this);
+		ctxtWrapper = new ContextBusWrapper(this);
+	}
 
-		Thread.currentThread().setContextClassLoader(
-			this.getClass().getClassLoader());
+	public void stop() {
+		// stops all existing callees and subscribers
+		if (thread != null)
+			thread.interrupt();
 
-		Object retval = null;
+		ServiceBusWrapper sw = srvcWrapper;
+		srvcWrapper = null;
+		sw.unregister();
+
+		ContextBusWrapper cw = ctxtWrapper;
+		ctxtWrapper = null;
+		cw.unregister();
+
+		publisher.close();
+		caller.close();
+	}
+
+	public void execute(String content, String engineName) {
+		this.content = content;
+		execute(new StringReader(content), engineName);
+	}
+
+	public void execute(File file, String engineName) {
+		if (file == null)
+			return;
+		String content = null;
+
 		try {
-		    startDate = new Date();
-		    isRunning = true;
-		    for (Class<?> c : stdimports) {
-			String s = "importClass(" + c.getName() + ");";
-			// System.out.println(" - ASOR: use std import: " + s);
-			// System.out.println(s);
-			// System.out.println(bindings);
-			try {
-			    engine.eval(s, bindings);
-			} catch (Exception e) {
-			}
-		    }
-		    retval = engine.eval(r, bindings);
-		} catch (ScriptException e) {
-		    LogUtils.logError(
-			    AsorActivator.mc,
-			    ExecutionEngine.class,
-			    "execute",
-			    new Object[] {
-				    "An error occurred while executing script: ",
-				    filename }, e);
-		    // e.printStackTrace();
+			Scanner scanner = new Scanner(file);
+			content = scanner.useDelimiter("\\Z").next();
+			scanner.close();
+		} catch (NoSuchElementException e1) {
+			// this just means that the file is empty -> no action/output needed
+			// e1.printStackTrace();
+		} catch (FileNotFoundException e2) {
+			LogUtils.logError(AsorActivator.mc, ExecutionEngine.class, "execute",
+					new Object[] { "Script could not be executed.", file.toString() }, e2);
+			// e2.printStackTrace();
 		}
-		isRunning = false;
-		endDate = new Date();
+		if (content == null)
+			content = "";
+		this.content = content;
+		// System.out.println(" ------------- executing script with content:");
+		// System.out.println(content);
+		// System.out.println(" ------------- ..end content!");
+		execute(content, engineName);
+	}
 
-		String sRetVal = null;
-		if (retval == null) {
-		    sRetVal = "null";
-		} else {
-		    if (retval instanceof Resource) {
-			sRetVal = "Resource(" + retval.toString() + ")";
-		    } else {
-			sRetVal = retval.toString();
-		    }
-		}
-		LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class,
-			"execute", new Object[] {
-				"Finished executing script: ", filename,
-				" Return value: ", sRetVal }, null);
-		// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! finished "
-		// + filename);
-	    }
-	};
-	thread.start();
-    }
+	public void execute(final Reader r, String engineName) {
+		// System.out.println("hello");
+		engine = new ScriptEngineManager().getEngineByName(engineName);
+
+		bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+		bindings.put("service", srvcWrapper);
+		bindings.put("ctxt", ctxtWrapper);
+
+		// execute in new thread
+		thread = new Thread() {
+			@Override
+			public void run() {
+				LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class, "execute",
+						new Object[] { "Executing script: ", filename }, null);
+				// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! script:");
+
+				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+
+				Object retval = null;
+				try {
+					startDate = new Date();
+					isRunning = true;
+					for (Class<?> c : stdimports) {
+						String s = "importClass(" + c.getName() + ");";
+						// System.out.println(" - ASOR: use std import: " + s);
+						// System.out.println(s);
+						// System.out.println(bindings);
+						try {
+							engine.eval(s, bindings);
+						} catch (Exception e) {
+						}
+					}
+					retval = engine.eval(r, bindings);
+				} catch (ScriptException e) {
+					LogUtils.logError(AsorActivator.mc, ExecutionEngine.class, "execute",
+							new Object[] { "An error occurred while executing script: ", filename }, e);
+					// e.printStackTrace();
+				}
+				isRunning = false;
+				endDate = new Date();
+
+				String sRetVal = null;
+				if (retval == null) {
+					sRetVal = "null";
+				} else {
+					if (retval instanceof Resource) {
+						sRetVal = "Resource(" + retval.toString() + ")";
+					} else {
+						sRetVal = retval.toString();
+					}
+				}
+				LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class, "execute",
+						new Object[] { "Finished executing script: ", filename, " Return value: ", sRetVal }, null);
+				// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! finished "
+				// + filename);
+			}
+		};
+		thread.start();
+	}
 }

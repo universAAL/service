@@ -32,198 +32,195 @@ import org.universAAL.ontology.asor.LanguageClassifier;
 import org.universAAL.ontology.asor.Script;
 
 public class AsorProvider {
-    public static final String BASE = "urn:ASOR/";
+	public static final String BASE = "urn:ASOR/";
 
-    class ManagedScript {
-	String uri = "";
-	ExecutionEngine engine = null;
-	File file = null;
-	boolean isPersistent = true;
-    }
-
-    List<ManagedScript> scripts = new LinkedList<ManagedScript>();
-    AsorIntegration ai;
-    File confHome;
-    private Watcher watcher = null;
-
-    public AsorProvider(File confHome) {
-	this.confHome = confHome;
-	start();
-    }
-
-    /**
-     * Determines whether the given file has a valid file extension according to
-     * the given set of extensions.
-     * 
-     * @param file
-     *            the file to check.
-     * @param validExt
-     *            the set of valid extensions.
-     * @return boolean
-     */
-    public static boolean isValidExt(File file, Set<String> validExt) {
-	if (file.isDirectory())
-	    return false;
-	String extension = "";
-	int i = file.getName().lastIndexOf('.');
-	if (i > 0) {
-	    extension = file.getName().substring(i + 1);
-	}
-	if (validExt.contains(extension)) {
-	    return true;
-	}
-	return false;
-    }
-
-    public void start() {
-	// get valid extensions
-	Map<String, LanguageClassifier[]> ext = EngineInfo.getFileExtensions();
-	Set<String> validExt = ext.keySet();
-
-	// get all files in confHome with vaild extension
-	ArrayList<File> files = new ArrayList<File>();
-	File[] filesList = confHome.listFiles();
-	for (File file : filesList) {
-	    if (isValidExt(file, validExt)) {
-		files.add(file);
-	    }
+	class ManagedScript {
+		String uri = "";
+		ExecutionEngine engine = null;
+		File file = null;
+		boolean isPersistent = true;
 	}
 
-	// log
-	String msg = "Found the following files for ASOR to start:"
-		+ System.getProperty("line.separator");
-	for (File file : files) {
-	    // System.out.println("FILE: " + file);
-	    msg += "   file: " + file.toURI().toString()
-		    + System.getProperty("line.separator");
-	}
-	LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "start", msg);
+	List<ManagedScript> scripts = new LinkedList<ManagedScript>();
+	AsorIntegration ai;
+	File confHome;
+	private Watcher watcher = null;
 
-	// start all valid files
-	for (File file : files) {
-	    addScript(file);
+	public AsorProvider(File confHome) {
+		this.confHome = confHome;
+		start();
 	}
 
-	// integrate with universAAL buses
-	ai = new AsorIntegration(this);
-
-	// start watcher
-	watcher = new Watcher(this, confHome.getAbsolutePath());
-    }
-
-    public void addScript(File file) {
-	ManagedScript ms = new ManagedScript();
-	ms.file = file;
-	ms.uri = file.toURI().toString();
-	ms.engine = new ExecutionEngine(AsorActivator.mc, file.getName());
-	synchronized (scripts) {
-	    scripts.add(ms);
-	    // System.out.println(" ----------------------- \n starting script: "
-	    // + file.getName() + "\nURI: " + file.toURI().toString());
-	    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class,
-		    "addScript", new Object[] { "Starting script: ", ms.uri },
-		    null);
-
-	    // TODO: language classifier
-	    ms.engine.execute(file, "JavaScript");
-	}
-	while (ms.engine.isRunning) {
-	    try {
-		Thread.sleep(10);
-	    } catch (InterruptedException e) {
-	    }
-	}
-    }
-
-    public String addScript(Script s) {
-	if (s == null)
-	    return null;
-	ManagedScript ms = new ManagedScript();
-	String name = s.getName();// TODO: make sure that this fits as URI
-	if (name == null)
-	    return null;
-
-	if (Resource.isAnon(ms.uri)) {
-	    ms.uri = BASE + name;
-	} else {
-	    ms.uri = s.getURI();
-	}
-	ms.engine = new ExecutionEngine(AsorActivator.mc, name);
-	synchronized (scripts) {
-	    scripts.add(ms);
-	    // System.out.println(" ----------------------- \n starting script: "
-	    // + name);
-	    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class,
-		    "addScript", new Object[] { "Starting script: ", ms.uri },
-		    null);
-	    // TODO: language classifier
-	    ms.engine.execute(s.getContent(), "JavaScript");
-	    return ms.uri;
-	}
-    }
-
-    public boolean removeScript(Script s) {
-	if (s == null)
-	    return false;
-	return removeScript(s.getURI());
-    }
-
-    public boolean removeScript(String uri) {
-	if (uri == null)
-	    return false;
-	synchronized (scripts) {
-	    for (Iterator<ManagedScript> it = scripts.iterator(); it.hasNext();) {
-		ManagedScript ms = it.next();
-		if (ms.uri.equals(uri)) {
-		    it.remove();
-		    ms.engine.stop();
-		    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class,
-			    "removeScript", new Object[] { "Removing script: ",
-				    uri }, null);
-		    return true;
+	/**
+	 * Determines whether the given file has a valid file extension according to
+	 * the given set of extensions.
+	 * 
+	 * @param file
+	 *            the file to check.
+	 * @param validExt
+	 *            the set of valid extensions.
+	 * @return boolean
+	 */
+	public static boolean isValidExt(File file, Set<String> validExt) {
+		if (file.isDirectory())
+			return false;
+		String extension = "";
+		int i = file.getName().lastIndexOf('.');
+		if (i > 0) {
+			extension = file.getName().substring(i + 1);
 		}
-	    }
-	}
-	return false;
-    }
-
-    public boolean hasRunning() {
-	synchronized (scripts) {
-	    for (ManagedScript ms : scripts) {
-		if (ms.engine.isRunning)
-		    return true;
-	    }
-	}
-	return false;
-    }
-
-    public List<Script> getScripts() {
-	List<Script> lst = new ArrayList<Script>();
-	synchronized (scripts) {
-	    for (ManagedScript ms : scripts) {
-		Script s = new Script(ms.uri);
-		s.setRunning(ms.engine.isRunning);
-		s.setPersistent(ms.isPersistent);
-		s.setContent(ms.engine.content);
-		lst.add(s);
-	    }
-	}
-	return lst;
-    }
-
-    public void stop() {
-	if (watcher != null) {
-	    watcher.stop();
+		if (validExt.contains(extension)) {
+			return true;
+		}
+		return false;
 	}
 
-	int i = scripts.size();
-	while (i > 0) {
-	    i--;
-	    ManagedScript ms = scripts.get(0);
-	    // System.out.println("---------- removing script: " + ms.uri);
-	    LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "stop",
-		    new Object[] { "Stopping script: ", ms.uri }, null);
-	    removeScript(ms.uri);
+	public void start() {
+		// get valid extensions
+		Map<String, LanguageClassifier[]> ext = EngineInfo.getFileExtensions();
+		Set<String> validExt = ext.keySet();
+
+		// get all files in confHome with vaild extension
+		ArrayList<File> files = new ArrayList<File>();
+		File[] filesList = confHome.listFiles();
+		for (File file : filesList) {
+			if (isValidExt(file, validExt)) {
+				files.add(file);
+			}
+		}
+
+		// log
+		String msg = "Found the following files for ASOR to start:" + System.getProperty("line.separator");
+		for (File file : files) {
+			// System.out.println("FILE: " + file);
+			msg += "   file: " + file.toURI().toString() + System.getProperty("line.separator");
+		}
+		LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "start", msg);
+
+		// start all valid files
+		for (File file : files) {
+			addScript(file);
+		}
+
+		// integrate with universAAL buses
+		ai = new AsorIntegration(this);
+
+		// start watcher
+		watcher = new Watcher(this, confHome.getAbsolutePath());
 	}
-    }
+
+	public void addScript(File file) {
+		ManagedScript ms = new ManagedScript();
+		ms.file = file;
+		ms.uri = file.toURI().toString();
+		ms.engine = new ExecutionEngine(AsorActivator.mc, file.getName());
+		synchronized (scripts) {
+			scripts.add(ms);
+			// System.out.println(" ----------------------- \n starting script:
+			// "
+			// + file.getName() + "\nURI: " + file.toURI().toString());
+			LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "addScript",
+					new Object[] { "Starting script: ", ms.uri }, null);
+
+			// TODO: language classifier
+			ms.engine.execute(file, "JavaScript");
+		}
+		while (ms.engine.isRunning) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+
+	public String addScript(Script s) {
+		if (s == null)
+			return null;
+		ManagedScript ms = new ManagedScript();
+		String name = s.getName();// TODO: make sure that this fits as URI
+		if (name == null)
+			return null;
+
+		if (Resource.isAnon(ms.uri)) {
+			ms.uri = BASE + name;
+		} else {
+			ms.uri = s.getURI();
+		}
+		ms.engine = new ExecutionEngine(AsorActivator.mc, name);
+		synchronized (scripts) {
+			scripts.add(ms);
+			// System.out.println(" ----------------------- \n starting script:
+			// "
+			// + name);
+			LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "addScript",
+					new Object[] { "Starting script: ", ms.uri }, null);
+			// TODO: language classifier
+			ms.engine.execute(s.getContent(), "JavaScript");
+			return ms.uri;
+		}
+	}
+
+	public boolean removeScript(Script s) {
+		if (s == null)
+			return false;
+		return removeScript(s.getURI());
+	}
+
+	public boolean removeScript(String uri) {
+		if (uri == null)
+			return false;
+		synchronized (scripts) {
+			for (Iterator<ManagedScript> it = scripts.iterator(); it.hasNext();) {
+				ManagedScript ms = it.next();
+				if (ms.uri.equals(uri)) {
+					it.remove();
+					ms.engine.stop();
+					LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "removeScript",
+							new Object[] { "Removing script: ", uri }, null);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean hasRunning() {
+		synchronized (scripts) {
+			for (ManagedScript ms : scripts) {
+				if (ms.engine.isRunning)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public List<Script> getScripts() {
+		List<Script> lst = new ArrayList<Script>();
+		synchronized (scripts) {
+			for (ManagedScript ms : scripts) {
+				Script s = new Script(ms.uri);
+				s.setRunning(ms.engine.isRunning);
+				s.setPersistent(ms.isPersistent);
+				s.setContent(ms.engine.content);
+				lst.add(s);
+			}
+		}
+		return lst;
+	}
+
+	public void stop() {
+		if (watcher != null) {
+			watcher.stop();
+		}
+
+		int i = scripts.size();
+		while (i > 0) {
+			i--;
+			ManagedScript ms = scripts.get(0);
+			// System.out.println("---------- removing script: " + ms.uri);
+			LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "stop",
+					new Object[] { "Stopping script: ", ms.uri }, null);
+			removeScript(ms.uri);
+		}
+	}
 }

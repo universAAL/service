@@ -30,22 +30,21 @@ import org.universAAL.middleware.container.osgi.uAALBundleContainer;
  * 
  */
 public final class AsorActivator implements BundleActivator {
-    public static ModuleContext mc;
-    public static BundleContext bc;
-    private AsorProvider asor;
+	public static ModuleContext mc;
+	public static BundleContext bc;
+	private AsorProvider asor;
 
-    /**
-     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
-     *      )
-     */
-    public void start(BundleContext context) throws Exception {
-	bc = context;
-	mc = uAALBundleContainer.THE_CONTAINER
-		.registerModule(new Object[] { context });
-	asor = new AsorProvider(mc.getConfigHome());
-    }
+	/**
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
+	 *      )
+	 */
+	public void start(BundleContext context) throws Exception {
+		bc = context;
+		mc = uAALBundleContainer.THE_CONTAINER.registerModule(new Object[] { context });
+		asor = new AsorProvider(mc.getConfigHome());
+	}
 
-    public void stop(BundleContext mc) throws Exception {
-	asor.stop();
-    }
+	public void stop(BundleContext mc) throws Exception {
+		asor.stop();
+	}
 }

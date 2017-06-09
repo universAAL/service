@@ -36,67 +36,64 @@ import org.universAAL.ontology.asor.ScriptEngine;
 @SuppressWarnings("restriction")
 public class EngineInfo {
 
-    public static List<ScriptEngine> getEngines() {
-	ScriptEngineManager scriptManager = new ScriptEngineManager();
-	List<ScriptEngineFactory> scriptFactories = scriptManager
-		.getEngineFactories();
+	public static List<ScriptEngine> getEngines() {
+		ScriptEngineManager scriptManager = new ScriptEngineManager();
+		List<ScriptEngineFactory> scriptFactories = scriptManager.getEngineFactories();
 
-	List<ScriptEngine> retVal = new ArrayList<ScriptEngine>(
-		scriptFactories.size());
+		List<ScriptEngine> retVal = new ArrayList<ScriptEngine>(scriptFactories.size());
 
-	for (ScriptEngineFactory factory : scriptFactories) {
-	    ScriptEngine se = new ScriptEngine();
+		for (ScriptEngineFactory factory : scriptFactories) {
+			ScriptEngine se = new ScriptEngine();
 
-	    se.setName(factory.getEngineName());
-	    se.setVersion(factory.getEngineVersion());
-	    se.setLanguageVersion(factory.getLanguageVersion());
-	    se.setMimeTypes(factory.getMimeTypes().toArray(new String[0]));
-	    se.setFileExtensions(factory.getExtensions().toArray(new String[0]));
+			se.setName(factory.getEngineName());
+			se.setVersion(factory.getEngineVersion());
+			se.setLanguageVersion(factory.getLanguageVersion());
+			se.setMimeTypes(factory.getMimeTypes().toArray(new String[0]));
+			se.setFileExtensions(factory.getExtensions().toArray(new String[0]));
 
-	    // find the language classifier
-	    OntClassInfo oci = OntologyManagement.getInstance()
-		    .getOntClassInfo(LanguageClassifier.MY_URI);
-	    if (oci != null) {
-		Resource[] instances = oci.getInstances();
-		for (Resource r : instances) {
-		    if (!(r instanceof LanguageClassifier))
-			continue;
-		    LanguageClassifier lc = (LanguageClassifier) r;
-		    String[] names = lc.getName();
-		    List<String> engineNames = factory.getNames();
-		    boolean found = false;
-		    for (String name : names) {
-			// if one of the names of the language classifier is a
-			// short name of the engine, then add the language
-			// classifier
-			for (String en : engineNames) {
-			    if (en.equals(name)) {
-				se.addLanguageClassifier(lc);
-				found = true;
-				break;
-			    }
+			// find the language classifier
+			OntClassInfo oci = OntologyManagement.getInstance().getOntClassInfo(LanguageClassifier.MY_URI);
+			if (oci != null) {
+				Resource[] instances = oci.getInstances();
+				for (Resource r : instances) {
+					if (!(r instanceof LanguageClassifier))
+						continue;
+					LanguageClassifier lc = (LanguageClassifier) r;
+					String[] names = lc.getName();
+					List<String> engineNames = factory.getNames();
+					boolean found = false;
+					for (String name : names) {
+						// if one of the names of the language classifier is a
+						// short name of the engine, then add the language
+						// classifier
+						for (String en : engineNames) {
+							if (en.equals(name)) {
+								se.addLanguageClassifier(lc);
+								found = true;
+								break;
+							}
+						}
+						if (found)
+							break;
+					}
+				}
 			}
-			if (found)
-			    break;
-		    }
+			retVal.add(se);
 		}
-	    }
-	    retVal.add(se);
+
+		return retVal;
 	}
 
-	return retVal;
-    }
+	public static Map<String, LanguageClassifier[]> getFileExtensions() {
+		Map<String, LanguageClassifier[]> map = new HashMap<String, LanguageClassifier[]>();
+		List<ScriptEngine> engines = getEngines();
 
-    public static Map<String, LanguageClassifier[]> getFileExtensions() {
-	Map<String, LanguageClassifier[]> map = new HashMap<String, LanguageClassifier[]>();
-	List<ScriptEngine> engines = getEngines();
-
-	for (ScriptEngine se : engines) {
-	    String[] ext = se.getFileExtensions();
-	    for (String ex : ext) {
-		map.put(ex, se.getLanguageClassifier());
-	    }
+		for (ScriptEngine se : engines) {
+			String[] ext = se.getFileExtensions();
+			for (String ex : ext) {
+				map.put(ex, se.getLanguageClassifier());
+			}
+		}
+		return map;
 	}
-	return map;
-    }
 }
