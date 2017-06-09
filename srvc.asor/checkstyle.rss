@@ -27,8 +27,8 @@ under the License.
     <item>
       <title>File: 10,
              Errors: 163,
-             Warnings: 41,
-             Infos: 165
+             Warnings: 1,
+             Infos: 74
       </title>
             <link>http://service/srvc.asor//checkstyle.html</link>
       <description>
@@ -49,10 +49,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.ContextBusWrapper.java">org/universAAL/service/asor/ContextBusWrapper.java</a>
                 </td>
                 <td>
-                  18
+                  6
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   18
@@ -63,10 +63,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.ServiceBusWrapper.java">org/universAAL/service/asor/ServiceBusWrapper.java</a>
                 </td>
                 <td>
-                  12
+                  6
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   14
@@ -77,10 +77,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.ContextConsumer.java">org/universAAL/service/asor/ContextConsumer.java</a>
                 </td>
                 <td>
-                  17
+                  7
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
                   5
@@ -91,10 +91,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.EngineInfo.java">org/universAAL/service/asor/EngineInfo.java</a>
                 </td>
                 <td>
-                  9
+                  6
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   4
@@ -105,10 +105,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.ExecutionEngine.java">org/universAAL/service/asor/ExecutionEngine.java</a>
                 </td>
                 <td>
-                  24
+                  9
                 </td>
                 <td>
-                  7
+                  0
                 </td>
                 <td>
                   35
@@ -119,10 +119,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.ServiceProvider.java">org/universAAL/service/asor/ServiceProvider.java</a>
                 </td>
                 <td>
-                  17
+                  7
                 </td>
                 <td>
-                  4
+                  0
                 </td>
                 <td>
                   5
@@ -133,10 +133,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.AsorActivator.java">org/universAAL/service/asor/AsorActivator.java</a>
                 </td>
                 <td>
-                  13
+                  8
                 </td>
                 <td>
-                  2
+                  1
                 </td>
                 <td>
                   8
@@ -147,10 +147,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.Watcher.java">org/universAAL/service/asor/Watcher.java</a>
                 </td>
                 <td>
-                  14
+                  10
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   12
@@ -161,10 +161,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.AsorProvider.java">org/universAAL/service/asor/AsorProvider.java</a>
                 </td>
                 <td>
-                  27
+                  9
                 </td>
                 <td>
-                  8
+                  0
                 </td>
                 <td>
                   35
@@ -175,10 +175,10 @@ under the License.
                   <a href="http://service/srvc.asor//checkstyle.html#org.universAAL.service.asor.AsorIntegration.java">org/universAAL/service/asor/AsorIntegration.java</a>
                 </td>
                 <td>
-                  14
+                  6
                 </td>
                 <td>
-                  11
+                  0
                 </td>
                 <td>
                   27
