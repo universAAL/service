@@ -56,7 +56,7 @@ public class Test extends BusTestCase {
 		OntologyManagement.getInstance().register(mc, new AsorOntology());
 		AsorActivator.mc = mc;
 
-		((JUnitModuleContext) mc).setLogLevel(LogLevel.DEBUG);
+		//((JUnitModuleContext) mc).setLogLevel(LogLevel.DEBUG);
 
 		// new ExecutionEngine(mc, this).execute2("");
 		// ExecutionEngine e = new ExecutionEngine(mc, this);
