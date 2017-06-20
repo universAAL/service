@@ -22,7 +22,7 @@ package org.universAAL.service.asor;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.universAAL.middleware.container.ModuleContext;
-import org.universAAL.middleware.container.osgi.uAALBundleContainer;
+import org.universAAL.middleware.container.osgi.OSGiContainer;
 
 /**
  * 
@@ -40,7 +40,7 @@ public final class AsorActivator implements BundleActivator {
 	 */
 	public void start(BundleContext context) throws Exception {
 		bc = context;
-		mc = uAALBundleContainer.THE_CONTAINER.registerModule(new Object[] { context });
+		mc = OSGiContainer.THE_CONTAINER.registerModule(new Object[] { context });
 		asor = new AsorProvider(mc.getConfigHome());
 	}
 
