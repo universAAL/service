@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.universAAL.middleware.bus.junit.BusTestCase;
 import org.universAAL.middleware.bus.permission.AccessControl;
+import org.universAAL.middleware.container.JUnit.JUnitModuleContext;
+import org.universAAL.middleware.container.JUnit.JUnitModuleContext.LogLevel;
 import org.universAAL.middleware.owl.OntologyManagement;
 import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.middleware.service.CallStatus;
@@ -21,8 +23,6 @@ import org.universAAL.ontology.phThing.PhThingOntology;
 import org.universAAL.ontology.shape.ShapeOntology;
 import org.universAAL.service.asor.AsorProvider;
 import org.universAAL.service.asor.AsorActivator;
-import org.universAAL.container.JUnit.JUnitModuleContext;
-import org.universAAL.container.JUnit.JUnitModuleContext.LogLevel;
 
 public class Test extends BusTestCase {
 	static boolean isSetUp = false;
