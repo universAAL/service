@@ -35,7 +35,7 @@ import org.universAAL.middleware.service.owls.profile.ServiceProfile;
  * Also this {@link ServiceCallee} implements the typical service call checks,
  * so the amount of code copied is decreased, and therefore code becomes more
  * understandable and error proof.
- * 
+ *
  * @author amedrano
  * @see ServiceProfileModel
  */
@@ -49,7 +49,7 @@ public class DefaultServiceCallee extends ServiceCallee {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param context
 	 *            {@link ModuleContext} mandatory for all {@link ServiceCallee},
 	 * @param profileModel
@@ -71,7 +71,7 @@ public class DefaultServiceCallee extends ServiceCallee {
 
 	/**
 	 * add a new service profile, by providing a {@link ServiceProfileModel}.
-	 * 
+	 *
 	 * @param spm
 	 *            the {@link ServiceProfileModel} which implements the
 	 *            {@link ServiceProfile} to be added.
@@ -85,7 +85,7 @@ public class DefaultServiceCallee extends ServiceCallee {
 	/**
 	 * Remove an existing service profile, by providing a
 	 * {@link ServiceProfileModel}.
-	 * 
+	 *
 	 * @param spm
 	 *            the {@link ServiceProfileModel} which implements the
 	 *            {@link ServiceProfile} to be removed.

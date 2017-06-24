@@ -32,7 +32,7 @@ public class Activator implements BundleActivator {
 		// Dummy library provision Bundle
 
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
