@@ -8,11 +8,11 @@
     <version>3.4.1-SNAPSHOT</version>
     <relativePath>../srvc.pom</relativePath>
   </parent>
-  <artifactId>srvc.asor</artifactId>
+  <artifactId>srvc.orchestrator</artifactId>
   <version>3.4.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
-  <name>universAAL Service ASOR</name>
-  <description>AAL Space Orchestrator</description>
+  <name>universAAL Service Orchestrator</name>
+  <description>Space Orchestrator</description>
   <dependencies>
     <dependency>
       <groupId>org.universAAL.middleware</groupId>
@@ -60,9 +60,9 @@
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Description>${project.description}</Bundle-Description>
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-            <Bundle-Activator>org.universAAL.service.asor.AsorActivator</Bundle-Activator>
+            <Bundle-Activator>org.universAAL.service.orchestrator.Activator</Bundle-Activator>
             <Export-Package></Export-Package>
-            <Private-Package>org.universAAL.service.asor</Private-Package>
+            <Private-Package>org.universAAL.service.orchestrator</Private-Package>
             <Import-Package>org.osgi.framework;version="[1,2)",*</Import-Package>
             <DynamicImport-Package>*</DynamicImport-Package>
           </instructions>

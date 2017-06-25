@@ -1,4 +1,4 @@
-package org.universAAL.service.asor.test;
+package org.universAAL.service.orchestrator.test;
 
 import java.io.File;
 import java.util.List;
@@ -21,8 +21,8 @@ import org.universAAL.ontology.lighting.LightingOntology;
 import org.universAAL.ontology.location.LocationOntology;
 import org.universAAL.ontology.phThing.PhThingOntology;
 import org.universAAL.ontology.shape.ShapeOntology;
-import org.universAAL.service.asor.AsorProvider;
-import org.universAAL.service.asor.AsorActivator;
+import org.universAAL.service.orchestrator.Activator;
+import org.universAAL.service.orchestrator.Provider;
 
 public class Test extends BusTestCase {
 	static boolean isSetUp = false;
@@ -54,7 +54,7 @@ public class Test extends BusTestCase {
 		mc.setAttribute(AccessControl.PROP_MODE_UPDATE, "always");
 
 		OntologyManagement.getInstance().register(mc, new AsorOntology());
-		AsorActivator.mc = mc;
+		Activator.mc = mc;
 
 		//((JUnitModuleContext) mc).setLogLevel(LogLevel.DEBUG);
 
@@ -68,7 +68,7 @@ public class Test extends BusTestCase {
 		// if (true)
 		// return;
 
-		AsorProvider asor = new AsorProvider(new File("."));
+		Provider asor = new Provider(new File("."));
 		while (asor.hasRunning()) {
 		}
 

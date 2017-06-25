@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import org.universAAL.middleware.rdf.Resource;
 import org.universAAL.ontology.asor.LanguageClassifier;
 import org.universAAL.ontology.asor.Script;
 
-public class AsorProvider {
+public class Provider {
 	public static final String BASE = "urn:ASOR/";
 
 	class ManagedScript {
@@ -42,11 +42,11 @@ public class AsorProvider {
 	}
 
 	List<ManagedScript> scripts = new LinkedList<ManagedScript>();
-	AsorIntegration ai;
+	Integration ai;
 	File confHome;
 	private Watcher watcher = null;
 
-	public AsorProvider(File confHome) {
+	public Provider(File confHome) {
 		this.confHome = confHome;
 		start();
 	}
@@ -95,7 +95,7 @@ public class AsorProvider {
 			// System.out.println("FILE: " + file);
 			msg += "   file: " + file.toURI().toString() + System.getProperty("line.separator");
 		}
-		LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "start", msg);
+		LogUtils.logDebug(Activator.mc, Provider.class, "start", msg);
 
 		// start all valid files
 		for (File file : files) {
@@ -103,7 +103,7 @@ public class AsorProvider {
 		}
 
 		// integrate with universAAL buses
-		ai = new AsorIntegration(this);
+		ai = new Integration(this);
 
 		// start watcher
 		watcher = new Watcher(this, confHome.getAbsolutePath());
@@ -113,13 +113,13 @@ public class AsorProvider {
 		ManagedScript ms = new ManagedScript();
 		ms.file = file;
 		ms.uri = file.toURI().toString();
-		ms.engine = new ExecutionEngine(AsorActivator.mc, file.getName());
+		ms.engine = new ExecutionEngine(Activator.mc, file.getName());
 		synchronized (scripts) {
 			scripts.add(ms);
 			// System.out.println(" ----------------------- \n starting script:
 			// "
 			// + file.getName() + "\nURI: " + file.toURI().toString());
-			LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "addScript",
+			LogUtils.logDebug(Activator.mc, Provider.class, "addScript",
 					new Object[] { "Starting script: ", ms.uri }, null);
 
 			// TODO: language classifier
@@ -146,13 +146,13 @@ public class AsorProvider {
 		} else {
 			ms.uri = s.getURI();
 		}
-		ms.engine = new ExecutionEngine(AsorActivator.mc, name);
+		ms.engine = new ExecutionEngine(Activator.mc, name);
 		synchronized (scripts) {
 			scripts.add(ms);
 			// System.out.println(" ----------------------- \n starting script:
 			// "
 			// + name);
-			LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "addScript",
+			LogUtils.logDebug(Activator.mc, Provider.class, "addScript",
 					new Object[] { "Starting script: ", ms.uri }, null);
 			// TODO: language classifier
 			ms.engine.execute(s.getContent(), "JavaScript");
@@ -175,7 +175,7 @@ public class AsorProvider {
 				if (ms.uri.equals(uri)) {
 					it.remove();
 					ms.engine.stop();
-					LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "removeScript",
+					LogUtils.logDebug(Activator.mc, Provider.class, "removeScript",
 							new Object[] { "Removing script: ", uri }, null);
 					return true;
 				}
@@ -218,7 +218,7 @@ public class AsorProvider {
 			i--;
 			ManagedScript ms = scripts.get(0);
 			// System.out.println("---------- removing script: " + ms.uri);
-			LogUtils.logDebug(AsorActivator.mc, AsorProvider.class, "stop",
+			LogUtils.logDebug(Activator.mc, Provider.class, "stop",
 					new Object[] { "Stopping script: ", ms.uri }, null);
 			removeScript(ms.uri);
 		}

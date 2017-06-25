@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -29,22 +29,18 @@ import org.universAAL.middleware.container.osgi.OSGiContainer;
  * @author Carsten Stockloew
  *
  */
-public final class AsorActivator implements BundleActivator {
+public final class Activator implements BundleActivator {
 	public static ModuleContext mc;
 	public static BundleContext bc;
-	private AsorProvider asor;
+	private Provider orchestrator;
 
-	/**
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
-	 *      )
-	 */
 	public void start(BundleContext context) throws Exception {
 		bc = context;
 		mc = OSGiContainer.THE_CONTAINER.registerModule(new Object[] { context });
-		asor = new AsorProvider(mc.getConfigHome());
+		orchestrator = new Provider(mc.getConfigHome());
 	}
 
 	public void stop(BundleContext mc) throws Exception {
-		asor.stop();
+		orchestrator.stop();
 	}
 }

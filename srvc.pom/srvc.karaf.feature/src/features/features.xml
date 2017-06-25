@@ -6,10 +6,10 @@
 	<repository>mvn:org.universAAL.ontology/ont.karaf.feature/${ont.karaf.feature.version}/xml/features</repository>
 
 
-	<feature name="uAAL-srvc.ASOR" description="AAL Service Orchestrator."
+	<feature name="uAAL-srvc.Orchestrator" description="Service Orchestrator."
 		version="${pom.version}" resolver='(obr)'>
 		<feature>uAAL-Ont.ASOR</feature> 
-		<bundle start-level='70' start='true'>mvn:org.universAAL.service/srvc.asor/${srvc.asor.version}</bundle>
+		<bundle start-level='70' start='true'>mvn:org.universAAL.service/srvc.orchestrator/${srvc.orchestrator.version}</bundle>
 	</feature>
 		
 </features>

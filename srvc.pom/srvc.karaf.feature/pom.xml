@@ -26,7 +26,7 @@
     </dependency>
     <dependency>
       <groupId>org.universAAL.service</groupId>
-      <artifactId>srvc.asor</artifactId>
+      <artifactId>srvc.orchestrator</artifactId>
     </dependency>
   </dependencies>
   <build>

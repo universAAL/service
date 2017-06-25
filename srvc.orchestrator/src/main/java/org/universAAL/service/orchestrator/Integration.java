@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +32,9 @@ import org.universAAL.ontology.asor.Asor;
 import org.universAAL.ontology.asor.Script;
 import org.universAAL.ontology.asor.ScriptEngine;
 
-public class AsorIntegration extends ServiceCallee {
+public class Integration extends ServiceCallee {
 
-	private AsorProvider as;
+	private Provider as;
 	private static int cntScript = 0;
 
 	public static final String NAMESPACE = "http://ontology.universAAL.org/AsorIntegration.owl#";
@@ -63,8 +63,8 @@ public class AsorIntegration extends ServiceCallee {
 	static final String OUTPUT_ENGINE_LANGS = NAMESPACE + "outputEngineLanguages";
 	static final String OUTPUT_SCRIPTS = NAMESPACE + "outputScripts";
 
-	protected AsorIntegration(AsorProvider as) {
-		super(AsorActivator.mc, createProfiles());
+	protected Integration(Provider as) {
+		super(Activator.mc, createProfiles());
 		this.as = as;
 	}
 
@@ -179,14 +179,14 @@ public class AsorIntegration extends ServiceCallee {
 	private ServiceResponse addScript(Script script) {
 		// System.out.println("-- addscript");
 		if (script.getContent() == null) {
-			LogUtils.logDebug(AsorActivator.mc, AsorIntegration.class, "addScript",
+			LogUtils.logDebug(Activator.mc, Integration.class, "addScript",
 					"Can not add script because the content is empty");
 			return new ServiceResponse(CallStatus.serviceSpecificFailure);
 		}
 
 		if (script.getName() == null) {
 			cntScript++;
-			script.setName(AsorProvider.BASE + "addedScript" + cntScript);
+			script.setName(Provider.BASE + "addedScript" + cntScript);
 		}
 
 		String uri = as.addScript(script);

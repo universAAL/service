@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,13 +38,13 @@ import org.universAAL.ontology.asor.LanguageClassifier;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class Watcher {
-	private AsorProvider provider;
+	private Provider provider;
 	private Path dir;
 	private WatchService watcher;
 	private Thread t;
 	private Map<String, Long> modTime;
 
-	public Watcher(AsorProvider provider, String fdir) {
+	public Watcher(Provider provider, String fdir) {
 		modTime = new HashMap<String, Long>();
 		this.provider = provider;
 		this.dir = Paths.get(fdir);
@@ -119,8 +119,8 @@ public class Watcher {
 
 				Map<String, LanguageClassifier[]> ext = EngineInfo.getFileExtensions();
 				Set<String> validExt = ext.keySet();
-				if (!AsorProvider.isValidExt(file, validExt)) {
-					LogUtils.logError(AsorActivator.mc, Watcher.class, "processEvents",
+				if (!Provider.isValidExt(file, validExt)) {
+					LogUtils.logError(Activator.mc, Watcher.class, "processEvents",
 							new Object[] {
 									"The watcher detected a change of a file but the file extension could not be recognized: ",
 									file.toString() },
@@ -141,7 +141,7 @@ public class Watcher {
 					if (!provider.removeScript(filename)) {
 						// System.out
 						// .println(" -- ERROR: removing script failed!");
-						LogUtils.logError(AsorActivator.mc, Watcher.class, "processEvents",
+						LogUtils.logError(Activator.mc, Watcher.class, "processEvents",
 								new Object[] {
 										"The watcher detected a modification of a file and tried to remove the script, but the script could not be removed: ",
 										filename },
@@ -160,7 +160,7 @@ public class Watcher {
 					if (!provider.removeScript(filename)) {
 						// System.out
 						// .println(" -- ERROR: removing script failed!");
-						LogUtils.logError(AsorActivator.mc, Watcher.class, "processEvents",
+						LogUtils.logError(Activator.mc, Watcher.class, "processEvents",
 								new Object[] {
 										"The watcher detected the deletion of a file and tried to remove the script, but the script could not be removed: ",
 										filename },

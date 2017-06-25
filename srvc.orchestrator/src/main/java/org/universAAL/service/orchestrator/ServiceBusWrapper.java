@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +44,7 @@ public class ServiceBusWrapper {
 			sreq = (ServiceRequest) req;
 		} else {
 			// System.out.println("ERROR: sreq == null!");
-			LogUtils.logError(AsorActivator.mc, ServiceBusWrapper.class, "call",
+			LogUtils.logError(Activator.mc, ServiceBusWrapper.class, "call",
 					"Service can not be called, it is not an instance of ServiceRequest.");
 			return null;
 		}
@@ -61,7 +61,7 @@ public class ServiceBusWrapper {
 
 	public void register(final String callback, ServiceProfile[] profiles) {
 		// System.out.println("Registering profiles: " + callback + "\n");
-		ServiceProvider sp = new ServiceProvider(AsorActivator.mc, profiles, exec.engine, callback);
+		ServiceProvider sp = new ServiceProvider(Activator.mc, profiles, exec.engine, callback);
 		providers.put(callback, sp);
 	}
 

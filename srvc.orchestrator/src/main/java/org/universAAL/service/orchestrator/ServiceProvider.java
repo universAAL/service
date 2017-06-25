@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -61,13 +61,13 @@ public class ServiceProvider extends ServiceCallee {
 
 			return sr;
 		} catch (NoSuchMethodException e) {
-			LogUtils.logError(AsorActivator.mc, ServiceProvider.class, "handleCall",
+			LogUtils.logError(Activator.mc, ServiceProvider.class, "handleCall",
 					new Object[] {
 							"Service call could not be transferred to script: callback method does not exist. A NoSuchMethodException occurred." },
 					e);
 			// e.printStackTrace();
 		} catch (ScriptException e) {
-			LogUtils.logError(AsorActivator.mc, ServiceProvider.class, "handleCall",
+			LogUtils.logError(Activator.mc, ServiceProvider.class, "handleCall",
 					new Object[] { "Service call could not be transferred to script. A ScriptException occurred." }, e);
 			// e.printStackTrace();
 		}

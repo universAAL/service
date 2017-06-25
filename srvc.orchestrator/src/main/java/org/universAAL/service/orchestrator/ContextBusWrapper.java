@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class ContextBusWrapper {
 			evt = (ContextEvent) event;
 		} else {
 			// System.out.println("ERROR: event == null!");
-			LogUtils.logError(AsorActivator.mc, ContextBusWrapper.class, "publish",
+			LogUtils.logError(Activator.mc, ContextBusWrapper.class, "publish",
 					"Event can not be published, it is not an instance of ContextEvent.");
 			return;
 		}
@@ -63,7 +63,7 @@ public class ContextBusWrapper {
 
 	public void register(final String callback, ContextEventPattern[] profiles) {
 		// System.out.println("Registering profiles: " + callback + "\n");
-		ContextConsumer sp = new ContextConsumer(AsorActivator.mc, profiles, exec.engine, callback);
+		ContextConsumer sp = new ContextConsumer(Activator.mc, profiles, exec.engine, callback);
 		consumers.put(callback, sp);
 	}
 

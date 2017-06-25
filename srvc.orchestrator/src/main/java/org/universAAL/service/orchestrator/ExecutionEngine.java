@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -80,7 +80,7 @@ public class ExecutionEngine extends Service {
 		this.filename = filename;
 		caller = new DefaultServiceCaller(this.mc);
 
-		ContextProvider info = new ContextProvider(AsorProvider.BASE + "ctxt.provider/" + filename);
+		ContextProvider info = new ContextProvider(Provider.BASE + "ctxt.provider/" + filename);
 		info.setType(ContextProviderType.controller);
 		info.setProvidedEvents(new ContextEventPattern[] { new ContextEventPattern() });
 		publisher = new DefaultContextPublisher(mc, info);
@@ -124,7 +124,7 @@ public class ExecutionEngine extends Service {
 			// this just means that the file is empty -> no action/output needed
 			// e1.printStackTrace();
 		} catch (FileNotFoundException e2) {
-			LogUtils.logError(AsorActivator.mc, ExecutionEngine.class, "execute",
+			LogUtils.logError(Activator.mc, ExecutionEngine.class, "execute",
 					new Object[] { "Script could not be executed.", file.toString() }, e2);
 			// e2.printStackTrace();
 		}
@@ -149,7 +149,7 @@ public class ExecutionEngine extends Service {
 		thread = new Thread() {
 			@Override
 			public void run() {
-				LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class, "execute",
+				LogUtils.logDebug(Activator.mc, ExecutionEngine.class, "execute",
 						new Object[] { "Executing script: ", filename }, null);
 				// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! script:");
 
@@ -171,7 +171,7 @@ public class ExecutionEngine extends Service {
 					}
 					retval = engine.eval(r, bindings);
 				} catch (ScriptException e) {
-					LogUtils.logError(AsorActivator.mc, ExecutionEngine.class, "execute",
+					LogUtils.logError(Activator.mc, ExecutionEngine.class, "execute",
 							new Object[] { "An error occurred while executing script: ", filename }, e);
 					// e.printStackTrace();
 				}
@@ -188,7 +188,7 @@ public class ExecutionEngine extends Service {
 						sRetVal = retval.toString();
 					}
 				}
-				LogUtils.logDebug(AsorActivator.mc, ExecutionEngine.class, "execute",
+				LogUtils.logDebug(Activator.mc, ExecutionEngine.class, "execute",
 						new Object[] { "Finished executing script: ", filename, " Return value: ", sRetVal }, null);
 				// System.out.println("!!!!!!!!!!!!!!!!!!!!!!! finished "
 				// + filename);

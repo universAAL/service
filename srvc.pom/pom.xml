@@ -14,7 +14,7 @@
   <name>universAAL Service Suite</name>
   <description>.</description>
   <modules>
-    <module>../srvc.asor</module>
+    <module>../srvc.orchestrator</module>
     <module>srvc.karaf.feature</module>
   </modules>
   <scm>
@@ -44,7 +44,7 @@
       </dependency>
       <dependency>
         <groupId>org.universAAL.service</groupId>
-        <artifactId>srvc.asor</artifactId>
+        <artifactId>srvc.orchestrator</artifactId>
         <version>3.4.1-SNAPSHOT</version>
       </dependency>
       <dependency>

@@ -17,7 +17,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
  */
-package org.universAAL.service.asor;
+package org.universAAL.service.orchestrator;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -54,13 +54,13 @@ public class ContextConsumer extends ContextSubscriber {
 			inv.invokeFunction(callback, event);
 			return;
 		} catch (NoSuchMethodException e) {
-			LogUtils.logError(AsorActivator.mc, ContextConsumer.class, "handleContextEvent",
+			LogUtils.logError(Activator.mc, ContextConsumer.class, "handleContextEvent",
 					new Object[] {
 							"Context event could not be transferred to script: callback method does not exist. A NoSuchMethodException occurred." },
 					e);
 			// e.printStackTrace();
 		} catch (ScriptException e) {
-			LogUtils.logError(AsorActivator.mc, ContextConsumer.class, "handleContextEvent",
+			LogUtils.logError(Activator.mc, ContextConsumer.class, "handleContextEvent",
 					new Object[] { "Context event could not be transferred to script. A ScriptException occurred." },
 					e);
 			// e.printStackTrace();
