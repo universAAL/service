@@ -26,7 +26,7 @@ under the License.
     <copyright>&#169;2017 universAAL Consortium</copyright>
     <item>
       <title>File: 10,
-             Errors: 163,
+             Errors: 162,
              Warnings: 1,
              Infos: 9
       </title>
@@ -46,35 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.ContextBusWrapper.java">org/universAAL/service/asor/ContextBusWrapper.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  18
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.ServiceBusWrapper.java">org/universAAL/service/asor/ServiceBusWrapper.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  14
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.ContextConsumer.java">org/universAAL/service/asor/ContextConsumer.java</a>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.ServiceProvider.java">org/universAAL/service/orchestrator/ServiceProvider.java</a>
                 </td>
                 <td>
                   1
@@ -88,77 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.EngineInfo.java">org/universAAL/service/asor/EngineInfo.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  4
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.ExecutionEngine.java">org/universAAL/service/asor/ExecutionEngine.java</a>
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  35
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.ServiceProvider.java">org/universAAL/service/asor/ServiceProvider.java</a>
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  5
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.AsorActivator.java">org/universAAL/service/asor/AsorActivator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  8
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.Watcher.java">org/universAAL/service/asor/Watcher.java</a>
-                </td>
-                <td>
-                  4
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  12
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.AsorProvider.java">org/universAAL/service/asor/AsorProvider.java</a>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.Provider.java">org/universAAL/service/orchestrator/Provider.java</a>
                 </td>
                 <td>
                   2
@@ -172,7 +74,105 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.asor.AsorIntegration.java">org/universAAL/service/asor/AsorIntegration.java</a>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.Activator.java">org/universAAL/service/orchestrator/Activator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  7
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.ContextBusWrapper.java">org/universAAL/service/orchestrator/ContextBusWrapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  18
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.EngineInfo.java">org/universAAL/service/orchestrator/EngineInfo.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.ServiceBusWrapper.java">org/universAAL/service/orchestrator/ServiceBusWrapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  14
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.Watcher.java">org/universAAL/service/orchestrator/Watcher.java</a>
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  12
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.ContextConsumer.java">org/universAAL/service/orchestrator/ContextConsumer.java</a>
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.ExecutionEngine.java">org/universAAL/service/orchestrator/ExecutionEngine.java</a>
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  35
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://service/srvc.pom//checkstyle.html#org.universAAL.service.orchestrator.Integration.java">org/universAAL/service/orchestrator/Integration.java</a>
                 </td>
                 <td>
                   0
