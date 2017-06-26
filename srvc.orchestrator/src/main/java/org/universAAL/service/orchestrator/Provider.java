@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.Set;
 import org.universAAL.middleware.container.utils.LogUtils;
 import org.universAAL.middleware.rdf.Resource;
-import org.universAAL.ontology.asor.LanguageClassifier;
-import org.universAAL.ontology.asor.Script;
+import org.universAAL.ontology.orchestration.LanguageClassifier;
+import org.universAAL.ontology.orchestration.Script;
 
 public class Provider {
-	public static final String BASE = "urn:ASOR/";
+	public static final String BASE = "urn:Orchestrator/";
 
 	class ManagedScript {
 		String uri = "";
@@ -90,7 +90,7 @@ public class Provider {
 		}
 
 		// log
-		String msg = "Found the following files for ASOR to start:" + System.getProperty("line.separator");
+		String msg = "Found the following files for Orchestrator to start:" + System.getProperty("line.separator");
 		for (File file : files) {
 			// System.out.println("FILE: " + file);
 			msg += "   file: " + file.toURI().toString() + System.getProperty("line.separator");

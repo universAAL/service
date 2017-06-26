@@ -161,7 +161,7 @@ public class ExecutionEngine extends Service {
 					isRunning = true;
 					for (Class<?> c : stdimports) {
 						String s = "importClass(" + c.getName() + ");";
-						// System.out.println(" - ASOR: use std import: " + s);
+						// System.out.println(" - Orchestrator: use std import: " + s);
 						// System.out.println(s);
 						// System.out.println(bindings);
 						try {

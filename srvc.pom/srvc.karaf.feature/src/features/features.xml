@@ -8,7 +8,7 @@
 
 	<feature name="uAAL-srvc.Orchestrator" description="Service Orchestrator."
 		version="${pom.version}" resolver='(obr)'>
-		<feature>uAAL-Ont.ASOR</feature> 
+		<feature>uAAL-Ont.ORCHESTRATION</feature> 
 		<bundle start-level='70' start='true'>mvn:org.universAAL.service/srvc.orchestrator/${srvc.orchestrator.version}</bundle>
 	</feature>
 		

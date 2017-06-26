@@ -13,12 +13,12 @@ import org.universAAL.middleware.service.CallStatus;
 import org.universAAL.middleware.service.DefaultServiceCaller;
 import org.universAAL.middleware.service.ServiceRequest;
 import org.universAAL.middleware.service.ServiceResponse;
-import org.universAAL.ontology.asor.Asor;
-import org.universAAL.ontology.asor.AsorOntology;
-import org.universAAL.ontology.asor.Script;
-import org.universAAL.ontology.asor.ScriptEngine;
 import org.universAAL.ontology.lighting.LightingOntology;
 import org.universAAL.ontology.location.LocationOntology;
+import org.universAAL.ontology.orchestration.OrchestrationOntology;
+import org.universAAL.ontology.orchestration.Orchestrator;
+import org.universAAL.ontology.orchestration.Script;
+import org.universAAL.ontology.orchestration.ScriptEngine;
 import org.universAAL.ontology.phThing.PhThingOntology;
 import org.universAAL.ontology.shape.ShapeOntology;
 import org.universAAL.service.orchestrator.Activator;
@@ -28,11 +28,11 @@ public class Test extends BusTestCase {
 	static boolean isSetUp = false;
 	static DefaultServiceCaller caller;
 
-	String NAMESPACE = "http://ontology.universAAL.org/AsorTest.owl#";
+	String NAMESPACE = "http://ontology.universAAL.org/OrchestratorTest.owl#";
 	String OUTPUT = NAMESPACE + "output";
 
-	String[] ppControls = new String[] { Asor.PROP_CONTROLS };
-	String[] ppSupports = new String[] { Asor.PROP_SUPPORTS };
+	String[] ppControls = new String[] { Orchestrator.PROP_CONTROLS };
+	String[] ppSupports = new String[] { Orchestrator.PROP_SUPPORTS };
 
 	public void tearDown() {
 		// don't do anything here so we don't have to set up again
@@ -53,7 +53,7 @@ public class Test extends BusTestCase {
 		mc.setAttribute(AccessControl.PROP_MODE, "none");
 		mc.setAttribute(AccessControl.PROP_MODE_UPDATE, "always");
 
-		OntologyManagement.getInstance().register(mc, new AsorOntology());
+		OntologyManagement.getInstance().register(mc, new OrchestrationOntology());
 		Activator.mc = mc;
 
 		//((JUnitModuleContext) mc).setLogLevel(LogLevel.DEBUG);
@@ -68,8 +68,8 @@ public class Test extends BusTestCase {
 		// if (true)
 		// return;
 
-		Provider asor = new Provider(new File("."));
-		while (asor.hasRunning()) {
+		Provider orchestrator = new Provider(new File("."));
+		while (orchestrator.hasRunning()) {
 		}
 
 		// List<ScriptEngine> en = EngineInfo.getEngines();
@@ -81,7 +81,7 @@ public class Test extends BusTestCase {
 	}
 
 	public int getNumberOfScripts() {
-		ServiceRequest req = new ServiceRequest(new Asor(), null);
+		ServiceRequest req = new ServiceRequest(new Orchestrator(), null);
 		req.addRequiredOutput(OUTPUT, ppControls);
 		ServiceResponse sr = caller.call(req);
 		assertTrue(sr != null);
@@ -105,7 +105,7 @@ public class Test extends BusTestCase {
 		script.setPersistent(false);
 
 		// add script and check answer
-		ServiceRequest req = new ServiceRequest(new Asor(), null);
+		ServiceRequest req = new ServiceRequest(new Orchestrator(), null);
 		req.addAddEffect(ppControls, script);
 		req.addRequiredOutput(OUTPUT, ppControls);
 
@@ -123,7 +123,7 @@ public class Test extends BusTestCase {
 		assertTrue(getNumberOfScripts() == num + 1);
 
 		// remove script
-		req = new ServiceRequest(new Asor(), null);
+		req = new ServiceRequest(new Orchestrator(), null);
 		req.addValueFilter(ppControls, new Script(uri));
 		req.addRemoveEffect(ppControls);
 
@@ -136,7 +136,7 @@ public class Test extends BusTestCase {
 	}
 
 	public void testGetEngines() {
-		ServiceRequest req = new ServiceRequest(new Asor(), null);
+		ServiceRequest req = new ServiceRequest(new Orchestrator(), null);
 		req.addRequiredOutput(OUTPUT, ppSupports);
 
 		ServiceResponse sr = caller.call(req);
@@ -151,7 +151,7 @@ public class Test extends BusTestCase {
 	}
 
 	public void testgetScripts() {
-		ServiceRequest req = new ServiceRequest(new Asor(), null);
+		ServiceRequest req = new ServiceRequest(new Orchestrator(), null);
 		req.addRequiredOutput(OUTPUT, ppControls);
 
 		ServiceResponse sr = caller.call(req);

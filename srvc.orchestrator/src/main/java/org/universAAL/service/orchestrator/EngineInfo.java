@@ -30,8 +30,8 @@ import javax.script.ScriptEngineManager;
 import org.universAAL.middleware.owl.OntClassInfo;
 import org.universAAL.middleware.owl.OntologyManagement;
 import org.universAAL.middleware.rdf.Resource;
-import org.universAAL.ontology.asor.LanguageClassifier;
-import org.universAAL.ontology.asor.ScriptEngine;
+import org.universAAL.ontology.orchestration.LanguageClassifier;
+import org.universAAL.ontology.orchestration.ScriptEngine;
 
 @SuppressWarnings("restriction")
 public class EngineInfo {

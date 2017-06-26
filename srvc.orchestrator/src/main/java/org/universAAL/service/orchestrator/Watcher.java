@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.universAAL.middleware.container.utils.LogUtils;
-import org.universAAL.ontology.asor.LanguageClassifier;
+import org.universAAL.ontology.orchestration.LanguageClassifier;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 

@@ -28,16 +28,16 @@ import org.universAAL.middleware.service.ServiceCall;
 import org.universAAL.middleware.service.ServiceCallee;
 import org.universAAL.middleware.service.ServiceResponse;
 import org.universAAL.middleware.service.owls.profile.ServiceProfile;
-import org.universAAL.ontology.asor.Asor;
-import org.universAAL.ontology.asor.Script;
-import org.universAAL.ontology.asor.ScriptEngine;
+import org.universAAL.ontology.orchestration.Orchestrator;
+import org.universAAL.ontology.orchestration.Script;
+import org.universAAL.ontology.orchestration.ScriptEngine;
 
 public class Integration extends ServiceCallee {
 
 	private Provider as;
 	private static int cntScript = 0;
 
-	public static final String NAMESPACE = "http://ontology.universAAL.org/AsorIntegration.owl#";
+	public static final String NAMESPACE = "http://ontology.universAAL.org/OrchestratorIntegration.owl#";
 	static final String SERVICE_GET_ENGINES = NAMESPACE + "getEngines";
 	static final String SERVICE_GET_SCRIPTS = NAMESPACE + "getScripts";
 	static final String SERVICE_ADD_SCRIPT = NAMESPACE + "addScript";
@@ -71,31 +71,31 @@ public class Integration extends ServiceCallee {
 	private static ServiceProfile[] createProfiles() {
 		List<ServiceProfile> profiles = new ArrayList<ServiceProfile>(20);
 
-		String[] ppControls = new String[] { Asor.PROP_CONTROLS };
-		String[] ppSupports = new String[] { Asor.PROP_SUPPORTS };
-		// String[] ppSuppLang = new String[] { Asor.PROP_SUPPORTS,
+		String[] ppControls = new String[] { Orchestrator.PROP_CONTROLS };
+		String[] ppSupports = new String[] { Orchestrator.PROP_SUPPORTS };
+		// String[] ppSuppLang = new String[] { Orchestrator.PROP_SUPPORTS,
 		// ScriptEngine.PROP_LANGUAGE_CLASSIFIER };
 
 		// ------
-		Asor getEngines = new Asor(SERVICE_GET_ENGINES);
+		Orchestrator getEngines = new Orchestrator(SERVICE_GET_ENGINES);
 		getEngines.addOutput(OUTPUT_ENGINES, ScriptEngine.MY_URI, 0, -1, ppSupports);
 		// getEngines.addOutput(OUTPUT_ENGINE_NAME,
 		// TypeMapper.getDatatypeURI(String.class), 0, 1, new String[] {
-		// Asor.PROP_SUPPORTS, ScriptEngine.PROP_NAME });
+		// Orchestrator.PROP_SUPPORTS, ScriptEngine.PROP_NAME });
 		// getEngines.addOutput(OUTPUT_ENGINE_VERSION,
 		// TypeMapper.getDatatypeURI(String.class), 0, 1, new String[] {
-		// Asor.PROP_SUPPORTS, ScriptEngine.PROP_VERSION });
+		// Orchestrator.PROP_SUPPORTS, ScriptEngine.PROP_VERSION });
 		// getEngines.addOutput(OUTPUT_ENGINE_LANG_VER,
 		// TypeMapper.getDatatypeURI(String.class), 0, 1,
-		// new String[] { Asor.PROP_SUPPORTS,
+		// new String[] { Orchestrator.PROP_SUPPORTS,
 		// ScriptEngine.PROP_LANGUAGE_VERSION });
 		// getEngines.addOutput(OUTPUT_ENGINE_MIMETYPES,
 		// TypeMapper.getDatatypeURI(String.class), 0, -1, new String[] {
-		// Asor.PROP_SUPPORTS, ScriptEngine.PROP_MIME_TYPES });
+		// Orchestrator.PROP_SUPPORTS, ScriptEngine.PROP_MIME_TYPES });
 		// getEngines
 		// .addOutput(OUTPUT_ENGINE_FILE_EXTENSIONS,
 		// TypeMapper.getDatatypeURI(String.class), 0, -1,
-		// new String[] { Asor.PROP_SUPPORTS,
+		// new String[] { Orchestrator.PROP_SUPPORTS,
 		// ScriptEngine.PROP_FILE_EXTENSIONS });
 		// getEngines.addOutput(OUTPUT_ENGINE_LANGS, LanguageClassifier.MY_URI,
 		// 0,
@@ -103,25 +103,25 @@ public class Integration extends ServiceCallee {
 		profiles.add(getEngines.getProfile());
 
 		// ------
-		Asor getScripts = new Asor(SERVICE_GET_SCRIPTS);
+		Orchestrator getScripts = new Orchestrator(SERVICE_GET_SCRIPTS);
 		getScripts.addOutput(OUTPUT_SCRIPTS, Script.MY_URI, 0, -1, ppControls);
 		profiles.add(getScripts.getProfile());
 
 		// ------
-		Asor addScript = new Asor(SERVICE_ADD_SCRIPT);
+		Orchestrator addScript = new Orchestrator(SERVICE_ADD_SCRIPT);
 		addScript.addInputWithAddEffect(INPUT_SCRIPT, Script.MY_URI, 1, 1, ppControls);
 		// addScript.addFilteringInput(INPUT_IS_PERSISTENT,
 		// TypeMapper.getDatatypeURI(Boolean.class), 0, 1, new String[] {
-		// Asor.PROP_CONTROLS, Script.PROP_IS_PERSISTENT });
+		// Orchestrator.PROP_CONTROLS, Script.PROP_IS_PERSISTENT });
 		// addScript.addFilteringInput(INPUT_CONTENT,
 		// TypeMapper.getDatatypeURI(String.class), 1, 1, new String[] {
-		// Asor.PROP_CONTROLS, Script.PROP_CONTENT });
+		// Orchestrator.PROP_CONTROLS, Script.PROP_CONTENT });
 		// addScript.addOutput(OUTPUT_SCRIPTS, Script.MY_URI, 0, 1, ppControls);
 		addScript.addOutput(OUTPUT_SCRIPTS, Script.MY_URI, 1, 1, ppControls);
 		profiles.add(addScript.getProfile());
 
 		// ------
-		Asor removeScript = new Asor(SERVICE_REMOVE_SCRIPT);
+		Orchestrator removeScript = new Orchestrator(SERVICE_REMOVE_SCRIPT);
 		removeScript.addInputWithRemoveEffect(INPUT_SCRIPT, Script.MY_URI, 1, 1, ppControls);
 		profiles.add(removeScript.getProfile());
 
